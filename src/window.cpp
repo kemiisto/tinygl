@@ -1,4 +1,6 @@
 #include "tinygl/tinygl.h"
+#include "tinygl/window.h"
+
 #include <spdlog/spdlog.h>
 #include <iostream>
 #include <map>
@@ -56,6 +58,7 @@ void GLAPIENTRY glDebugOutput(
 struct tinygl::Window::WindowPrivate
 {
     GLFWwindow* window = nullptr;
+    KeyCallback keyCallback;
 };
 
 tinygl::Window::Window(int width, int height, const std::string& title) :
@@ -89,6 +92,9 @@ tinygl::Window::Window(int width, int height, const std::string& title) :
     }
     glfwMakeContextCurrent(p->window);
     glfwSetFramebufferSizeCallback(p->window, framebufferSizeCallback);
+
+    // see setKeyCallback() method
+    glfwSetWindowUserPointer(p->window, reinterpret_cast<void*>(this));
 
     glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK) {
@@ -169,4 +175,17 @@ void framebufferSizeCallback(GLFWwindow* window, int width, int height)
 void tinygl::Window::setShouldClose(bool shouldClose)
 {
     glfwSetWindowShouldClose(p->window, shouldClose);
+}
+
+void tinygl::Window::setKeyCallback(tinygl::Window::KeyCallback callback)
+{
+    // https://stackoverflow.com/questions/7676971/pointing-to-a-function-that-is-a-class-member-glfw-setkeycallback
+    // https://www.glfw.org/faq.html#216---how-do-i-use-c-methods-as-callbacks
+    p->keyCallback = callback;
+    auto glfwKeyCallback = [](GLFWwindow* w, int key, int scancode, int action, int mods) {
+        static_cast<tinygl::Window*>(glfwGetWindowUserPointer(w))->p->keyCallback(
+            static_cast<Key>(key), scancode, static_cast<KeyAction>(action), static_cast<Modifier>(mods)
+        );
+    };
+    glfwSetKeyCallback(p->window, glfwKeyCallback);
 }

@@ -2,6 +2,7 @@
 #define TINYGL_WINDOW_H
 
 #include "tinygl/keyboard.h"
+#include <functional>
 #include <memory>
 #include <string>
 
@@ -10,6 +11,8 @@ namespace tinygl
     class Window
     {
     public:
+        typedef std::function<void(tinygl::Key, int, tinygl::KeyAction, tinygl::Modifier)> KeyCallback;
+
         Window(int width, int height, const std::string& title);
         virtual ~Window();
 
@@ -21,6 +24,8 @@ namespace tinygl
         tinygl::KeyState getKey(tinygl::Key key);
 
         void setShouldClose(bool shouldClose);
+
+        void setKeyCallback(KeyCallback callback);
 
     protected:
         virtual void init() {};
