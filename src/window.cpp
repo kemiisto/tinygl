@@ -6,31 +6,31 @@
 void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 
 static const std::map<GLenum, std::string> glDebugSource = {
-        { GL_DEBUG_SOURCE_API            , "API"             },
-        { GL_DEBUG_SOURCE_WINDOW_SYSTEM  , "Window System"   },
-        { GL_DEBUG_SOURCE_SHADER_COMPILER, "Shader Compiler" },
-        { GL_DEBUG_SOURCE_THIRD_PARTY    , "Third Party"     },
-        { GL_DEBUG_SOURCE_APPLICATION    , "Application"     },
-        { GL_DEBUG_SOURCE_OTHER          , "Other"           }
+    { GL_DEBUG_SOURCE_API            , "API"             },
+    { GL_DEBUG_SOURCE_WINDOW_SYSTEM  , "Window System"   },
+    { GL_DEBUG_SOURCE_SHADER_COMPILER, "Shader Compiler" },
+    { GL_DEBUG_SOURCE_THIRD_PARTY    , "Third Party"     },
+    { GL_DEBUG_SOURCE_APPLICATION    , "Application"     },
+    { GL_DEBUG_SOURCE_OTHER          , "Other"           }
 };
 
 static const std::map<GLenum, std::string> glDebugType = {
-        { GL_DEBUG_TYPE_ERROR              , "Error"               },
-        { GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR, "Deprecated Behavior" },
-        { GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR , "Undefined Behavior"  },
-        { GL_DEBUG_TYPE_PORTABILITY        , "Portability"         },
-        { GL_DEBUG_TYPE_PERFORMANCE        , "Performance"         },
-        { GL_DEBUG_TYPE_MARKER             , "Marker"              },
-        { GL_DEBUG_TYPE_PUSH_GROUP         , "Push Group"          },
-        { GL_DEBUG_TYPE_POP_GROUP          , "Pop Group"           },
-        { GL_DEBUG_TYPE_OTHER              , "Other"               }
+    { GL_DEBUG_TYPE_ERROR              , "Error"               },
+    { GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR, "Deprecated Behavior" },
+    { GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR , "Undefined Behavior"  },
+    { GL_DEBUG_TYPE_PORTABILITY        , "Portability"         },
+    { GL_DEBUG_TYPE_PERFORMANCE        , "Performance"         },
+    { GL_DEBUG_TYPE_MARKER             , "Marker"              },
+    { GL_DEBUG_TYPE_PUSH_GROUP         , "Push Group"          },
+    { GL_DEBUG_TYPE_POP_GROUP          , "Pop Group"           },
+    { GL_DEBUG_TYPE_OTHER              , "Other"               }
 };
 
 static const std::map<GLenum, std::string> glDebugSeverity = {
-        { GL_DEBUG_SEVERITY_HIGH        , "High"         },
-        { GL_DEBUG_SEVERITY_MEDIUM      , "Medium"       },
-        { GL_DEBUG_SEVERITY_LOW         , "Low"          },
-        { GL_DEBUG_SEVERITY_NOTIFICATION, "Notification" }
+    { GL_DEBUG_SEVERITY_HIGH        , "High"         },
+    { GL_DEBUG_SEVERITY_MEDIUM      , "Medium"       },
+    { GL_DEBUG_SEVERITY_LOW         , "Low"          },
+    { GL_DEBUG_SEVERITY_NOTIFICATION, "Notification" }
 };
 
 void GLAPIENTRY glDebugOutput(
@@ -43,14 +43,14 @@ void GLAPIENTRY glDebugOutput(
         const void* userParam)
 {
     std::cerr <<
-          "================================[ OpenGL error ]================================\n" <<
-          "Source: " << glDebugSource.at(source) << '\n' <<
-          "Type: " << glDebugType.at(type) << '\n' <<
-          "Severity: " << glDebugSeverity.at(severity) << '\n' <<
-          "Message: " << message << '\n' <<
-          "================================[ Stack  Trace ]================================\n";
+        "================================[ OpenGL error ]================================\n" <<
+        "Source: " << glDebugSource.at(source) << '\n' <<
+        "Type: " << glDebugType.at(type) << '\n' <<
+        "Severity: " << glDebugSeverity.at(severity) << '\n' <<
+        "Message: " << message << '\n' <<
+        "================================[ Stack  Trace ]================================\n";
     std::cerr <<
-          "================================================================================\n";
+        "================================================================================\n";
 }
 
 struct tinygl::Window::WindowPrivate
@@ -89,8 +89,6 @@ tinygl::Window::Window(int width, int height, const std::string& title) :
     }
     glfwMakeContextCurrent(p->window);
     glfwSetFramebufferSizeCallback(p->window, framebufferSizeCallback);
-    // see setKeyCallback() method
-    glfwSetWindowUserPointer(p->window, reinterpret_cast<void*>(this));
 
     glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK) {
@@ -99,9 +97,9 @@ tinygl::Window::Window(int width, int height, const std::string& title) :
 
     spdlog::info("[tinygl::Window] ========== OpenGL properties ==========");
     const std::map<GLenum, std::string> glProperties = {
-            { GL_VENDOR,   "Vendor"   },
-            { GL_RENDERER, "Renderer" },
-            { GL_VERSION,  "Version"  },
+        { GL_VENDOR,   "Vendor"   },
+        { GL_RENDERER, "Renderer" },
+        { GL_VERSION,  "Version"  }
     };
     for (const auto& [flag, desc] : glProperties) {
         spdlog::info("[tinygl::Window] {}: {}", desc, tinygl::getString(flag));
@@ -112,10 +110,10 @@ tinygl::Window::Window(int width, int height, const std::string& title) :
 
     spdlog::info("[tinygl::Window] ========== OpenGL context properties ==========");
     const std::map<GLenum, std::string> glContextFlags = {
-            { GL_CONTEXT_FLAG_FORWARD_COMPATIBLE_BIT, "FORWARD_COMPATIBLE" },
-            { GL_CONTEXT_FLAG_DEBUG_BIT, "DEBUG" },
-            { GL_CONTEXT_FLAG_ROBUST_ACCESS_BIT, "ROBUST_ACCESS" },
-            { GL_CONTEXT_FLAG_NO_ERROR_BIT, "NO_ERROR" }
+        { GL_CONTEXT_FLAG_FORWARD_COMPATIBLE_BIT, "FORWARD_COMPATIBLE" },
+        { GL_CONTEXT_FLAG_DEBUG_BIT, "DEBUG" },
+        { GL_CONTEXT_FLAG_ROBUST_ACCESS_BIT, "ROBUST_ACCESS" },
+        { GL_CONTEXT_FLAG_NO_ERROR_BIT, "NO_ERROR" }
     };
 
     for (const auto& [flag, desc] : glContextFlags) {
