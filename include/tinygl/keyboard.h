@@ -2,6 +2,10 @@
 #define TINYGL_KEYS_H
 
 #include "tinygl/bitmask_operators.h"
+/**
+ * The include file for GLEW includes the required OpenGL headers.
+ * So be sure to include GLEW before GLFW (or any header that require OpenGL)!
+ */
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
