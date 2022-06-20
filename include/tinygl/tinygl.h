@@ -4,6 +4,7 @@
 #include "tinygl/buffer.h"
 #include "tinygl/shader.h"
 #include "tinygl/shader_program.h"
+#include "tinygl/texture.h"
 #include "tinygl/vertex_array_object.h"
 #include "tinygl/window.h"
 #include "tinygl/keyboard.h"
