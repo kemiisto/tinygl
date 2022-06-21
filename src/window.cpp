@@ -65,20 +65,6 @@ struct tinygl::Window::WindowPrivate
 tinygl::Window::Window(int width, int height, const std::string& title) :
         p{std::make_unique<WindowPrivate>()}
 {
-    if (!glfwInit()) {
-        throw std::runtime_error("glfwInit() failed!");
-    }
-
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-#ifdef __APPLE__
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif
-#ifndef NDEBUG
-    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
-#endif
-
     p->window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
     if (!p->window) {
         throw std::runtime_error("glfwCreateWindow() failed!");

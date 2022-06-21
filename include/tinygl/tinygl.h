@@ -11,6 +11,9 @@
 
 namespace tinygl
 {
+    void init(int major, int minor);
+    void terminate();
+
     float getTime();
     const char* getString(GLenum name);
 }
