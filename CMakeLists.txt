@@ -31,3 +31,9 @@ endif()
 
 file(GLOB SOURCES src/*.cpp)
 add_library(tinygl ${SOURCES})
+
+add_executable(tinygl_mat_tests test/mat_tests.cpp)
+target_link_libraries(tinygl_mat_tests PRIVATE tinygl Catch2::Catch2)
+
+add_executable(tinygl_vec_tests test/vec_tests.cpp)
+target_link_libraries(tinygl_vec_tests PRIVATE tinygl Catch2::Catch2)
