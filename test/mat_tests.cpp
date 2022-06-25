@@ -36,15 +36,23 @@ TEST_CASE("Mat<4> is constructed from initializer list", "[Mat<4>]")
 
 TEST_CASE("Mat<4> is constructed as identity matrix", "[Mat<4>]")
 {
-    auto tinyglIdentity = tinygl::Mat<4>::identity();
-    auto glmIdentity = glm::mat4(1.0f);
-    compare(tinyglIdentity, glmIdentity);
+    auto tglMatrix = tinygl::Mat<4>::identity();
+    auto glmMatrix = glm::mat4(1.0f);
+    compare(tglMatrix, glmMatrix);
 }
 
 TEST_CASE("Mat<4> is constructed as translation matrix", "[Mat<4>]")
 {
-    auto tinyglTranslation = tinygl::Mat<4>::translation({1.0f, 2.0f, 3.0f});
-    auto glmTranslation = glm::mat4(1.0f);
-    glmTranslation = glm::translate(glmTranslation, glm::vec3(1.0f, 2.0f, 3.0f));
-    compare(tinyglTranslation, glmTranslation);
+    auto tglMatrix = tinygl::Mat<4>::translation({1.0f, 2.0f, 3.0f});
+    auto glmMatrix = glm::mat4(1.0f);
+    glmMatrix = glm::translate(glmMatrix, glm::vec3(1.0f, 2.0f, 3.0f));
+    compare(tglMatrix, glmMatrix);
+}
+
+TEST_CASE("Mat<4> is constructed as scale matrix", "[Mat<4>]")
+{
+    auto tglMatrix = tinygl::Mat<4>::scale({1.0f, 2.0f, 3.0f});
+    auto glmMatrix = glm::mat4(1.0f);
+    glmMatrix = glm::scale(glmMatrix, glm::vec3(1.0f, 2.0f, 3.0f));
+    compare(tglMatrix, glmMatrix);
 }

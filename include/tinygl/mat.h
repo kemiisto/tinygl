@@ -14,8 +14,10 @@ namespace tinygl
     {
     public:
         Mat(std::initializer_list<T> values);
+
         static Mat identity();
-        static Mat translation(const Vec<N-1,T>& v);
+        static Mat translation(const Vec<N-1,T>& t);
+        static Mat scale(const Vec<N-1,T>& s);
 
         constexpr T& operator[](std::size_t j, std::size_t i);
         constexpr T operator[](std::size_t j, std::size_t i) const;
@@ -54,13 +56,25 @@ tinygl::Mat<N,T> tinygl::Mat<N,T>::identity()
 
 template<std::size_t N, typename T>
 requires(N >= 2 && N <= 4)
-tinygl::Mat<N,T> tinygl::Mat<N,T>::translation(const Vec<N-1,T>& v)
+tinygl::Mat<N,T> tinygl::Mat<N,T>::translation(const Vec<N-1,T>& t)
 {
     return tinygl::Mat<N,T> {
-        1.0f, 0.0f, 0.0f, v.x(),
-        0.0f, 1.0f, 0.0f, v.y(),
-        0.0f, 0.0f, 1.0f, v.z(),
+        1.0f, 0.0f, 0.0f, t.x(),
+        0.0f, 1.0f, 0.0f, t.y(),
+        0.0f, 0.0f, 1.0f, t.z(),
         0.0f, 0.0f, 0.0f, 1.0f,
+    };
+}
+
+template<std::size_t N, typename T>
+requires(N >= 2 && N <= 4)
+tinygl::Mat<N,T> tinygl::Mat<N,T>::scale(const Vec<N-1,T>& s)
+{
+    return tinygl::Mat<N,T> {
+        s.x(),  0.0f,  0.0f, 0.0f,
+         0.0f, s.y(),  0.0f, 0.0f,
+         0.0f,  0.0f, s.z(), 0.0f,
+         0.0f,  0.0f,  0.0f, 1.0f,
     };
 }
 
