@@ -1,10 +1,9 @@
 #include "tinygl/shader_program.h"
-
-#include <vector>
-#include <iostream>
-
 #include <fmt/format.h>
 #include <glm/gtc/type_ptr.hpp>
+#include <algorithm>
+#include <iostream>
+#include <vector>
 
 struct tinygl::ShaderProgram::ShaderProgramPrivate
 {
@@ -54,7 +53,7 @@ tinygl::ShaderProgram& tinygl::ShaderProgram::operator=(ShaderProgram&& other) n
     return *this;
 }
 
-void tinygl::ShaderProgram::addShader(std::shared_ptr<Shader> shader) {
+void tinygl::ShaderProgram::addShader(const std::shared_ptr<Shader>& shader) {
     if (std::find(p->shaders.begin(), p->shaders.end(), shader) != p->shaders.end()) {
         std::cout << "Shader is already added to the program!" << std::endl;
         return;

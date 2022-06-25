@@ -51,7 +51,7 @@ bool tinygl::Texture::TexturePrivate::bound()
 {
     GLint boundId;
     glGetIntegerv(textureBindings.at(target), &boundId);
-    return id == boundId;
+    return id == static_cast<GLuint>(boundId);
 }
 
 tinygl::Texture::Texture(tinygl::Texture::Target target,

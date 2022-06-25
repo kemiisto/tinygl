@@ -19,7 +19,7 @@ namespace tinygl
         ShaderProgram(ShaderProgram&& other) noexcept;
         ShaderProgram& operator=(ShaderProgram&& other) noexcept;
 
-        void addShader(std::shared_ptr<Shader> shader);
+        void addShader(const std::shared_ptr<Shader>& shader);
         void addShaderFromSourceCode(Shader::Type type, const char* source);
         void addShaderFromSourceFile(Shader::Type type, const std::string& fileName);
         void removeShader(std::shared_ptr<Shader> shader);

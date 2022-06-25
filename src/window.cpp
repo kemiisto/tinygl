@@ -39,11 +39,11 @@ static const std::map<GLenum, std::string> glDebugSeverity = {
 void GLAPIENTRY glDebugOutput(
         GLenum source,
         GLenum type,
-        GLuint id,
+        [[maybe_unused]] GLuint id,
         GLenum severity,
-        GLsizei length,
+        [[maybe_unused]] GLsizei length,
         const GLchar* message,
-        const void* userParam)
+        [[maybe_unused]] const void* userParam)
 {
     std::cerr <<
         "================================[ OpenGL error ]================================\n" <<
@@ -145,7 +145,7 @@ tinygl::KeyState tinygl::Window::getKey(tinygl::Key key)
     return static_cast<KeyState>(glfwGetKey(p->window, static_cast<int>(key)));
 }
 
-void framebufferSizeCallback(GLFWwindow* window, int width, int height)
+void framebufferSizeCallback([[maybe_unused]] GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
 }
