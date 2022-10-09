@@ -25,6 +25,7 @@ namespace tinygl
         void removeShader(std::shared_ptr<Shader> shader);
 
         int attributeLocation(const char* name) const;
+        int uniformLocation(const char* name) const;
 
         void setUniformValue(int location, GLfloat value);
         void setUniformValue(int location, GLint value);
@@ -32,9 +33,9 @@ namespace tinygl
         void setUniformValue(int location, GLfloat x, GLfloat y);
         void setUniformValue(int location, GLfloat x, GLfloat y, GLfloat z);
         void setUniformValue(int location, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
-        void setUniformValue(int location, const glm::mat4& value);
 
-        int uniformLocation(const char* name) const;
+        void setUniformValue(int location, const glm::vec3& value);
+        void setUniformValue(int location, const glm::mat4& value);
 
         template<typename T>
         void setUniformValue(const char* name, T value)

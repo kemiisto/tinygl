@@ -156,6 +156,11 @@ void tinygl::ShaderProgram::setUniformValue(int location, GLfloat x, GLfloat y, 
     glUniform4f(location, x, y, z, w);
 }
 
+void tinygl::ShaderProgram::setUniformValue(int location, const glm::vec3& value)
+{
+    glUniform3fv(location, 1, glm::value_ptr(value));
+}
+
 void tinygl::ShaderProgram::setUniformValue(int location, const glm::mat4& value)
 {
     glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
