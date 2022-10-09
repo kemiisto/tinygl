@@ -118,6 +118,14 @@ void tinygl::ShaderProgram::use() {
     glUseProgram(p->id);
 }
 
+int tinygl::ShaderProgram::attributeLocation(char const* name) const {
+    if (p->id && p->linked) {
+        return glGetAttribLocation(p->id, name);
+    } else {
+        return -1;
+    }
+}
+
 void tinygl::ShaderProgram::setUniformValue(int location, GLfloat value)
 {
     glUniform1f(location, value);

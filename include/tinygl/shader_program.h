@@ -24,6 +24,8 @@ namespace tinygl
         void addShaderFromSourceFile(Shader::Type type, const std::string& fileName);
         void removeShader(std::shared_ptr<Shader> shader);
 
+        int attributeLocation(const char* name) const;
+
         void setUniformValue(int location, GLfloat value);
         void setUniformValue(int location, GLint value);
         void setUniformValue(int location, GLuint value);
