@@ -62,7 +62,7 @@ struct tinygl::Window::WindowPrivate
     KeyCallback keyCallback;
 };
 
-tinygl::Window::Window(int width, int height, const std::string& title) :
+tinygl::Window::Window(int width, int height, const std::string& title, bool vsync) :
         p{std::make_unique<WindowPrivate>()}
 {
     p->window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
@@ -70,6 +70,9 @@ tinygl::Window::Window(int width, int height, const std::string& title) :
         throw std::runtime_error("glfwCreateWindow() failed!");
     }
     glfwMakeContextCurrent(p->window);
+    if (vsync) {
+        glfwSwapInterval(1);
+    }
     glfwSetFramebufferSizeCallback(p->window, framebufferSizeCallback);
 
     // see setKeyCallback() method

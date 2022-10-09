@@ -13,7 +13,7 @@ namespace tinygl
     public:
         typedef std::function<void(tinygl::Key, int, tinygl::KeyAction, tinygl::Modifier)> KeyCallback;
 
-        Window(int width, int height, const std::string& title);
+        Window(int width, int height, const std::string& title, bool vsync = false);
         virtual ~Window();
 
         Window(Window&& other) noexcept;
