@@ -26,7 +26,7 @@ namespace tinygl
             DynamicCopy = GL_DYNAMIC_COPY
         };
 
-        Buffer(Type type, Buffer::UsagePattern usagePattern);
+        Buffer(Type type, UsagePattern usagePattern);
         ~Buffer();
 
         Buffer(Buffer&& other) noexcept;
