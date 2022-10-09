@@ -1,6 +1,6 @@
 #include "tinygl/mat.h"
-#define CATCH_CONFIG_MAIN
-#include <catch2/catch.hpp>
+#define CATCH_CONFIG_RUNNER
+#include <catch2/catch_all.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -9,7 +9,7 @@ void compare(const tinygl::Mat<4>& tglMatrix, const glm::mat4& glmMatrix)
 {
     for (std::size_t j = 0; j < 4; ++j) {
         for (std::size_t i = 0; i < 4; ++i) {
-            REQUIRE(tglMatrix[j,i] == Approx(glmMatrix[j][i]));
+            REQUIRE(tglMatrix[j,i] == Catch::Approx(glmMatrix[j][i]));
         }
     }
 }
@@ -56,3 +56,9 @@ TEST_CASE("Mat<4> is constructed as scale matrix", "[Mat<4>]")
     glmMatrix = glm::scale(glmMatrix, glm::vec3(1.0f, 2.0f, 3.0f));
     compare(tglMatrix, glmMatrix);
 }
+
+int main(int argc, const char* argv[])
+{
+    return Catch::Session().run(argc, argv);
+}
+
