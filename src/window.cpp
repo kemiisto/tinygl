@@ -60,6 +60,9 @@ struct tinygl::Window::WindowPrivate
 {
     GLFWwindow* window = nullptr;
     KeyCallback keyCallback;
+    decltype(tinygl::getTime()) previousTime{};
+    decltype(tinygl::getTime()) currentTime{};
+    decltype(tinygl::getTime()) deltaTime{};
 };
 
 tinygl::Window::Window(int width, int height, const std::string& title, bool vsync) :
@@ -140,6 +143,10 @@ void tinygl::Window::run()
         draw();
         glfwSwapBuffers(p->window);
         glfwPollEvents();
+
+        p->currentTime = tinygl::getTime();
+        p->deltaTime = (p->currentTime - p->previousTime);
+        p->previousTime = p->currentTime;
     }
 }
 
@@ -169,4 +176,9 @@ void tinygl::Window::setKeyCallback(tinygl::Window::KeyCallback callback)
         );
     };
     glfwSetKeyCallback(p->window, glfwKeyCallback);
+}
+
+float tinygl::Window::deltaTime() const
+{
+    return p->deltaTime;
 }

@@ -27,6 +27,8 @@ namespace tinygl
 
         void setKeyCallback(KeyCallback callback);
 
+        float deltaTime() const;
+
     protected:
         virtual void init() {};
         virtual void processInput() {};
