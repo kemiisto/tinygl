@@ -22,10 +22,13 @@ namespace tinygl
         constexpr T& operator[](std::size_t j, std::size_t i);
         constexpr T operator[](std::size_t j, std::size_t i) const;
 
+        constexpr T* data() noexcept;
+        constexpr const T* data() const noexcept;
     private:
-        using Column = std::array<float,4>;
-        std::array<Column,4> columns = {};
+        std::array<float, N*N> v;
     };
+
+    using Mat4 = Mat<4, float>;
 }
 
 template<std::size_t N, typename T>
@@ -37,7 +40,7 @@ tinygl::Mat<N,T>::Mat(std::initializer_list<T> values)
     typename std::initializer_list<T>::iterator it = values.begin();
     for (std::size_t i = 0; i < N; ++i) {
         for (std::size_t j = 0; j < N; ++j) {
-            columns[j][i] = *it++;
+            v[i + j * N] = *it++;
         }
     }
 }
@@ -82,14 +85,28 @@ template<std::size_t N, typename T>
 requires(N >= 2 && N <= 4)
 constexpr T& tinygl::Mat<N,T>::operator[](std::size_t j, std::size_t i)
 {
-    return columns[j][i];
+    return v[i + j * N];
 }
 
 template<std::size_t N, typename T>
 requires(N >= 2 && N <= 4)
 constexpr T tinygl::Mat<N,T>::operator[](std::size_t j, std::size_t i) const
 {
-    return columns[j][i];
+    return v[i + j * N];
+}
+
+template<std::size_t N, typename T>
+requires (N >= 2 && N <= 4)
+constexpr T* tinygl::Mat<N, T>::data() noexcept
+{
+    return v.data();
+}
+
+template<std::size_t N, typename T>
+requires (N >= 2 && N <= 4)
+constexpr const T* tinygl::Mat<N, T>::data() const noexcept
+{
+    return v.data();
 }
 
 #endif // LEARNOPENGL_MATRIX_H

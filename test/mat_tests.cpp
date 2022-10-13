@@ -4,8 +4,9 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <iostream>
 
-void compare(const tinygl::Mat<4>& tglMatrix, const glm::mat4& glmMatrix)
+void compare(const tinygl::Mat4& tglMatrix, const glm::mat4& glmMatrix)
 {
     for (std::size_t j = 0; j < 4; ++j) {
         for (std::size_t i = 0; i < 4; ++i) {
@@ -14,9 +15,9 @@ void compare(const tinygl::Mat<4>& tglMatrix, const glm::mat4& glmMatrix)
     }
 }
 
-TEST_CASE("Mat<4> is constructed from initializer list", "[Mat<4>]")
+TEST_CASE("Mat4 is constructed from initializer list", "[Mat4]")
 {
-    tinygl::Mat<4> tglMatrix {
+    tinygl::Mat4 tglMatrix {
         0.0f, 0.1f, 0.2f, 0.3f,
         1.0f, 1.1f, 1.2f, 1.3f,
         2.0f, 2.1f, 2.2f, 2.3f,
@@ -34,27 +35,41 @@ TEST_CASE("Mat<4> is constructed from initializer list", "[Mat<4>]")
     compare(tglMatrix, glmMatrix);
 }
 
-TEST_CASE("Mat<4> is constructed as identity matrix", "[Mat<4>]")
+TEST_CASE("Mat4 is constructed as identity matrix", "[Mat4]")
 {
-    auto tglMatrix = tinygl::Mat<4>::identity();
+    auto tglMatrix = tinygl::Mat4::identity();
     auto glmMatrix = glm::mat4(1.0f);
     compare(tglMatrix, glmMatrix);
 }
 
-TEST_CASE("Mat<4> is constructed as translation matrix", "[Mat<4>]")
+TEST_CASE("Mat4 is constructed as translation matrix", "[Mat4]")
 {
-    auto tglMatrix = tinygl::Mat<4>::translation({1.0f, 2.0f, 3.0f});
+    auto tglMatrix = tinygl::Mat4::translation({1.0f, 2.0f, 3.0f});
     auto glmMatrix = glm::mat4(1.0f);
     glmMatrix = glm::translate(glmMatrix, glm::vec3(1.0f, 2.0f, 3.0f));
     compare(tglMatrix, glmMatrix);
 }
 
-TEST_CASE("Mat<4> is constructed as scale matrix", "[Mat<4>]")
+TEST_CASE("Mat4 is constructed as scale matrix", "[Mat4]")
 {
-    auto tglMatrix = tinygl::Mat<4>::scale({1.0f, 2.0f, 3.0f});
+    auto tglMatrix = tinygl::Mat4::scale({1.0f, 2.0f, 3.0f});
     auto glmMatrix = glm::mat4(1.0f);
     glmMatrix = glm::scale(glmMatrix, glm::vec3(1.0f, 2.0f, 3.0f));
     compare(tglMatrix, glmMatrix);
+}
+
+TEST_CASE("Mat4 data method", "[Mat4]")
+{
+    auto tglMatrix = tinygl::Mat4::translation({1.0f, 2.0f, 3.0f});
+    auto glmMatrix = glm::mat4(1.0f);
+    glmMatrix = glm::translate(glmMatrix, glm::vec3(1.0f, 2.0f, 3.0f));
+
+    auto* tglData = tglMatrix.data();
+    auto* glmData = glm::value_ptr(glmMatrix);
+
+    for (std::size_t i = 0; i < 4*4; ++i) {
+        REQUIRE(tglData[i] == Catch::Approx(glmData[i]));
+    }
 }
 
 int main(int argc, const char* argv[])

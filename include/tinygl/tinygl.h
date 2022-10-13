@@ -8,6 +8,8 @@
 #include "tinygl/vertex_array_object.h"
 #include "tinygl/window.h"
 #include "tinygl/keyboard.h"
+#include "tinygl/vec.h"
+#include "tinygl/mat.h"
 
 namespace tinygl
 {

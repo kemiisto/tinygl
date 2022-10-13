@@ -1,6 +1,5 @@
 #include "tinygl/shader_program.h"
 #include <fmt/format.h>
-#include <glm/gtc/type_ptr.hpp>
 #include <algorithm>
 #include <iostream>
 #include <vector>
@@ -156,14 +155,14 @@ void tinygl::ShaderProgram::setUniformValue(int location, GLfloat x, GLfloat y, 
     glUniform4f(location, x, y, z, w);
 }
 
-void tinygl::ShaderProgram::setUniformValue(int location, const glm::vec3& value)
+void tinygl::ShaderProgram::setUniformValue(int location, const tinygl::Vec3& value)
 {
-    glUniform3fv(location, 1, glm::value_ptr(value));
+    glUniform3fv(location, 1, value.data());
 }
 
-void tinygl::ShaderProgram::setUniformValue(int location, const glm::mat4& value)
+void tinygl::ShaderProgram::setUniformValue(int location, const tinygl::Mat4& value)
 {
-    glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
+    glUniformMatrix4fv(location, 1, GL_FALSE, value.data());
 }
 
 int tinygl::ShaderProgram::uniformLocation(const char* name) const

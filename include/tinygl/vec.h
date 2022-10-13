@@ -20,9 +20,14 @@ namespace tinygl
         constexpr T y() const;
         constexpr T z() const requires(N >= 3);
         constexpr T w() const requires(N >= 4);
+
+        constexpr T* data() noexcept;
+        constexpr const T* data() const noexcept;
     private:
         std::array<T, N> v;
     };
+
+    using Vec3 = Vec<3, float>;
 }
 
 template<std::size_t N, typename T>
@@ -77,6 +82,20 @@ requires(N >= 2 && N <= 4)
 constexpr T tinygl::Vec<N, T>::w() const requires(N >= 4)
 {
     return v[3];
+}
+
+template<std::size_t N, typename T>
+requires (N >= 2 && N <= 4)
+constexpr T* tinygl::Vec<N, T>::data() noexcept
+{
+    return v.data();
+}
+
+template<std::size_t N, typename T>
+requires (N >= 2 && N <= 4)
+constexpr const T* tinygl::Vec<N, T>::data() const noexcept
+{
+    return v.data();
 }
 
 #endif // LEARNOPENGL_VEC_H

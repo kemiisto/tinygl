@@ -1,12 +1,10 @@
 #ifndef TINYGL_SHADER_PROGRAM_H
 #define TINYGL_SHADER_PROGRAM_H
 
-#include <memory>
-
-#include <glm/glm.hpp>
-
 #include "tinygl/shader.h"
-
+#include "tinygl/vec.h"
+#include "tinygl/mat.h"
+#include <memory>
 
 namespace tinygl
 {
@@ -34,8 +32,8 @@ namespace tinygl
         void setUniformValue(int location, GLfloat x, GLfloat y, GLfloat z);
         void setUniformValue(int location, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
 
-        void setUniformValue(int location, const glm::vec3& value);
-        void setUniformValue(int location, const glm::mat4& value);
+        void setUniformValue(int location, const tinygl::Vec3& value);
+        void setUniformValue(int location, const tinygl::Mat4& value);
 
         template<typename T>
         void setUniformValue(const char* name, T value)
