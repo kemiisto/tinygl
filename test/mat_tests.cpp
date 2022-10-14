@@ -1,4 +1,5 @@
 #include "tinygl/mat.h"
+#include "tinygl/util.h"
 #define CATCH_CONFIG_RUNNER
 #include <catch2/catch_all.hpp>
 #include <glm/glm.hpp>
@@ -37,30 +38,72 @@ TEST_CASE("Mat4 is constructed from initializer list", "[Mat4]")
 
 TEST_CASE("Mat4 is constructed as identity matrix", "[Mat4]")
 {
-    auto tglMatrix = tinygl::Mat4::identity();
+    auto tglMatrix = tinygl::Mat4{};
     auto glmMatrix = glm::mat4(1.0f);
     compare(tglMatrix, glmMatrix);
 }
 
-TEST_CASE("Mat4 is constructed as translation matrix", "[Mat4]")
+
+TEST_CASE("Mat4 translate", "[Mat4]")
 {
-    auto tglMatrix = tinygl::Mat4::translation({1.0f, 2.0f, 3.0f});
+    auto tglMatrix = tinygl::Mat4{};
+    tglMatrix.translate({1.0f, 2.0f, 3.0f});
+
     auto glmMatrix = glm::mat4(1.0f);
     glmMatrix = glm::translate(glmMatrix, glm::vec3(1.0f, 2.0f, 3.0f));
+
     compare(tglMatrix, glmMatrix);
 }
 
-TEST_CASE("Mat4 is constructed as scale matrix", "[Mat4]")
+TEST_CASE("Mat4 scale", "[Mat4]")
 {
-    auto tglMatrix = tinygl::Mat4::scale({1.0f, 2.0f, 3.0f});
+    auto tglMatrix = tinygl::Mat4{};
+    tglMatrix.scale({1.0f, 2.0f, 3.0f});
+
     auto glmMatrix = glm::mat4(1.0f);
     glmMatrix = glm::scale(glmMatrix, glm::vec3(1.0f, 2.0f, 3.0f));
+
     compare(tglMatrix, glmMatrix);
 }
 
-TEST_CASE("Mat4 data method", "[Mat4]")
+TEST_CASE("Mat4 rotateX", "[Mat4]")
 {
-    auto tglMatrix = tinygl::Mat4::translation({1.0f, 2.0f, 3.0f});
+    auto tglMatrix = tinygl::Mat4{};
+    tglMatrix.rotateX(45.0f);
+
+    auto glmMatrix = glm::mat4(1.0f);
+    glmMatrix = glm::rotate(glmMatrix, tinygl::degreesToRadians(45.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+    compare(tglMatrix, glmMatrix);
+}
+
+TEST_CASE("Mat4 rotateY", "[Mat4]")
+{
+    auto tglMatrix = tinygl::Mat4{};
+    tglMatrix.rotateY(45.0f);
+
+    auto glmMatrix = glm::mat4(1.0f);
+    glmMatrix = glm::rotate(glmMatrix, tinygl::degreesToRadians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+    compare(tglMatrix, glmMatrix);
+}
+
+TEST_CASE("Mat4 rotateZ", "[Mat4]")
+{
+    auto tglMatrix = tinygl::Mat4{};
+    tglMatrix.rotateZ(45.0f);
+
+    auto glmMatrix = glm::mat4(1.0f);
+    glmMatrix = glm::rotate(glmMatrix, tinygl::degreesToRadians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+
+    compare(tglMatrix, glmMatrix);
+}
+
+TEST_CASE("Mat4 data", "[Mat4]")
+{
+    auto tglMatrix = tinygl::Mat4{};
+    tglMatrix.translate({1.0f, 2.0f, 3.0f});
+
     auto glmMatrix = glm::mat4(1.0f);
     glmMatrix = glm::translate(glmMatrix, glm::vec3(1.0f, 2.0f, 3.0f));
 

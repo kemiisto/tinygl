@@ -2,8 +2,10 @@
 #define LEARNOPENGL_MATRIX_H
 
 #include "tinygl/vec.h"
+#include "tinygl/util.h"
 #include <array>
 #include <cassert>
+#include <cmath>
 #include <initializer_list>
 
 namespace tinygl
@@ -13,22 +15,33 @@ namespace tinygl
     class Mat
     {
     public:
+        Mat();
         Mat(std::initializer_list<T> values);
 
-        static Mat identity();
-        static Mat translation(const Vec<N-1,T>& t);
-        static Mat scale(const Vec<N-1,T>& s);
+        constexpr T& operator()(std::size_t i, std::size_t j);
+        constexpr T operator()(std::size_t i, std::size_t j) const;
 
-        constexpr T& operator()(std::size_t j, std::size_t i);
-        constexpr T operator()(std::size_t j, std::size_t i) const;
+        void setToIdentity();
+
+        void scale(const Vec<N-1,T>& s);
+        void translate(const Vec<N-1,T>& t);
+        void rotateX(T angle);
+        void rotateY(T angle);
+        void rotateZ(T angle);
 
         constexpr T* data() noexcept;
         constexpr const T* data() const noexcept;
     private:
-        std::array<float, N*N> v;
+        float m[4][4] {};
     };
 
     using Mat4 = Mat<4, float>;
+}
+
+template<std::size_t N, typename T>
+requires (N >= 2 && N <= 4) tinygl::Mat<N, T>::Mat()
+{
+    setToIdentity();
 }
 
 template<std::size_t N, typename T>
@@ -40,73 +53,155 @@ tinygl::Mat<N,T>::Mat(std::initializer_list<T> values)
     typename std::initializer_list<T>::iterator it = values.begin();
     for (std::size_t i = 0; i < N; ++i) {
         for (std::size_t j = 0; j < N; ++j) {
-            v[i + j * N] = *it++;
+            m[j][i] = *it++;
         }
     }
 }
 
 template<std::size_t N, typename T>
 requires(N >= 2 && N <= 4)
-tinygl::Mat<N,T> tinygl::Mat<N,T>::identity()
+constexpr T& tinygl::Mat<N,T>::operator()(std::size_t i, std::size_t j)
 {
-    return tinygl::Mat<N,T> {
-        1.0f, 0.0f, 0.0f, 0.0f,
-        0.0f, 1.0f, 0.0f, 0.0f,
-        0.0f, 0.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 0.0f, 1.0f,
-    };
+    return m[i][j];
 }
 
 template<std::size_t N, typename T>
 requires(N >= 2 && N <= 4)
-tinygl::Mat<N,T> tinygl::Mat<N,T>::translation(const Vec<N-1,T>& t)
+constexpr T tinygl::Mat<N,T>::operator()(std::size_t i, std::size_t j) const
 {
-    return tinygl::Mat<N,T> {
-        1.0f, 0.0f, 0.0f, t.x(),
-        0.0f, 1.0f, 0.0f, t.y(),
-        0.0f, 0.0f, 1.0f, t.z(),
-        0.0f, 0.0f, 0.0f, 1.0f,
-    };
+    return m[i][j];
 }
 
 template<std::size_t N, typename T>
 requires(N >= 2 && N <= 4)
-tinygl::Mat<N,T> tinygl::Mat<N,T>::scale(const Vec<N-1,T>& s)
+void tinygl::Mat<N,T>::setToIdentity()
 {
-    return tinygl::Mat<N,T> {
-        s.x(),  0.0f,  0.0f, 0.0f,
-         0.0f, s.y(),  0.0f, 0.0f,
-         0.0f,  0.0f, s.z(), 0.0f,
-         0.0f,  0.0f,  0.0f, 1.0f,
-    };
+    m[0][0] = 1.0f; m[0][1] = 0.0f; m[0][2] = 0.0f; m[0][3] = 0.0f;
+    m[1][0] = 0.0f; m[1][1] = 1.0f; m[1][2] = 0.0f; m[1][3] = 0.0f;
+    m[2][0] = 0.0f; m[2][1] = 0.0f; m[2][2] = 1.0f; m[2][3] = 0.0f;
+    m[3][0] = 0.0f; m[3][1] = 0.0f; m[3][2] = 0.0f; m[3][3] = 1.0f;
 }
 
 template<std::size_t N, typename T>
-requires(N >= 2 && N <= 4)
-constexpr T& tinygl::Mat<N,T>::operator()(std::size_t j, std::size_t i)
+requires (N >= 2 && N <= 4)void tinygl::Mat<N, T>::translate(tinygl::Vec<N - 1, T> const& t)
 {
-    return v[i + j * N];
+    /**
+     * | m00   m01   m02   m03 |   | 1  0  0  tx |   | m00   m01   m02   m00*tx + m01*ty + m02*tz + m03 |
+     * | m10   m11   m12   m13 |   | 0  1  0  ty |   | m10   m11   m12   m10*tx + m11*ty + m12*tz + m13 |
+     * | m20   m21   m22   m23 | * | 0  0  1  tz | = | m20   m21   m22   m20*tx + m21*ty + m22*tz + m23 |
+     * | m30   m31   m32   m33 |   | 0  0  0  1  |   | m30   m31   m32   m30*tx + m31*ty + m32*tz + m33 |
+     *
+     * Only the last column is changing.
+     * Remember the column-major order!
+     */
+    m[3][0] += m[0][0] * t.x() + m[1][0] * t.y() + m[2][0] * t.z();
+    m[3][1] += m[0][1] * t.x() + m[1][1] * t.y() + m[2][1] * t.z();
+    m[3][2] += m[0][2] * t.x() + m[1][2] * t.y() + m[2][2] * t.z();
+    m[3][3] += m[0][3] * t.x() + m[1][3] * t.y() + m[2][3] * t.z();
 }
 
 template<std::size_t N, typename T>
-requires(N >= 2 && N <= 4)
-constexpr T tinygl::Mat<N,T>::operator()(std::size_t j, std::size_t i) const
+requires (N >= 2 && N <= 4)void tinygl::Mat<N, T>::scale(const Vec<N - 1, T>& s)
 {
-    return v[i + j * N];
+    /**
+     * | m00   m01   m02   m03 |   | sx  0   0   0 |   | m00*sx   m01*sy   m02*sz   m03 |
+     * | m10   m11   m12   m13 |   | 0   sy  0   0 |   | m10*sx   m11*sy   m12*sz   m13 |
+     * | m20   m21   m22   m23 | * | 0   0   sz  0 | = | m20*sx   m21*sy   m22*sz   m23 |
+     * | m30   m31   m32   m33 |   | 0   0   0   1 |   | m30*sx   m31*sy   m32*sz   m33 |
+     *
+     * All the columns except the last one are changing.
+     * Remember the column-major order!
+     */
+    m[0][0] *= s.x();   m[1][0] *= s.y();   m[2][0] *= s.z();
+    m[0][1] *= s.x();   m[1][1] *= s.y();   m[2][1] *= s.z();
+    m[0][2] *= s.x();   m[1][2] *= s.y();   m[2][2] *= s.z();
+    m[0][3] *= s.x();   m[1][3] *= s.y();   m[2][3] *= s.z();
+}
+
+template<std::size_t N, typename T>
+requires (N >= 2 && N <= 4)
+void tinygl::Mat<N, T>::rotateX(T angle)
+{
+    /**
+     * | m00   m01   m02   m03 |   | 1   0   0   0 |   | m00    m01*c + m02*s    -m01*s + m02*c   m03 |
+     * | m10   m11   m12   m13 |   | 0   c  -s   0 |   | m10    m11*c + m12*s    -m11*s + m12*c   m13 |
+     * | m20   m21   m22   m23 | * | 0   s   c   0 | = | m20    m21*c + m22*s    -m21*s + m22*c   m23 |
+     * | m30   m31   m32   m33 |   | 0   0   0   1 |   | m30    m31*c + m32*s    -m31*s + m32*c   m33 |
+     *
+     * Only the two middle columns are changing.
+     * Remember the column-major order!
+     */
+    const T a = degreesToRadians(angle);
+    const T c = std::cos(a);
+    const T s = std::sin(a);
+
+    T tmp;
+    m[1][0] = (tmp = m[1][0]) * c + m[2][0] * s;   m[2][0] = -tmp * s + m[2][0] * c;
+    m[1][1] = (tmp = m[1][1]) * c + m[2][1] * s;   m[2][1] = -tmp * s + m[2][1] * c;
+    m[1][2] = (tmp = m[1][2]) * c + m[2][2] * s;   m[2][2] = -tmp * s + m[2][2] * c;
+    m[1][3] = (tmp = m[1][3]) * c + m[2][3] * s;   m[2][3] = -tmp * s + m[2][3] * c;
+}
+
+template<std::size_t N, typename T>
+requires (N >= 2 && N <= 4)
+void tinygl::Mat<N, T>::rotateY(T angle)
+{
+    /**
+     * | m00   m01   m02   m03 |   |  c   0   s   0 |   | m00*c - m02*s   m01   m00*s + m02*c   m03 |
+     * | m10   m11   m12   m13 |   |  0   1   0   0 |   | m10*c - m12*s   m11   m10*s + m12*c   m13 |
+     * | m20   m21   m22   m23 | * | -s   0   c   0 | = | m20*c - m22*s   m21   m20*s + m22*c   m23 |
+     * | m30   m31   m32   m33 |   |  0   0   0   1 |   | m30*c - m32*s   m31   m30*s + m32*c   m33 |
+     *
+     * Only the odd columns are changing.
+     * Remember the column-major order!
+     */
+    const T a = degreesToRadians(angle);
+    const T c = std::cos(a);
+    const T s = std::sin(a);
+
+    T tmp;
+    m[0][0] = (tmp = m[0][0]) * c - m[2][0] * s;   m[2][0] = tmp * s + m[2][0] * c;
+    m[0][1] = (tmp = m[0][1]) * c - m[2][1] * s;   m[2][1] = tmp * s + m[2][1] * c;
+    m[0][2] = (tmp = m[0][2]) * c - m[2][2] * s;   m[2][2] = tmp * s + m[2][2] * c;
+    m[0][3] = (tmp = m[0][3]) * c - m[2][3] * s;   m[2][3] = tmp * s + m[2][3] * c;
+}
+
+template<std::size_t N, typename T>
+requires (N >= 2 && N <= 4)
+void tinygl::Mat<N, T>::rotateZ(T angle)
+{
+    /**
+     * | m00   m01   m02   m03 |   | c   -s   0   0 |   | m00*c + m01*s   -m00*s - m01*c   m02   m03 |
+     * | m10   m11   m12   m13 |   | s    c   0   0 |   | m10*c + m11*s   -m10*s - m11*c   m12   m13 |
+     * | m20   m21   m22   m23 | * | 0    0   1   0 | = | m20*c + m21*s   -m20*s - m21*c   m22   m23 |
+     * | m30   m31   m32   m33 |   | 0    0   0   1 |   | m30*c + m31*s   -m30*s - m31*c   m32   m33 |
+     *
+     * Only first two columns are changing.
+     * Remember the column-major order!
+     */
+    const T a = degreesToRadians(angle);
+    const T c = std::cos(a);
+    const T s = std::sin(a);
+
+    T tmp;
+    m[0][0] = (tmp = m[0][0]) * c + m[1][0] * s;   m[1][0] = -tmp * s + m[1][0] * c;
+    m[0][1] = (tmp = m[0][1]) * c + m[1][1] * s;   m[1][1] = -tmp * s + m[1][1] * c;
+    m[0][2] = (tmp = m[0][2]) * c + m[1][2] * s;   m[1][2] = -tmp * s + m[1][2] * c;
+    m[0][3] = (tmp = m[0][3]) * c + m[1][3] * s;   m[1][3] = -tmp * s + m[1][3] * c;
 }
 
 template<std::size_t N, typename T>
 requires (N >= 2 && N <= 4)
 constexpr T* tinygl::Mat<N, T>::data() noexcept
 {
-    return v.data();
+    return *m;
 }
 
 template<std::size_t N, typename T>
 requires (N >= 2 && N <= 4)
 constexpr const T* tinygl::Mat<N, T>::data() const noexcept
 {
-    return v.data();
+    return *m;
 }
 
 #endif // LEARNOPENGL_MATRIX_H
