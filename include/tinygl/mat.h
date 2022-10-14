@@ -1,5 +1,5 @@
-#ifndef LEARNOPENGL_MATRIX_H
-#define LEARNOPENGL_MATRIX_H
+#ifndef TINYGL_MATRIX_H
+#define TINYGL_MATRIX_H
 
 #include "tinygl/vec.h"
 #include "tinygl/util.h"
@@ -204,4 +204,4 @@ constexpr const T* tinygl::Mat<N, T>::data() const noexcept
     return *m;
 }
 
-#endif // LEARNOPENGL_MATRIX_H
+#endif // TINYGL_MATRIX_H

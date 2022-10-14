@@ -1,5 +1,5 @@
-#ifndef LEARNOPENGL_EXCEPTIONS_H
-#define LEARNOPENGL_EXCEPTIONS_H
+#ifndef TINYGL_EXCEPTIONS_H
+#define TINYGL_EXCEPTIONS_H
 
 #include <tinygl/texture.h>
 #include <fmt/format.h>
@@ -21,4 +21,4 @@ namespace tinygl
     };
 };
 
-#endif //LEARNOPENGL_EXCEPTIONS_H
+#endif // TINYGL_EXCEPTIONS_H

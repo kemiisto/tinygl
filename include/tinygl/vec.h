@@ -1,5 +1,5 @@
-#ifndef LEARNOPENGL_VEC_H
-#define LEARNOPENGL_VEC_H
+#ifndef TINYGL_VEC_H
+#define TINYGL_VEC_H
 
 #include <array>
 #include <cassert>
@@ -98,4 +98,4 @@ constexpr const T* tinygl::Vec<N, T>::data() const noexcept
     return v.data();
 }
 
-#endif // LEARNOPENGL_VEC_H
+#endif // TINYGL_VEC_H
