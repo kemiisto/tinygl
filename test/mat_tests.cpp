@@ -10,7 +10,7 @@ void compare(const tinygl::Mat4& tglMatrix, const glm::mat4& glmMatrix)
 {
     for (std::size_t j = 0; j < 4; ++j) {
         for (std::size_t i = 0; i < 4; ++i) {
-            REQUIRE(tglMatrix[j,i] == Catch::Approx(glmMatrix[j][i]));
+            REQUIRE(tglMatrix(j,i) == Catch::Approx(glmMatrix[j][i]));
         }
     }
 }

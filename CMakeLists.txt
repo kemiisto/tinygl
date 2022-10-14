@@ -6,7 +6,7 @@ endif()
 
 project(tinygl)
 
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 20)
 
 find_package(GLEW REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)

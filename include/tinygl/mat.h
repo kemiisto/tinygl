@@ -19,8 +19,8 @@ namespace tinygl
         static Mat translation(const Vec<N-1,T>& t);
         static Mat scale(const Vec<N-1,T>& s);
 
-        constexpr T& operator[](std::size_t j, std::size_t i);
-        constexpr T operator[](std::size_t j, std::size_t i) const;
+        constexpr T& operator()(std::size_t j, std::size_t i);
+        constexpr T operator()(std::size_t j, std::size_t i) const;
 
         constexpr T* data() noexcept;
         constexpr const T* data() const noexcept;
@@ -83,14 +83,14 @@ tinygl::Mat<N,T> tinygl::Mat<N,T>::scale(const Vec<N-1,T>& s)
 
 template<std::size_t N, typename T>
 requires(N >= 2 && N <= 4)
-constexpr T& tinygl::Mat<N,T>::operator[](std::size_t j, std::size_t i)
+constexpr T& tinygl::Mat<N,T>::operator()(std::size_t j, std::size_t i)
 {
     return v[i + j * N];
 }
 
 template<std::size_t N, typename T>
 requires(N >= 2 && N <= 4)
-constexpr T tinygl::Mat<N,T>::operator[](std::size_t j, std::size_t i) const
+constexpr T tinygl::Mat<N,T>::operator()(std::size_t j, std::size_t i) const
 {
     return v[i + j * N];
 }
