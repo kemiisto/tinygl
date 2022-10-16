@@ -2,18 +2,38 @@
 #include "tinygl/util.h"
 #define CATCH_CONFIG_RUNNER
 #include <catch2/catch_all.hpp>
+#define GLM_FORCE_SIZE_T_LENGTH
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 
-void compare(const tinygl::Mat4& tglMatrix, const glm::mat4& glmMatrix)
+template<std::size_t N, typename T>
+void compare(const tinygl::Mat<N,T>& tglMatrix, const glm::mat<N,N,T>& glmMatrix)
 {
-    for (std::size_t j = 0; j < 4; ++j) {
-        for (std::size_t i = 0; i < 4; ++i) {
-            REQUIRE(tglMatrix(j,i) == Catch::Approx(glmMatrix[j][i]));
+    for (std::size_t i = 0; i < N; ++i) {
+        for (std::size_t j = 0; j < N; ++j) {
+            REQUIRE(tglMatrix(i, j) == Catch::Approx(glmMatrix[i][j]));
         }
     }
+}
+
+TEST_CASE("Mat3 is constructed from initializer list", "[Mat3]")
+{
+    tinygl::Mat3 tglMatrix {
+        0.0f, 0.1f, 0.2f,
+        1.0f, 1.1f, 1.2f,
+        2.0f, 2.1f, 2.2f
+    };
+
+    float a[] = {
+        0.0f, 0.1f, 0.2f,
+        1.0f, 1.1f, 1.2f,
+        2.0f, 2.1f, 2.2f
+    };
+    glm::mat3 glmMatrix = glm::transpose(glm::make_mat3(a));
+
+    compare(tglMatrix, glmMatrix);
 }
 
 TEST_CASE("Mat4 is constructed from initializer list", "[Mat4]")
@@ -25,7 +45,7 @@ TEST_CASE("Mat4 is constructed from initializer list", "[Mat4]")
         3.0f, 3.1f, 3.2f, 3.3f
     };
 
-    float a[16] = {
+    float a[] = {
         0.0f, 0.1f, 0.2f, 0.3f,
         1.0f, 1.1f, 1.2f, 1.3f,
         2.0f, 2.1f, 2.2f, 2.3f,
