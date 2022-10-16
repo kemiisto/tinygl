@@ -47,7 +47,7 @@ TEST_CASE("Mat4 is constructed as identity matrix", "[Mat4]")
 TEST_CASE("Mat4 translate", "[Mat4]")
 {
     auto tglMatrix = tinygl::Mat4{};
-    tglMatrix.translate({1.0f, 2.0f, 3.0f});
+    tglMatrix.translate(tinygl::Vec3{1.0f, 2.0f, 3.0f});
 
     auto glmMatrix = glm::mat4(1.0f);
     glmMatrix = glm::translate(glmMatrix, glm::vec3(1.0f, 2.0f, 3.0f));
@@ -58,7 +58,7 @@ TEST_CASE("Mat4 translate", "[Mat4]")
 TEST_CASE("Mat4 scale", "[Mat4]")
 {
     auto tglMatrix = tinygl::Mat4{};
-    tglMatrix.scale({1.0f, 2.0f, 3.0f});
+    tglMatrix.scale(tinygl::Vec3{1.0f, 2.0f, 3.0f});
 
     auto glmMatrix = glm::mat4(1.0f);
     glmMatrix = glm::scale(glmMatrix, glm::vec3(1.0f, 2.0f, 3.0f));
@@ -69,7 +69,7 @@ TEST_CASE("Mat4 scale", "[Mat4]")
 TEST_CASE("Mat4 rotate around x-axis", "[Mat4]")
 {
     auto tglMatrix = tinygl::Mat4{};
-    tglMatrix.rotate(45.0f, {1.0f, 0.0f, 0.0f});
+    tglMatrix.rotate(45.0f, tinygl::Vec3{1.0f, 0.0f, 0.0f});
 
     auto glmMatrix = glm::mat4(1.0f);
     glmMatrix = glm::rotate(glmMatrix, tinygl::degreesToRadians(45.0f), glm::vec3(1.0f, 0.0f, 0.0f));
