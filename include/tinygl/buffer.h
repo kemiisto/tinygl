@@ -2,7 +2,9 @@
 #define TINYGL_BUFFER_H
 
 #include <GL/glew.h>
+#include <iterator>
 #include <memory>
+#include <vector>
 
 namespace tinygl
 {
@@ -37,11 +39,16 @@ namespace tinygl
 
         void fill(const void* data, GLsizeiptr size);
 
+        template<std::contiguous_iterator It>
+        void fill(It first, It last)
+        {
+            fill(&(*first), (last - first) * sizeof(*first));
+        }
+
     private:
         struct BufferPrivate;
         std::unique_ptr<BufferPrivate> p;
     };
 }
-
 
 #endif // TINYGL_BUFFER_H

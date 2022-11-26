@@ -1,9 +1,5 @@
 cmake_minimum_required(VERSION 3.2)
 
-if(WIN32 AND MSVC AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
-    set(CMAKE_TOOLCHAIN_FILE "c:/Users/$ENV{USERNAME}/Downloads/vcpkg/scripts/buildsystems/vcpkg.cmake")
-endif()
-
 project(tinygl)
 
 set(CMAKE_CXX_STANDARD 20)
