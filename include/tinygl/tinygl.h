@@ -11,6 +11,7 @@
 #include "tinygl/vec.h"
 #include "tinygl/mat.h"
 #include "tinygl/util.h"
+#include "imgui.h"
 
 namespace tinygl
 {

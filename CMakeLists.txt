@@ -6,17 +6,20 @@ set(CMAKE_CXX_STANDARD 20)
 
 find_package(GLEW REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
+find_package(imgui CONFIG)
 find_package(glm CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 find_package(Catch2 CONFIG REQUIRED)
 
-link_libraries(GLEW::GLEW glfw fmt::fmt spdlog::spdlog)
+link_libraries(GLEW::GLEW glfw imgui::imgui fmt::fmt spdlog::spdlog)
 if (TARGET glm::glm)
     link_libraries(glm::glm)
 else()
     link_libraries(glm)
 endif()
+
+include_directories(.)
 include_directories(include)
 
 if (MSVC)
@@ -25,8 +28,9 @@ else()
     add_compile_options(-Wall -Wextra -pedantic -Werror)
 endif()
 
-file(GLOB SOURCES src/*.cpp)
+file(GLOB SOURCES src/*.cpp imgui/backends/*.cpp)
 add_library(tinygl ${SOURCES})
+#target_compile_definitions(tinygl PUBLIC IMGUI_IMPL_OPENGL_LOADER_GLEW)
 
 add_executable(tinygl_mat_tests test/mat_tests.cpp)
 target_link_libraries(tinygl_mat_tests PRIVATE tinygl Catch2::Catch2)

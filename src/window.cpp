@@ -1,6 +1,10 @@
 #include "tinygl/tinygl.h"
 #include "tinygl/window.h"
 
+#include "imgui.h"
+#include "imgui/backends/imgui_impl_glfw.h"
+#include "imgui/backends/imgui_impl_opengl3.h"
+
 #include <spdlog/spdlog.h>
 #include <iostream>
 #include <map>
@@ -139,9 +143,30 @@ tinygl::Window& tinygl::Window::operator=(Window&& other) noexcept
 void tinygl::Window::run()
 {
     init();
+
+    // Setup Dear ImGui context
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    // Setup Platform/Renderer bindings
+    ImGui_ImplGlfw_InitForOpenGL(p->window, true);
+    ImGui_ImplOpenGL3_Init("#version 330");
+
     while (!glfwWindowShouldClose(p->window)) {
         processInput();
+
         draw();
+
+        // feed inputs to dear imgui, start new frame
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
+        drawGUI();
+
+        // Render dear imgui into screen
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
         glfwSwapBuffers(p->window);
         glfwPollEvents();
 
@@ -149,6 +174,10 @@ void tinygl::Window::run()
         p->deltaTime = (p->currentTime - p->previousTime);
         p->previousTime = p->currentTime;
     }
+
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
 }
 
 tinygl::keyboard::KeyState tinygl::Window::getKey(tinygl::keyboard::Key key)
@@ -200,6 +229,8 @@ void tinygl::Window::setMouseButtonCallback(tinygl::Window::MouseButtonCallback 
 {
     p->mouseButtonCallback = std::move(callback);
     auto glfwMouseButtonCallback = [](GLFWwindow* w, int button, int action, int mods) {
+        ImGuiIO& io = ImGui::GetIO();
+        if (io.WantCaptureMouse) return;
         static_cast<tinygl::Window*>(glfwGetWindowUserPointer(w))->p->mouseButtonCallback(
             static_cast<tinygl::mouse::Button>(button),
             static_cast<input::Action>(action),
