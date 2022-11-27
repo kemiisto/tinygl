@@ -37,7 +37,9 @@ namespace tinygl
         void bind();
         void unbind();
 
+        void allocate(GLsizeiptr size);
         void fill(const void* data, GLsizeiptr size);
+        void write(GLintptr offset, const void* data, GLsizeiptr size);
 
         template<std::contiguous_iterator It>
         void fill(It first, It last)
