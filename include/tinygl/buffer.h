@@ -2,6 +2,7 @@
 #define TINYGL_BUFFER_H
 
 #include <GL/glew.h>
+#include <cstddef>
 #include <iterator>
 #include <memory>
 #include <vector>
@@ -37,14 +38,13 @@ namespace tinygl
         void bind();
         void unbind();
 
-        void allocate(GLsizeiptr size);
-        void fill(const void* data, GLsizeiptr size);
-        void write(GLintptr offset, const void* data, GLsizeiptr size);
+        void create(std::size_t size, const void* data = nullptr);
+        void update(std::size_t offset, std::size_t size, const void* data);
 
         template<std::contiguous_iterator It>
-        void fill(It first, It last)
+        void create(It first, It last)
         {
-            fill(&(*first), (last - first) * sizeof(*first));
+            create((last - first) * sizeof(*first), &(*first));
         }
 
     private:

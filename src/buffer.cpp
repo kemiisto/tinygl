@@ -50,17 +50,22 @@ void tinygl::Buffer::unbind()
     glBindBuffer(static_cast<GLenum>(p->type), 0);
 }
 
-void tinygl::Buffer::allocate(GLsizeiptr size)
+void tinygl::Buffer::create(std::size_t size, const void* data)
 {
-    glBufferData(static_cast<GLenum>(p->type), size, nullptr, static_cast<GLenum>(p->usagePattern));
+    glBufferData(
+        static_cast<GLenum>(p->type),
+        static_cast<GLsizeiptr>(size),
+        data,
+        static_cast<GLenum>(p->usagePattern)
+    );
 }
 
-void tinygl::Buffer::fill(const void* data, GLsizeiptr size)
+void tinygl::Buffer::update(std::size_t offset, std::size_t size, void const* data)
 {
-    glBufferData(static_cast<GLenum>(p->type), size, data, static_cast<GLenum>(p->usagePattern));
-}
-
-void tinygl::Buffer::write(GLintptr offset, void const* data, GLsizeiptr size)
-{
-    glBufferSubData(static_cast<GLenum>(p->type), offset, size, data);
+    glBufferSubData(
+        static_cast<GLenum>(p->type),
+        static_cast<GLintptr>(offset),
+        static_cast<GLsizeiptr>(size),
+        data
+    );
 }
