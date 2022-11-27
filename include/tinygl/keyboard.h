@@ -1,31 +1,11 @@
 #ifndef TINYGL_KEYS_H
 #define TINYGL_KEYS_H
 
-#include "tinygl/bitmask_operators.h"
-/**
- * The include file for GLEW includes the required OpenGL headers.
- * So be sure to include GLEW before GLFW (or any header that require OpenGL)!
- */
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-namespace tinygl
+namespace tinygl::keyboard
 {
-    // Key and button actions
-    enum class KeyAction {
-        Release = GLFW_RELEASE,
-        Press = GLFW_PRESS,
-        Repeat = GLFW_REPEAT
-    };
-
-    // Modifier key flags
-    enum class Modifier {
-        Shift = GLFW_MOD_SHIFT,
-        Control = GLFW_MOD_CONTROL,
-        Alt = GLFW_MOD_ALT,
-        Super = GLFW_MOD_SUPER,
-    };
-
     enum class KeyState {
         Press = GLFW_PRESS,
         Release = GLFW_RELEASE
@@ -155,10 +135,5 @@ namespace tinygl
         Menu              = GLFW_KEY_MENU
     };
 }
-
-template<>
-struct enable_bitmask_operators<tinygl::Modifier> {
-    static const bool enable = true;
-};
 
 #endif // TINYGL_KEYS_H

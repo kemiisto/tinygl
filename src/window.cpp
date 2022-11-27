@@ -60,6 +60,7 @@ struct tinygl::Window::WindowPrivate
 {
     GLFWwindow* window = nullptr;
     KeyCallback keyCallback;
+    MouseButtonCallback mouseButtonCallback;
     decltype(tinygl::getTime()) previousTime{};
     decltype(tinygl::getTime()) currentTime{};
     decltype(tinygl::getTime()) deltaTime{};
@@ -150,10 +151,24 @@ void tinygl::Window::run()
     }
 }
 
-tinygl::KeyState tinygl::Window::getKey(tinygl::Key key)
+tinygl::keyboard::KeyState tinygl::Window::getKey(tinygl::keyboard::Key key)
 {
-    return static_cast<KeyState>(glfwGetKey(p->window, static_cast<int>(key)));
+    return static_cast<tinygl::keyboard::KeyState>(glfwGetKey(p->window, static_cast<int>(key)));
 }
+std::tuple<double, double> tinygl::Window::getCursorPos()
+{
+    double x, y;
+    glfwGetCursorPos(p->window, &x, &y);
+    return {x, y};
+}
+
+std::tuple<int, int> tinygl::Window::getWindowSize()
+{
+    int width, height;
+    glfwGetWindowSize(p->window, &width, &height);
+    return {width, height};
+}
+
 
 void framebufferSizeCallback([[maybe_unused]] GLFWwindow* window, int width, int height)
 {
@@ -172,10 +187,26 @@ void tinygl::Window::setKeyCallback(tinygl::Window::KeyCallback callback)
     p->keyCallback = std::move(callback);
     auto glfwKeyCallback = [](GLFWwindow* w, int key, int scancode, int action, int mods) {
         static_cast<tinygl::Window*>(glfwGetWindowUserPointer(w))->p->keyCallback(
-            static_cast<Key>(key), scancode, static_cast<KeyAction>(action), static_cast<Modifier>(mods)
+            static_cast<tinygl::keyboard::Key>(key),
+            scancode,
+            static_cast<input::Action>(action),
+            static_cast<tinygl::input::Modifier>(mods)
         );
     };
     glfwSetKeyCallback(p->window, glfwKeyCallback);
+}
+
+void tinygl::Window::setMouseButtonCallback(tinygl::Window::MouseButtonCallback callback)
+{
+    p->mouseButtonCallback = std::move(callback);
+    auto glfwMouseButtonCallback = [](GLFWwindow* w, int button, int action, int mods) {
+        static_cast<tinygl::Window*>(glfwGetWindowUserPointer(w))->p->mouseButtonCallback(
+            static_cast<tinygl::mouse::Button>(button),
+            static_cast<input::Action>(action),
+            static_cast<tinygl::input::Modifier>(mods)
+        );
+    };
+    glfwSetMouseButtonCallback(p->window, glfwMouseButtonCallback);
 }
 
 float tinygl::Window::deltaTime() const
