@@ -12,6 +12,13 @@ void tinygl::init(int major, int minor)
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 #ifdef __APPLE__
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#else
+    auto* monitor = glfwGetPrimaryMonitor();
+    float xscale, yscale;
+    glfwGetMonitorContentScale(monitor, &xscale, &yscale);
+    if (xscale > 1.0f || yscale > 1.0f) {
+        glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE);
+    }
 #endif
 #ifndef NDEBUG
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);

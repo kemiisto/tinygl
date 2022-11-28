@@ -41,7 +41,7 @@ namespace tinygl
         virtual void init() {};
         virtual void processInput() {};
         virtual void draw() {};
-        virtual void drawGUI() {};
+        virtual void drawUi() {};
 
     private:
         struct WindowPrivate;

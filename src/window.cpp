@@ -144,12 +144,21 @@ void tinygl::Window::run()
 {
     init();
 
-    // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    // Setup Platform/Renderer bindings
+
     ImGui_ImplGlfw_InitForOpenGL(p->window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
+
+    ImGuiStyle& style = ImGui::GetStyle();
+    auto* monitor = glfwGetPrimaryMonitor();
+    float xscale, yscale;
+    glfwGetMonitorContentScale(monitor, &xscale, &yscale);
+    if (xscale > 1.0f || yscale > 1.0f) {
+        auto& io = ImGui::GetIO();
+        io.Fonts->AddFontFromFileTTF("fonts/JetBrainsMono-Light.ttf", 14.0f * xscale, nullptr, nullptr);
+        style.ScaleAllSizes(xscale);
+    }
 
     while (!glfwWindowShouldClose(p->window)) {
         processInput();
@@ -161,7 +170,7 @@ void tinygl::Window::run()
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        drawGUI();
+        drawUi();
 
         // Render dear imgui into screen
         ImGui::Render();
