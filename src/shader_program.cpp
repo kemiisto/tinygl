@@ -80,7 +80,8 @@ void tinygl::ShaderProgram::removeShader(std::shared_ptr<Shader> shader)
 {
     if (p->id && shader) {
         glDetachShader(p->id, shader->id());
-        p->shaders.erase(std::remove(p->shaders.begin(), p->shaders.end(), shader), p->shaders.end());
+        auto& shaders = p->shaders;
+        shaders.erase(std::remove(shaders.begin(), shaders.end(), shader), shaders.end());
     }
     p->linked = false;
 }
