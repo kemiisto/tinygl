@@ -47,6 +47,12 @@ namespace tinygl
             create((last - first) * sizeof(*first), &(*first));
         }
 
+        template<std::contiguous_iterator It>
+        void update(std::size_t offset, It first, It last)
+        {
+            update(offset, (last - first) * sizeof(*first), &(*first));
+        }
+
     private:
         struct BufferPrivate;
         std::unique_ptr<BufferPrivate> p;
