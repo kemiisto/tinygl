@@ -1,17 +1,21 @@
 #ifndef TINYGL_VEC_H
 #define TINYGL_VEC_H
 
+#include <algorithm>
 #include <array>
 #include <cassert>
+#include <functional>
 #include <initializer_list>
 
 namespace tinygl
 {
     template<std::size_t N, typename T = float>
     requires(N >= 2)
-    class Vec {
+    class Vec
+    {
     public:
-        Vec(std::initializer_list<T> values);
+        constexpr Vec() = default;
+        constexpr Vec(std::initializer_list<T> values);
 
         inline constexpr T& operator[](std::size_t i);
         inline constexpr T operator[](std::size_t i) const;
@@ -42,6 +46,64 @@ namespace tinygl
 
         inline constexpr T* data() noexcept;
         inline constexpr const T* data() const noexcept;
+
+        // Element-wise binary operations
+        constexpr friend inline Vec operator+(Vec vec1, Vec vec2) noexcept
+        {
+            Vec result;
+            std::transform(vec1.v.begin(), vec1.v.end(), vec2.v.begin(), result.v.begin(), std::plus<T>());
+            return result;
+        }
+
+        constexpr friend inline Vec operator-(Vec vec1, Vec vec2) noexcept
+        {
+            Vec result;
+            std::transform(vec1.v.begin(), vec1.v.end(), vec2.v.begin(), result.v.begin(), std::minus<T>());
+            return result;
+        }
+
+        constexpr friend inline Vec operator*(float a, Vec vec) noexcept
+        {
+            Vec result;
+            std::transform(vec.v.begin(), vec.v.end(), result.v.begin(), [a](auto& c) { return a * c; });
+            return result;
+        }
+
+        constexpr friend inline Vec operator*(Vec vec, float a) noexcept
+        {
+            Vec result;
+            std::transform(vec.v.begin(), vec.v.end(), result.v.begin(), [a](auto& c) { return a * c; });
+            return result;
+        }
+
+        constexpr friend inline Vec operator*(Vec vec1, Vec vec2) noexcept
+        {
+            Vec result;
+            std::transform(vec1.v.begin(), vec1.v.end(), vec2.v.begin(), result.v.begin(), std::multiplies<T>());
+            return result;
+        }
+
+        constexpr friend inline Vec operator/(Vec vec, float a) noexcept
+        {
+            Vec result;
+            std::transform(vec.v.begin(), vec.v.end(), result.v.begin(), [a](auto& c) { return c / a; });
+            return result;
+        }
+
+        constexpr friend inline Vec operator/(Vec vec1, Vec vec2) noexcept
+        {
+            Vec result;
+            std::transform(vec1.v.begin(), vec1.v.end(), vec2.v.begin(), result.v.begin(), std::divides<T>());
+            return result;
+        }
+
+        // Unary minus (negation)
+        constexpr friend inline Vec operator-(Vec vec) noexcept
+        {
+            Vec result;
+            std::transform(vec.v.begin(), vec.v.end(), result.v.begin(), std::negate<T>());
+            return result;
+        }
     private:
         std::array<T, N> v;
     };
@@ -53,7 +115,7 @@ namespace tinygl
 
 template<std::size_t N, typename T>
 requires(N >= 2)
-tinygl::Vec<N,T>::Vec(std::initializer_list<T> values)
+constexpr tinygl::Vec<N,T>::Vec(std::initializer_list<T> values)
 {
     assert(values.size() == N);
 
