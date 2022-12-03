@@ -25,7 +25,7 @@ include_directories(imgui)
 if (MSVC)
     add_compile_options(/W3 /WX)
 else()
-    add_compile_options(-Wall -Wextra -pedantic -Werror)
+    add_compile_options(-Wall -Wextra -pedantic -Werror -Wno-error=cast-function-type)
 endif()
 
 file(GLOB SOURCES src/*.cpp imgui/*.cpp)
