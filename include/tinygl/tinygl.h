@@ -18,8 +18,14 @@ namespace tinygl
     void init(int major, int minor);
     void terminate();
 
-    float getTime();
+    template<std::floating_point T>
+    T getTime();
+
     const char* getString(GLenum name);
 }
+
+extern template float tinygl::getTime<float>();
+extern template double tinygl::getTime<double>();
+extern template long double tinygl::getTime<long double>();
 
 #endif // TINYGL_TINYGL_H

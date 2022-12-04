@@ -65,9 +65,9 @@ struct tinygl::Window::WindowPrivate
     GLFWwindow* window = nullptr;
     KeyCallback keyCallback;
     MouseButtonCallback mouseButtonCallback;
-    decltype(tinygl::getTime()) previousTime{};
-    decltype(tinygl::getTime()) currentTime{};
-    decltype(tinygl::getTime()) deltaTime{};
+    float previousTime{};
+    float currentTime{};
+    float deltaTime{};
 };
 
 tinygl::Window::Window(int width, int height, const std::string& title, bool vsync) :
@@ -179,7 +179,7 @@ void tinygl::Window::run()
         glfwSwapBuffers(p->window);
         glfwPollEvents();
 
-        p->currentTime = tinygl::getTime();
+        p->currentTime = tinygl::getTime<float>();
         p->deltaTime = (p->currentTime - p->previousTime);
         p->previousTime = p->currentTime;
     }
@@ -193,12 +193,22 @@ tinygl::keyboard::KeyState tinygl::Window::getKey(tinygl::keyboard::Key key)
 {
     return static_cast<tinygl::keyboard::KeyState>(glfwGetKey(p->window, static_cast<int>(key)));
 }
-std::tuple<double, double> tinygl::Window::getCursorPos()
+
+template<std::floating_point T>
+std::tuple<T, T> tinygl::Window::getCursorPos()
 {
     double x, y;
     glfwGetCursorPos(p->window, &x, &y);
-    return {x, y};
+    if constexpr (std::is_same<T, double>::value) {
+        return {x, y};
+    } else {
+        return {static_cast<T>(x), static_cast<T>(y)};
+    }
 }
+
+template std::tuple<float, float> tinygl::Window::getCursorPos<float>();
+template std::tuple<double, double> tinygl::Window::getCursorPos<double>();
+template std::tuple<long double, long double> tinygl::Window::getCursorPos<long double>();
 
 std::tuple<int, int> tinygl::Window::getWindowSize()
 {

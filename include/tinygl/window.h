@@ -7,6 +7,7 @@
 #include <functional>
 #include <memory>
 #include <string>
+#include <concepts>
 
 namespace tinygl
 {
@@ -27,7 +28,10 @@ namespace tinygl
         void run();
 
         tinygl::keyboard::KeyState getKey(tinygl::keyboard::Key key);
-        std::tuple<double, double> getCursorPos();
+
+        template<std::floating_point T>
+        std::tuple<T, T> getCursorPos();
+
         std::tuple<int, int> getWindowSize();
 
         void setShouldClose(bool shouldClose);
@@ -48,5 +52,9 @@ namespace tinygl
         std::unique_ptr<WindowPrivate> p;
     };
 }
+
+extern template std::tuple<float, float> tinygl::Window::getCursorPos<float>();
+extern template std::tuple<double, double> tinygl::Window::getCursorPos<double>();
+extern template std::tuple<long double, long double> tinygl::Window::getCursorPos<long double>();
 
 #endif // TINYGL_WINDOW_H
