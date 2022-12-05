@@ -17,6 +17,10 @@ namespace tinygl
         constexpr Vec() = default;
         constexpr Vec(std::initializer_list<T> values);
 
+        constexpr Vec(T c1, T c2) requires(N == 2);
+        constexpr Vec(T c1, T c2, T c3) requires(N == 3);
+        constexpr Vec(T c1, T c2, T c3, T c4) requires(N == 4);
+
         inline constexpr T& operator[](std::size_t i);
         inline constexpr T operator[](std::size_t i) const;
 
@@ -124,6 +128,25 @@ constexpr tinygl::Vec<N,T>::Vec(std::initializer_list<T> values)
         v[i] = *it++;
     }
 }
+
+template<std::size_t N, typename T>
+requires (N >= 2)
+constexpr tinygl::Vec<N, T>::Vec(T c1, T c2) requires (N == 2) : v{c1, c2}
+{
+}
+
+template<std::size_t N, typename T>
+requires (N >= 2)
+constexpr tinygl::Vec<N, T>::Vec(T c1, T c2, T c3) requires (N == 3) : v{c1, c2, c3}
+{
+}
+
+template<std::size_t N, typename T>
+requires (N >= 2)
+constexpr tinygl::Vec<N, T>::Vec(T c1, T c2, T c3, T c4) requires (N == 4) : v{c1, c2, c3, c4}
+{
+}
+
 
 template<std::size_t N, typename T>
 requires(N >= 2)
