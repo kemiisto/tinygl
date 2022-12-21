@@ -150,15 +150,19 @@ void tinygl::Window::run()
     ImGui_ImplGlfw_InitForOpenGL(p->window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
 
-    ImGuiStyle& style = ImGui::GetStyle();
+    auto& io = ImGui::GetIO();
+    auto fontSize = 14.0f;
+#ifndef __APPLE__
     auto* monitor = glfwGetPrimaryMonitor();
     float xscale, yscale;
     glfwGetMonitorContentScale(monitor, &xscale, &yscale);
     if (xscale > 1.0f || yscale > 1.0f) {
-        auto& io = ImGui::GetIO();
-        io.Fonts->AddFontFromFileTTF("fonts/JetBrainsMono-Light.ttf", 14.0f * xscale, nullptr, nullptr);
+        fontSize *= xscale;
+        ImGuiStyle& style = ImGui::GetStyle();
         style.ScaleAllSizes(xscale);
     }
+#endif
+    io.Fonts->AddFontFromFileTTF("fonts/JetBrainsMono-Light.ttf", fontSize, nullptr, nullptr);
 
     while (!glfwWindowShouldClose(p->window)) {
         processInput();

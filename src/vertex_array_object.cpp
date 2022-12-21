@@ -57,6 +57,7 @@ void tinygl::VertexArrayObject::setAttributeArray(
         int location, int tupleSize, GLenum type, bool normalize, int stride, int offset)
 {
     /**
+     * https://www.khronos.org/opengl/wiki/Vertex_Specification
      * https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_vertex_buffer_object.txt
      *
      * Is it legal C to use pointers as offsets?
@@ -69,8 +70,9 @@ void tinygl::VertexArrayObject::setAttributeArray(
      * See also:
      * https://stackoverflow.com/questions/26201840/int-to-void-avoiding-c-style-cast
      * https://stackoverflow.com/questions/23177229/how-to-cast-int-to-const-glvoid
+     * https://stackoverflow.com/questions/58679610/how-to-cast-an-integer-to-a-void-without-violating-c-core-guidelines
      */
-    glVertexAttribPointer(location, tupleSize, type, normalize, stride, static_cast<char*>(nullptr) + offset);
+    glVertexAttribPointer(location, tupleSize, type, normalize, stride, reinterpret_cast<void*>(offset));
 }
 
 void tinygl::VertexArrayObject::enableAttributeArray(int location)
