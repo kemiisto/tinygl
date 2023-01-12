@@ -137,21 +137,21 @@ void tinygl::Mat<N,T>::preTranslate(const tinygl::Vec<N - 1,T>& t) requires (N =
      *
      * All columns are changing.
      */
-    m[0][0] += m[0][3] * t.x;
-    m[0][1] += m[0][3] * t.y;
-    m[0][2] += m[0][3] * t.z;
+    m[0][0] += m[0][3] * t.x();
+    m[0][1] += m[0][3] * t.y();
+    m[0][2] += m[0][3] * t.z();
 
-    m[1][0] += m[1][3] * t.x;
-    m[1][1] += m[1][3] * t.y;
-    m[1][2] += m[1][3] * t.z;
+    m[1][0] += m[1][3] * t.x();
+    m[1][1] += m[1][3] * t.y();
+    m[1][2] += m[1][3] * t.z();
 
-    m[2][0] += m[2][3] * t.x;
-    m[2][1] += m[2][3] * t.y;
-    m[2][2] += m[2][3] * t.z;
+    m[2][0] += m[2][3] * t.x();
+    m[2][1] += m[2][3] * t.y();
+    m[2][2] += m[2][3] * t.z();
 
-    m[3][0] += m[3][3] * t.x;
-    m[3][1] += m[3][3] * t.y;
-    m[3][2] += m[3][3] * t.z;
+    m[3][0] += m[3][3] * t.x();
+    m[3][1] += m[3][3] * t.y();
+    m[3][2] += m[3][3] * t.z();
 }
 
 template<std::size_t N, typename T>
@@ -166,10 +166,10 @@ void tinygl::Mat<N,T>::postTranslate(const tinygl::Vec<N - 1,T>& t) requires (N 
      *
      * Only the last column is changing.
      */
-    m[3][0] += m[0][0] * t.x + m[1][0] * t.y + m[2][0] * t.z;
-    m[3][1] += m[0][1] * t.x + m[1][1] * t.y + m[2][1] * t.z;
-    m[3][2] += m[0][2] * t.x + m[1][2] * t.y + m[2][2] * t.z;
-    m[3][3] += m[0][3] * t.x + m[1][3] * t.y + m[2][3] * t.z;
+    m[3][0] += m[0][0] * t.x() + m[1][0] * t.y() + m[2][0] * t.z();
+    m[3][1] += m[0][1] * t.x() + m[1][1] * t.y() + m[2][1] * t.z();
+    m[3][2] += m[0][2] * t.x() + m[1][2] * t.y() + m[2][2] * t.z();
+    m[3][3] += m[0][3] * t.x() + m[1][3] * t.y() + m[2][3] * t.z();
 }
 
 template<std::size_t N, typename T>
@@ -199,21 +199,21 @@ void tinygl::Mat<N,T>::preScale(const Vec<N - 1,T>& s) requires (N == 4)
      * All the columns except the last one are changing.
      * Remember the column-major order!
      */
-    m[0][0] *= s.x;
-    m[0][1] *= s.y;
-    m[0][2] *= s.z;
+    m[0][0] *= s.x();
+    m[0][1] *= s.y();
+    m[0][2] *= s.z();
 
-    m[1][0] *= s.x;
-    m[1][1] *= s.y;
-    m[1][2] *= s.z;
+    m[1][0] *= s.x();
+    m[1][1] *= s.y();
+    m[1][2] *= s.z();
 
-    m[2][0] *= s.x;
-    m[2][1] *= s.y;
-    m[2][2] *= s.z;
+    m[2][0] *= s.x();
+    m[2][1] *= s.y();
+    m[2][2] *= s.z();
 
-    m[3][0] *= s.x;
-    m[3][1] *= s.y;
-    m[3][2] *= s.z;
+    m[3][0] *= s.x();
+    m[3][1] *= s.y();
+    m[3][2] *= s.z();
 }
 
 template<std::size_t N, typename T>
@@ -229,20 +229,20 @@ void tinygl::Mat<N,T>::postScale(const Vec<N - 1,T>& s) requires (N == 4)
      * All the columns except the last one are changing.
      * Remember the column-major order!
      */
-    m[0][0] *= s.x;
-    m[0][1] *= s.x;
-    m[0][2] *= s.x;
-    m[0][3] *= s.x;
+    m[0][0] *= s.x();
+    m[0][1] *= s.x();
+    m[0][2] *= s.x();
+    m[0][3] *= s.x();
 
-    m[1][0] *= s.y;
-    m[1][1] *= s.y;
-    m[1][2] *= s.y;
-    m[1][3] *= s.y;
+    m[1][0] *= s.y();
+    m[1][1] *= s.y();
+    m[1][2] *= s.y();
+    m[1][3] *= s.y();
 
-    m[2][0] *= s.z;
-    m[2][1] *= s.z;
-    m[2][2] *= s.z;
-    m[2][3] *= s.z;
+    m[2][0] *= s.z();
+    m[2][1] *= s.z();
+    m[2][2] *= s.z();
+    m[2][3] *= s.z();
 }
 
 template<std::size_t N, typename T>
@@ -357,9 +357,9 @@ void tinygl::Mat<N,T>::preRotate(T angle, const tinygl::Vec<N - 1,T>& axis)  req
     const T c = std::cos(a);
     const T s = std::sin(a);
 
-    auto x = axis.x;
-    auto y = axis.y;
-    auto z = axis.z;
+    auto x = axis.x();
+    auto y = axis.y();
+    auto z = axis.z();
 
     if (x == T{0}) {
         if (y == T{0}) {
@@ -387,9 +387,9 @@ void tinygl::Mat<N,T>::postRotate(T angle, const tinygl::Vec<N - 1,T>& axis)  re
     const T c = std::cos(a);
     const T s = std::sin(a);
 
-    auto x = axis.x;
-    auto y = axis.y;
-    auto z = axis.z;
+    auto x = axis.x();
+    auto y = axis.y();
+    auto z = axis.z();
 
     if (x == T{0}) {
         if (y == T{0}) {
@@ -435,19 +435,19 @@ tinygl::Mat<N, T> tinygl::Mat<N, T>::scaling(tinygl::Vec<N - 1, T> const& s) req
      */
     tinygl::Mat<N,T> mat(false);
 
-    mat.m[0][0] = s.x;
+    mat.m[0][0] = s.x();
     mat.m[0][1] = T{0};
     mat.m[0][2] = T{0};
     mat.m[0][3] = T{0};
 
     mat.m[1][0] = T{0};
-    mat.m[1][1] = s.y;
+    mat.m[1][1] = s.y();
     mat.m[1][2] = T{0};
     mat.m[1][3] = T{0};
 
     mat.m[2][0] = T{0};
     mat.m[2][1] = T{0};
-    mat.m[2][2] = s.z;
+    mat.m[2][2] = s.z();
     mat.m[2][3] = T{0};
 
     mat.m[3][0] = T{0};
@@ -485,9 +485,9 @@ tinygl::Mat<N,T> tinygl::Mat<N,T>::translation(const Vec<N-1,T>& t) requires (N 
     mat.m[2][2] = T{1};
     mat.m[2][3] = T{0};
 
-    mat.m[3][0] = t.x;
-    mat.m[3][1] = t.y;
-    mat.m[3][2] = t.z;
+    mat.m[3][0] = t.x();
+    mat.m[3][1] = t.y();
+    mat.m[3][2] = t.z();
     mat.m[3][3] = T{1};
 
     return mat;
@@ -502,9 +502,9 @@ tinygl::Mat<N,T> tinygl::Mat<N,T>::rotation(T angle, const Vec<N-1,T>& axis) req
     const T c = std::cos(a);
     const T s = std::sin(a);
 
-    auto x = axis.x;
-    auto y = axis.y;
-    auto z = axis.z;
+    auto x = axis.x();
+    auto y = axis.y();
+    auto z = axis.z();
 
     T len = x*x + y*y + z*z;
     if (!tinygl::close(len, T{1}) && !closeToZero(len)) {
