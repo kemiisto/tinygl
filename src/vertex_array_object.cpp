@@ -57,28 +57,26 @@ void tinygl::VertexArrayObject::setAttributeArray(
         int location, int tupleSize, GLenum type, bool normalize, int stride, int offset)
 {
     /**
+     * Here we have to convert the last parameter from `int` to `void*` to send it to `glVertexAttribPointer`.
+     * This can be done essentially using:
+     *   [1] `static_cast<char*>(nullptr) + offset`
+     *   [2] `reinterpret_cast<void*>(offset)`
+     *
+     * On 3 major C++ compilers (clang 14, GCC 12, MSVC 19):
+     *   [1] results in warning with clang only
+     *   warning: arithmetic on a null pointer treated as a cast from integer to pointer is a GNU extension [-Wnull-pointer-arithmetic]
+     *   [2] results in warning with MSVC only
+     *   warning C4312: 'reinterpret_cast': conversion from 'int' to 'void *' of greater size
+     *
+     * Now, pointer arithmetic on `(char*)nullptr` in [1] is certainly UB.
+     * And although no one could provide an example of a real system where any problems would occur, I lean towards [2].
+     *
+     * The OpenGL Wiki also suggests using `reinterpret_cast`.
      * https://www.khronos.org/opengl/wiki/Vertex_Specification
-     * https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_vertex_buffer_object.txt
-     *
-     * Is it legal C to use pointers as offsets?
-     *
-     * We haven't come to any definitive conclusion about this. The proposal is to convert to pointer as:
-     *     pointer = (char *)NULL + offset;
-     * Varying opinions have been expressed as to whether this is legal,
-     * although no one could provide an example of a real system where any problems would occur.
-     *
-     * See also:
-     * https://stackoverflow.com/questions/26201840/int-to-void-avoiding-c-style-cast
-     * https://stackoverflow.com/questions/23177229/how-to-cast-int-to-const-glvoid
-     * https://stackoverflow.com/questions/58679610/how-to-cast-an-integer-to-a-void-without-violating-c-core-guidelines
      */
-
-    // Apple clang 14.0.0
-    // warning: arithmetic on a null pointer treated as a cast from integer to pointer is a GNU extension [-Wnull-pointer-arithmetic]
-    // glVertexAttribPointer(location, tupleSize, type, normalize, stride, static_cast<char*>(nullptr) + offset);
-
-    // Apple clang 14.0.0
-    // No warnings.
+#ifdef _MSC_VER
+#pragma warning(disable: 4312) // possible loss of data
+#endif
     glVertexAttribPointer(location, tupleSize, type, normalize, stride, reinterpret_cast<void*>(offset));
 }
 
