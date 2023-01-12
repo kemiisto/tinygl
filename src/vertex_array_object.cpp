@@ -72,7 +72,7 @@ void tinygl::VertexArrayObject::setAttributeArray(
      * https://stackoverflow.com/questions/23177229/how-to-cast-int-to-const-glvoid
      * https://stackoverflow.com/questions/58679610/how-to-cast-an-integer-to-a-void-without-violating-c-core-guidelines
      */
-    glVertexAttribPointer(location, tupleSize, type, normalize, stride, reinterpret_cast<void*>(offset));
+    glVertexAttribPointer(location, tupleSize, type, normalize, stride, reinterpret_cast<void*>(offset * sizeof(unsigned int)));
 }
 
 void tinygl::VertexArrayObject::enableAttributeArray(int location)
