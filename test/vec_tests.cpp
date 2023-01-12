@@ -49,10 +49,10 @@ TEST_CASE("Vec4 component access", "[Vec4]")
 {
     tinygl::Vec4 tglVec {0.0f, 0.1f, 0.2f, 0.3f};
     glm::vec4 glmVec {0.0f, 0.1f, 0.2f, 0.3f};
-    REQUIRE(tglVec.x() == Catch::Approx(glmVec.x));
-    REQUIRE(tglVec.y() == Catch::Approx(glmVec.y));
-    REQUIRE(tglVec.z() == Catch::Approx(glmVec.z));
-    REQUIRE(tglVec.w() == Catch::Approx(glmVec.w));
+    REQUIRE(tglVec.x == Catch::Approx(glmVec.x));
+    REQUIRE(tglVec.y == Catch::Approx(glmVec.y));
+    REQUIRE(tglVec.z == Catch::Approx(glmVec.z));
+    REQUIRE(tglVec.w == Catch::Approx(glmVec.w));
 }
 
 TEST_CASE("Vec4 data", "[Vec4]")
