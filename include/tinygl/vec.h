@@ -17,39 +17,41 @@ namespace tinygl
         constexpr Vec() = default;
         constexpr Vec(std::initializer_list<T> values);
 
-        constexpr Vec(T c1, T c2) requires(N == 2);
-        constexpr Vec(T c1, T c2, T c3) requires(N == 3);
-        constexpr Vec(T c1, T c2, T c3, T c4) requires(N == 4);
+        constexpr Vec(T c1, T c2) requires(N == 2) : v{c1, c2} {}
+        constexpr Vec(T c1, T c2, T c3) requires(N == 3) : v{c1, c2, c3} {}
+        constexpr Vec(T c1, T c2, T c3, T c4) requires(N == 4) : v{c1, c2, c3, c4} {}
 
-        inline constexpr T& operator[](std::size_t i);
-        inline constexpr T operator[](std::size_t i) const;
+        constexpr T& operator[](std::size_t i) { return v[i]; }
+        constexpr T operator[](std::size_t i) const { return v[i]; }
 
-        inline constexpr T& x();
-        inline constexpr T x() const;
+        // x, y, z, w components
+        constexpr T& x() { return v[0]; }
+        constexpr T x() const { return v[0]; }
 
-        inline constexpr T& y();
-        inline constexpr T y() const;
+        constexpr T& y() { return v[1]; }
+        constexpr T y() const { return v[1]; }
 
-        inline constexpr T& z() requires(N >= 3);
-        inline constexpr T z() const requires(N >= 3);
+        constexpr T& z() requires(N >= 3) { return v[2]; }
+        constexpr T z() const requires(N >= 3) { return v[2]; }
 
-        inline constexpr T& w() requires(N >= 4);
-        inline constexpr T w() const requires(N >= 4);
+        constexpr T& w() requires(N >= 4) { return v[3]; }
+        constexpr T w() const requires(N >= 4) { return v[3]; }
 
-        inline constexpr T& r();
-        inline constexpr T r() const;
+        // r, g, b, a components
+        constexpr T& r() { return v[0]; }
+        constexpr T r() const { return v[0]; }
 
-        inline constexpr T& g();
-        inline constexpr T g() const;
+        constexpr T& g() { return v[1]; }
+        constexpr T g() const { return v[1]; }
 
-        inline constexpr T& b() requires(N >= 3);
-        inline constexpr T b() const requires(N >= 3);
+        constexpr T& b() requires(N >= 3) { return v[2]; }
+        constexpr T b() const requires(N >= 3) { return v[2]; }
 
-        inline constexpr T& a() requires(N >= 4);
-        inline constexpr T a() const requires(N >= 4);
+        constexpr T& a() requires(N >= 4) { return v[3]; }
+        constexpr T a() const requires(N >= 4) { return v[3]; }
 
-        inline constexpr T* data() noexcept;
-        inline constexpr const T* data() const noexcept;
+        constexpr T* data() noexcept { return v.data(); }
+        constexpr const T* data() const noexcept { return v.data(); }
 
         // Element-wise binary operations
         constexpr friend inline Vec operator+(Vec vec1, Vec vec2) noexcept
@@ -122,170 +124,10 @@ requires(N >= 2)
 constexpr tinygl::Vec<N,T>::Vec(std::initializer_list<T> values)
 {
     assert(values.size() == N);
-
     typename std::initializer_list<T>::iterator it = values.begin();
     for (std::size_t i = 0; i < N; ++i) {
         v[i] = *it++;
     }
-}
-
-template<std::size_t N, typename T>
-requires (N >= 2)
-constexpr tinygl::Vec<N, T>::Vec(T c1, T c2) requires (N == 2) : v{c1, c2}
-{
-}
-
-template<std::size_t N, typename T>
-requires (N >= 2)
-constexpr tinygl::Vec<N, T>::Vec(T c1, T c2, T c3) requires (N == 3) : v{c1, c2, c3}
-{
-}
-
-template<std::size_t N, typename T>
-requires (N >= 2)
-constexpr tinygl::Vec<N, T>::Vec(T c1, T c2, T c3, T c4) requires (N == 4) : v{c1, c2, c3, c4}
-{
-}
-
-
-template<std::size_t N, typename T>
-requires(N >= 2)
-constexpr T& tinygl::Vec<N,T>::operator[](std::size_t i)
-{
-    return v[i];
-}
-
-template<std::size_t N, typename T>
-requires(N >= 2)
-constexpr T tinygl::Vec<N,T>::operator[](std::size_t i) const
-{
-    return v[i];
-}
-
-template<std::size_t N, typename T>
-requires(N >= 2)
-constexpr T& tinygl::Vec<N, T>::x()
-{
-    return v[0];
-}
-
-template<std::size_t N, typename T>
-requires(N >= 2)
-constexpr T tinygl::Vec<N, T>::x() const
-{
-    return v[0];
-}
-
-template<std::size_t N, typename T>
-requires(N >= 2)
-constexpr T& tinygl::Vec<N, T>::y()
-{
-    return v[1];
-}
-
-template<std::size_t N, typename T>
-requires(N >= 2)
-constexpr T tinygl::Vec<N, T>::y() const
-{
-    return v[1];
-}
-
-template<std::size_t N, typename T>
-requires(N >= 2)
-constexpr T& tinygl::Vec<N, T>::z() requires(N >= 3)
-{
-    return v[2];
-}
-
-template<std::size_t N, typename T>
-requires(N >= 2)
-constexpr T tinygl::Vec<N, T>::z() const requires(N >= 3)
-{
-    return v[2];
-}
-
-template<std::size_t N, typename T>
-requires(N >= 2)
-constexpr T& tinygl::Vec<N, T>::w() requires(N >= 4)
-{
-    return v[3];
-}
-
-template<std::size_t N, typename T>
-requires(N >= 2)
-constexpr T tinygl::Vec<N, T>::w() const requires(N >= 4)
-{
-    return v[3];
-}
-
-template<std::size_t N, typename T>
-requires(N >= 2)
-constexpr T& tinygl::Vec<N, T>::r()
-{
-    return v[0];
-}
-
-template<std::size_t N, typename T>
-requires(N >= 2)
-constexpr T tinygl::Vec<N, T>::r() const
-{
-    return v[0];
-}
-
-template<std::size_t N, typename T>
-requires(N >= 2)
-constexpr T& tinygl::Vec<N, T>::g()
-{
-    return v[1];
-}
-
-template<std::size_t N, typename T>
-requires(N >= 2)
-constexpr T tinygl::Vec<N, T>::g() const
-{
-    return v[1];
-}
-
-template<std::size_t N, typename T>
-requires(N >= 2)
-constexpr T& tinygl::Vec<N, T>::b() requires(N >= 3)
-{
-    return v[2];
-}
-
-template<std::size_t N, typename T>
-requires(N >= 2)
-constexpr T tinygl::Vec<N, T>::b() const requires(N >= 3)
-{
-    return v[2];
-}
-
-template<std::size_t N, typename T>
-requires(N >= 2)
-constexpr T& tinygl::Vec<N, T>::a() requires(N >= 4)
-{
-    return v[3];
-}
-
-template<std::size_t N, typename T>
-requires(N >= 2)
-constexpr T tinygl::Vec<N, T>::a() const requires(N >= 4)
-{
-    return v[3];
-}
-
-template<std::size_t N, typename T>
-requires (N >= 2)
-constexpr T* tinygl::Vec<N, T>::data() noexcept
-{
-    return v.data();
-}
-
-template<std::size_t N, typename T>
-requires (N >= 2)
-constexpr const T* tinygl::Vec<N, T>::data() const noexcept
-{
-    return v.data();
 }
 
 #endif // TINYGL_VEC_H
