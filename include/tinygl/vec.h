@@ -1,11 +1,14 @@
 #ifndef TINYGL_VEC_H
 #define TINYGL_VEC_H
 
+#include "util.h"
 #include <algorithm>
 #include <array>
 #include <cassert>
+#include <cmath>
 #include <functional>
 #include <initializer_list>
+#include <numeric>
 
 namespace tinygl
 {
@@ -53,54 +56,90 @@ namespace tinygl
         constexpr T* data() noexcept { return v.data(); }
         constexpr const T* data() const noexcept { return v.data(); }
 
+        constexpr T length() const noexcept { return std::sqrt(dot(*this, *this)); }
+        constexpr T lengthSquared() const noexcept { return dot(*this, *this); }
+
+        Vec normalized() const noexcept;
+        void normalize() noexcept;
+
         // Element-wise binary operations
+
+        constexpr inline Vec& operator+=(Vec rhs) noexcept
+        {
+            std::transform(v.begin(), v.end(), rhs.v.begin(), v.begin(), std::plus<T>());
+            return *this;
+        }
+
         constexpr friend inline Vec operator+(Vec vec1, Vec vec2) noexcept
         {
-            Vec result;
-            std::transform(vec1.v.begin(), vec1.v.end(), vec2.v.begin(), result.v.begin(), std::plus<T>());
-            return result;
+            vec1 += vec2;
+            return vec1;
+        }
+
+        constexpr inline Vec& operator-=(Vec rhs) noexcept
+        {
+            std::transform(v.begin(), v.end(), rhs.v.begin(), v.begin(), std::minus<T>());
+            return *this;
         }
 
         constexpr friend inline Vec operator-(Vec vec1, Vec vec2) noexcept
         {
-            Vec result;
-            std::transform(vec1.v.begin(), vec1.v.end(), vec2.v.begin(), result.v.begin(), std::minus<T>());
-            return result;
+            vec1 -= vec2;
+            return vec1;
+        }
+
+        constexpr inline Vec& operator*=(float a) noexcept
+        {
+            std::transform(v.begin(), v.end(), v.begin(), [a](auto& c) { return a * c; });
+            return *this;
         }
 
         constexpr friend inline Vec operator*(float a, Vec vec) noexcept
         {
-            Vec result;
-            std::transform(vec.v.begin(), vec.v.end(), result.v.begin(), [a](auto& c) { return a * c; });
-            return result;
+            vec *= a;
+            return vec;
         }
 
         constexpr friend inline Vec operator*(Vec vec, float a) noexcept
         {
-            Vec result;
-            std::transform(vec.v.begin(), vec.v.end(), result.v.begin(), [a](auto& c) { return a * c; });
-            return result;
+            vec *= a;
+            return vec;
+        }
+
+        constexpr inline Vec& operator*=(Vec rhs) noexcept
+        {
+            std::transform(v.begin(), v.end(), rhs.v.begin(), v.begin(), std::multiplies<T>());
+            return *this;
         }
 
         constexpr friend inline Vec operator*(Vec vec1, Vec vec2) noexcept
         {
-            Vec result;
-            std::transform(vec1.v.begin(), vec1.v.end(), vec2.v.begin(), result.v.begin(), std::multiplies<T>());
-            return result;
+            vec1 *= vec2;
+            return vec1;
+        }
+
+        constexpr inline Vec& operator/=(float a) noexcept
+        {
+            std::transform(v.begin(), v.end(), v.begin(), [a](auto& c) { return c / a; });
+            return *this;
         }
 
         constexpr friend inline Vec operator/(Vec vec, float a) noexcept
         {
-            Vec result;
-            std::transform(vec.v.begin(), vec.v.end(), result.v.begin(), [a](auto& c) { return c / a; });
-            return result;
+            vec /= a;
+            return vec;
+        }
+
+        constexpr inline Vec& operator/=(Vec rhs) noexcept
+        {
+            std::transform(v.begin(), v.end(), rhs.v.begin(), v.begin(), std::divides<T>());
+            return *this;
         }
 
         constexpr friend inline Vec operator/(Vec vec1, Vec vec2) noexcept
         {
-            Vec result;
-            std::transform(vec1.v.begin(), vec1.v.end(), vec2.v.begin(), result.v.begin(), std::divides<T>());
-            return result;
+            vec1 /= vec2;
+            return vec1;
         }
 
         // Unary minus (negation)
@@ -109,6 +148,11 @@ namespace tinygl
             Vec result;
             std::transform(vec.v.begin(), vec.v.end(), result.v.begin(), std::negate<T>());
             return result;
+        }
+
+        static constexpr T dot(Vec vec1, Vec vec2) noexcept
+        {
+            return std::inner_product(vec1.v.begin(), vec1.v.end(), vec2.v.begin(), T{0});
         }
     private:
         std::array<T, N> v;
@@ -127,6 +171,29 @@ constexpr tinygl::Vec<N,T>::Vec(std::initializer_list<T> values)
     typename std::initializer_list<T>::iterator it = values.begin();
     for (std::size_t i = 0; i < N; ++i) {
         v[i] = *it++;
+    }
+}
+
+// If the vector is already normalized or zero, then this function simply returns it back.
+template<std::size_t N, typename T>
+requires (N >= 2)
+tinygl::Vec<N, T> tinygl::Vec<N, T>::normalized() const noexcept
+{
+    const float len = length();
+    if (closeToZero(len - 1.0f) || closeToZero(len)) {
+        return *this;
+    } else {
+        return *this / len;
+    }
+}
+
+template<std::size_t N, typename T>
+requires (N >= 2)
+void tinygl::Vec<N, T>::normalize() noexcept
+{
+    const float len = length();
+    if (!closeToZero(len - 1.0f) && !closeToZero(len)) {
+        *this /= len;
     }
 }
 

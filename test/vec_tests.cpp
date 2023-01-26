@@ -4,11 +4,11 @@
 #define GLM_FORCE_SIZE_T_LENGTH
 #include <glm/glm.hpp>
 
-constexpr auto glmVecA = glm::vec4{1.0f, 2.0f, 3.0f, 4.0f};
-constexpr auto glmVecB = glm::vec4{4.0f, 5.0f, 6.0f, 7.0f};
+constexpr auto glmVec4A = glm::vec4{1.0f, 2.0f, 3.0f, 4.0f};
+constexpr auto glmVec4B = glm::vec4{4.0f, 5.0f, 6.0f, 7.0f};
 
-constexpr auto tglVecA = tinygl::Vec4{1.0f, 2.0f, 3.0f, 4.0f};
-constexpr auto tglVecB = tinygl::Vec4{4.0f, 5.0f, 6.0f, 7.0f};
+constexpr auto tglVec4A = tinygl::Vec4{1.0f, 2.0f, 3.0f, 4.0f};
+constexpr auto tglVec4B = tinygl::Vec4{4.0f, 5.0f, 6.0f, 7.0f};
 
 template<std::size_t N, typename T>
 void compare(const tinygl::Vec<N,T>& tglVec, const glm::vec<N,T>& glmVec)
@@ -31,11 +31,72 @@ TEST_CASE("Vec2 is constructed from initializer list", "[Vec2]")
     compare(tglVec, glmVec);
 }
 
+TEST_CASE("Vec2 length", "[Vec2]")
+{
+    REQUIRE(tinygl::Vec2{ 0.0f,  0.0f}.length() == 0.0f);               // zero
+    REQUIRE(tinygl::Vec2{ 1.0f,  0.0f}.length() == 1.0f);               // 1x
+    REQUIRE(tinygl::Vec2{ 0.0f,  1.0f}.length() == 1.0f);               // 1y
+    REQUIRE(tinygl::Vec2{-1.0f,  0.0f}.length() == 1.0f);               // -1x
+    REQUIRE(tinygl::Vec2{ 0.0f, -1.0f}.length() == 1.0f);               // -1y
+    REQUIRE(tinygl::Vec2{ 2.0f, -2.0f}.length() == std::sqrt(8.0f));    // two
+}
+
+TEST_CASE("Vec2 normalized", "[Vec2]")
+{
+    // For zero vector glm::normalize() returns vector of NaNs.
+    // We rather simply return the zero vector back.
+    compare(tinygl::Vec2{ 0.0f,  0.0f}.normalized(), glm::vec2{ 0.0f,  0.0f});                  // zero
+    compare(tinygl::Vec2{ 1.0f,  0.0f}.normalized(), glm::normalize(glm::vec2{ 1.0f,  0.0f}));  // 1x
+    compare(tinygl::Vec2{ 0.0f,  1.0f}.normalized(), glm::normalize(glm::vec2{ 0.0f,  1.0f}));  // 1y
+    compare(tinygl::Vec2{-1.0f,  0.0f}.normalized(), glm::normalize(glm::vec2{-1.0f,  0.0f}));  // -1x
+    compare(tinygl::Vec2{ 0.0f, -1.0f}.normalized(), glm::normalize(glm::vec2{ 0.0f, -1.0f}));  // -1y
+    compare(tinygl::Vec2{ 2.0f, -2.0f}.normalized(), glm::normalize(glm::vec2{ 2.0f, -2.0f}));  // two
+}
+
+TEST_CASE("Vec2 normalize", "[Vec2]")
+{
+    // For zero vector glm::normalize() returns vector of NaNs.
+    // We rather simply return the zero vector back.
+
+    auto v0 = tinygl::Vec2{ 0.0f,  0.0f};
+    auto v1 = tinygl::Vec2{ 1.0f,  0.0f};
+    auto v2 = tinygl::Vec2{ 0.0f,  1.0f};
+    auto v3 = tinygl::Vec2{-1.0f,  0.0f};
+    auto v4 = tinygl::Vec2{ 0.0f, -1.0f};
+    auto v5 = tinygl::Vec2{ 2.0f, -2.0f};
+
+    v0.normalize();
+    v1.normalize();
+    v2.normalize();
+    v3.normalize();
+    v4.normalize();
+    v5.normalize();
+
+    compare(v0, glm::vec2{ 0.0f,  0.0f});                  // zero
+    compare(v1, glm::normalize(glm::vec2{ 1.0f,  0.0f}));  // 1x
+    compare(v2, glm::normalize(glm::vec2{ 0.0f,  1.0f}));  // 1y
+    compare(v3, glm::normalize(glm::vec2{-1.0f,  0.0f}));  // -1x
+    compare(v4, glm::normalize(glm::vec2{ 0.0f, -1.0f}));  // -1y
+    compare(v5, glm::normalize(glm::vec2{ 2.0f, -2.0f}));  // two
+}
+
 TEST_CASE("Vec3 is constructed from initializer list", "[Vec3]")
 {
     tinygl::Vec3 tglVec {0.0f, 0.1f, 0.2f};
     glm::vec3 glmVec {0.0f, 0.1f, 0.2f};
     compare(tglVec, glmVec);
+}
+
+TEST_CASE("Vec3 length", "[Vec3]")
+{
+    REQUIRE(tinygl::Vec3{ 0.0f,  0.0f,  0.0f}.length() == 0.0f);                // zero
+    REQUIRE(tinygl::Vec3{ 1.0f,  0.0f,  0.0f}.length() == 1.0f);                // 1x
+    REQUIRE(tinygl::Vec3{ 0.0f,  1.0f,  0.0f}.length() == 1.0f);                // 1y
+    REQUIRE(tinygl::Vec3{ 0.0f,  0.0f,  1.0f}.length() == 1.0f);                // 1z
+    REQUIRE(tinygl::Vec3{-1.0f,  0.0f,  0.0f}.length() == 1.0f);                // -1x
+    REQUIRE(tinygl::Vec3{ 0.0f, -1.0f,  0.0f}.length() == 1.0f);                // -1y
+    REQUIRE(tinygl::Vec3{ 0.0f,  0.0f, -1.0f}.length() == 1.0f);                // -1z
+    REQUIRE(tinygl::Vec3{ 2.0f, -2.0f,  2.0f}.length() == std::sqrt(12.0f));    // two 
 }
 
 TEST_CASE("Vec4 is constructed from initializer list", "[Vec4]")
@@ -66,37 +127,87 @@ TEST_CASE("Vec4 data", "[Vec4]")
     }
 }
 
+TEST_CASE("Vec4 operator+=", "[Vec4]")
+{
+    auto tglVec = tglVec4A;
+    tglVec += tglVec4B;
+    auto glmVec = glmVec4A + glmVec4B;
+    compare(tglVec, glmVec);
+}
+
 TEST_CASE("Vec4 operator+", "[Vec4]")
 {
-    auto tglVec = tglVecA + tglVecB;
-    auto glmVec = glmVecA + glmVecB;
+    auto tglVec = tglVec4A + tglVec4B;
+    auto glmVec = glmVec4A + glmVec4B;
+    compare(tglVec, glmVec);
+}
+
+TEST_CASE("Vec4 operator-=", "[Vec4]")
+{
+    auto tglVec = tglVec4A;
+    tglVec -= tglVec4B;
+    auto glmVec = glmVec4A - glmVec4B;
     compare(tglVec, glmVec);
 }
 
 TEST_CASE("Vec4 operator-", "[Vec4]")
 {
-    auto tglVec = tglVecA - tglVecB;
-    auto glmVec = glmVecA - glmVecB;
+    auto tglVec = tglVec4A - tglVec4B;
+    auto glmVec = glmVec4A - glmVec4B;
     compare(tglVec, glmVec);
+}
+
+TEST_CASE("Vec4 operator*=", "[Vec4]")
+{
+    {
+        auto tglVec = tglVec4A;
+        tglVec *= 2.0f;
+        auto glmVec = glmVec4A * 2.0f;
+        compare(tglVec, glmVec);
+    }
+
+    {
+        auto tglVec = tglVec4A;
+        tglVec *= tglVec4B;
+        auto glmVec = glmVec4A * glmVec4B;
+        compare(tglVec, glmVec);
+    }
 }
 
 TEST_CASE("Vec4 operator*", "[Vec4]")
 {
     {
-        auto tglVec = 2.0f * tglVecB;
-        auto glmVec = 2.0f * glmVecB;
+        auto tglVec = 2.0f * tglVec4B;
+        auto glmVec = 2.0f * glmVec4B;
         compare(tglVec, glmVec);
     }
 
     {
-        auto tglVec = tglVecA * 2.0f;
-        auto glmVec = glmVecA * 2.0f;
+        auto tglVec = tglVec4A * 2.0f;
+        auto glmVec = glmVec4A * 2.0f;
         compare(tglVec, glmVec);
     }
 
     {
-        auto tglVec = tglVecA * tglVecB;
-        auto glmVec = glmVecA * glmVecB;
+        auto tglVec = tglVec4A * tglVec4B;
+        auto glmVec = glmVec4A * glmVec4B;
+        compare(tglVec, glmVec);
+    }
+}
+
+TEST_CASE("Vec4 operator/=", "[Vec4]")
+{
+    {
+        auto tglVec = tglVec4A;
+        tglVec /= 2.0f;
+        auto glmVec = glmVec4A / 2.0f;
+        compare(tglVec, glmVec);
+    }
+
+    {
+        auto tglVec = tglVec4A;
+        tglVec /= tglVec4B;
+        auto glmVec = glmVec4A / glmVec4B;
         compare(tglVec, glmVec);
     }
 }
@@ -104,14 +215,14 @@ TEST_CASE("Vec4 operator*", "[Vec4]")
 TEST_CASE("Vec4 operator/", "[Vec4]")
 {
     {
-        auto tglVec = tglVecA / 2.0f;
-        auto glmVec = glmVecA / 2.0f;
+        auto tglVec = tglVec4A / 2.0f;
+        auto glmVec = glmVec4A / 2.0f;
         compare(tglVec, glmVec);
     }
 
     {
-        auto tglVec = tglVecA / tglVecB;
-        auto glmVec = glmVecA / glmVecB;
+        auto tglVec = tglVec4A / tglVec4B;
+        auto glmVec = glmVec4A / glmVec4B;
         compare(tglVec, glmVec);
     }
 }
@@ -125,6 +236,20 @@ TEST_CASE("Vec4 unary operator-", "[Vec4]")
     glmVec = -glmVec;
 
     compare(tglVec, glmVec);
+}
+
+TEST_CASE("Vec4 length", "[Vec4]")
+{
+    REQUIRE(tinygl::Vec4{ 0.0f,  0.0f,  0.0f,  0.0f}.length() == 0.0f);                // zero
+    REQUIRE(tinygl::Vec4{ 1.0f,  0.0f,  0.0f,  0.0f}.length() == 1.0f);                // 1x
+    REQUIRE(tinygl::Vec4{ 0.0f,  1.0f,  0.0f,  0.0f}.length() == 1.0f);                // 1y
+    REQUIRE(tinygl::Vec4{ 0.0f,  0.0f,  1.0f,  0.0f}.length() == 1.0f);                // 1z
+    REQUIRE(tinygl::Vec4{ 0.0f,  0.0f,  0.0f,  1.0f}.length() == 1.0f);                // 1w
+    REQUIRE(tinygl::Vec4{-1.0f,  0.0f,  0.0f,  0.0f}.length() == 1.0f);                // -1x
+    REQUIRE(tinygl::Vec4{ 0.0f, -1.0f,  0.0f,  0.0f}.length() == 1.0f);                // -1y
+    REQUIRE(tinygl::Vec4{ 0.0f,  0.0f, -1.0f,  0.0f}.length() == 1.0f);                // -1z
+    REQUIRE(tinygl::Vec4{ 0.0f,  0.0f,  0.0f, -1.0f}.length() == 1.0f);                // -1w
+    REQUIRE(tinygl::Vec4{ 2.0f, -2.0f,  2.0f,  2.0f}.length() == std::sqrt(16.0f));    // two
 }
 
 int main(int argc, const char* argv[])

@@ -1,6 +1,7 @@
 #ifndef TINYGL_UTIL_H
 #define TINYGL_UTIL_H
 
+#include <algorithm>
 #include <concepts>
 #include <numbers>
 #include <numeric>
