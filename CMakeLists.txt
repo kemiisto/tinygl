@@ -4,6 +4,7 @@ project(tinygl)
 
 set(CMAKE_CXX_STANDARD 20)
 
+find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
@@ -11,7 +12,7 @@ find_package(fmt CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 find_package(Catch2 CONFIG REQUIRED)
 
-link_libraries(GLEW::GLEW glfw fmt::fmt spdlog::spdlog)
+link_libraries(${OPENGL_LIBRARIES} GLEW::GLEW glfw fmt::fmt spdlog::spdlog)
 if (TARGET glm::glm)
     link_libraries(glm::glm)
 else()
