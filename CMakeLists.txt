@@ -10,7 +10,6 @@ find_package(glfw3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
-find_package(Catch2 CONFIG REQUIRED)
 
 link_libraries(${OPENGL_LIBRARIES} GLEW::GLEW glfw fmt::fmt spdlog::spdlog)
 if (TARGET glm::glm)
@@ -19,9 +18,13 @@ else()
     link_libraries(glm)
 endif()
 
+add_subdirectory(Catch2)
+
 include_directories(.)
 include_directories(include)
 include_directories(imgui)
+include_directories(Catch2/src)
+include_directories(${PROJECT_BINARY_DIR}/Catch2/generated-includes)
 
 if (MSVC)
     add_compile_options(/W3 /WX)
