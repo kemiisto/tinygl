@@ -317,6 +317,36 @@ TEST_CASE("Mat4 perspective", "[Mat4]")
     compare(tglMatrix, glmMatrix);
 }
 
+TEST_CASE("Mat4 determinant", "[Mat4]")
+{
+    {
+        auto tglMatrix = tinygl::Mat4(true);
+        auto glmMatrix = glm::mat4(1.0f);
+        REQUIRE(tglMatrix.determinant() == Catch::Approx(glm::determinant(glmMatrix)));
+    }
+    {
+        auto tglMatrix = tinygl::Mat4::perspective(60.0f, 1.0f, 0.1f, 1000.0f);
+        auto glmMatrix = glm::perspective(tinygl::degreesToRadians(60.0f), 1.0f, 0.1f, 1000.0f);
+        REQUIRE(tglMatrix.determinant() == Catch::Approx(glm::determinant(glmMatrix)));
+    }
+}
+
+TEST_CASE("Mat4 inverted", "[Mat4]")
+{
+    {
+        auto tglMatrix = tinygl::Mat4(true);
+        auto glmMatrix = glm::mat4(1.0f);
+        compare(tglMatrix.inverted(), glm::inverse(glmMatrix));
+    }
+    {
+        auto tglMatrix = tinygl::Mat4::perspective(60.0f, 1.0f, 0.1f, 1000.0f);
+        auto glmMatrix = glm::perspective(tinygl::degreesToRadians(60.0f), 1.0f, 0.1f, 1000.0f);
+        tglMatrix = tglMatrix.inverted();
+        glmMatrix = glm::inverse(glmMatrix);
+        compare(tglMatrix.inverted(), glm::inverse(glmMatrix));
+    }
+}
+
 int main(int argc, const char* argv[])
 {
     return Catch::Session().run(argc, argv);

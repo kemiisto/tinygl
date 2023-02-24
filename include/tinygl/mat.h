@@ -51,6 +51,9 @@ namespace tinygl
         void preRotate(T angle, const Vec<N-1,T>& axis) requires (N == 4);
         void postRotate(T angle, const Vec<N-1,T>& axis) requires (N == 4);
 
+        T determinant() const requires (N == 4);
+        Mat inverted() const requires (N == 4);
+
         constexpr T* data() noexcept;
         constexpr const T* data() const noexcept;
 
@@ -381,7 +384,7 @@ void tinygl::Mat<N,T>::preRotate(T angle, const tinygl::Vec<N - 1,T>& axis)  req
 
 template<std::size_t N, typename T>
 requires(N >= 3)
-void tinygl::Mat<N,T>::postRotate(T angle, const tinygl::Vec<N - 1,T>& axis)  requires (N == 4)
+void tinygl::Mat<N,T>::postRotate(T angle, const tinygl::Vec<N - 1,T>& axis) requires (N == 4)
 {
     const T a = degreesToRadians(angle);
     const T c = std::cos(a);
@@ -407,6 +410,79 @@ void tinygl::Mat<N,T>::postRotate(T angle, const tinygl::Vec<N - 1,T>& axis)  re
     }
 
     *this *= Mat::rotation(angle, axis);
+}
+
+// Calculate the determinant of a 2x2 sub-matrix.
+template<typename T>
+static inline T det2(const T m[4][4], int col0, int col1, int row0, int row1)
+{
+    return m[col0][row0] * m[col1][row1] - m[col0][row1] * m[col1][row0];
+}
+
+// Calculate the determinant of a 3x3 sub-matrix.
+template<typename T>
+static inline T det3(const T m[4][4],
+                     int col0, int col1, int col2,
+                     int row0, int row1, int row2)
+{
+    return m[col0][row0] * det2(m, col1, col2, row1, row2)
+        - m[col1][row0] * det2(m, col0, col2, row1, row2)
+        + m[col2][row0] * det2(m, col0, col1, row1, row2);
+}
+
+// Calculate the determinant of a 4x4 matrix.
+template<typename T>
+static inline T det4(const T m[4][4])
+{
+    T det;
+    det  = m[0][0] * det3(m, 1, 2, 3, 1, 2, 3);
+    det -= m[1][0] * det3(m, 0, 2, 3, 1, 2, 3);
+    det += m[2][0] * det3(m, 0, 1, 3, 1, 2, 3);
+    det -= m[3][0] * det3(m, 0, 1, 2, 1, 2, 3);
+    return det;
+}
+
+template<std::size_t N, typename T>
+requires(N >= 3)
+T tinygl::Mat<N,T>::determinant() const requires (N == 4)
+{
+    return det4(m);
+}
+
+template<std::size_t N, typename T>
+requires(N >= 3)
+tinygl::Mat<N, T> tinygl::Mat<N,T>::inverted() const requires (N == 4)
+{
+    tinygl::Mat<N,T> inv(false);
+
+    T det = det4(m);
+    if (closeToZero(det)) {
+        return tinygl::Mat<N,T>(true);
+    }
+
+    det = T{1} / det;
+
+    inv.m[0][0] = det3(m, 1, 2, 3, 1, 2, 3) * det;
+    inv.m[0][1] = -det3(m, 0, 2, 3, 1, 2, 3) * det;
+    inv.m[0][2] = det3(m, 0, 1, 3, 1, 2, 3) * det;
+    inv.m[0][3] = -det3(m, 0, 1, 2, 1, 2, 3) * det;
+
+    inv.m[1][0] = -det3(m, 1, 2, 3, 0, 2, 3) * det;
+    inv.m[1][1] = det3(m, 0, 2, 3, 0, 2, 3) * det;
+    inv.m[1][2] = -det3(m, 0, 1, 3, 0, 2, 3) * det;
+    inv.m[1][3] = det3(m, 0, 1, 2, 0, 2, 3) * det;
+
+    inv.m[2][0] = det3(m, 1, 2, 3, 0, 1, 3) * det;
+    inv.m[2][1] = -det3(m, 0, 2, 3, 0, 1, 3) * det;
+    inv.m[2][2] = det3(m, 0, 1, 3, 0, 1, 3) * det;
+    inv.m[2][3] = -det3(m, 0, 1, 2, 0, 1, 3) * det;
+
+    inv.m[3][0] = -det3(m, 1, 2, 3, 0, 1, 2) * det;
+    inv.m[3][1] = det3(m, 0, 2, 3, 0, 1, 2) * det;
+    inv.m[3][2] = -det3(m, 0, 1, 3, 0, 1, 2) * det;
+    inv.m[3][3] = det3(m, 0, 1, 2, 0, 1, 2) * det;
+
+    return inv;
 }
 
 template<std::size_t N, typename T>
