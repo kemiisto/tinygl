@@ -81,7 +81,7 @@ TEST_CASE("Mat4 is constructed from initializer list", "[Mat4]")
 
 TEST_CASE("Mat4 is constructed as identity matrix", "[Mat4]")
 {
-    auto tglMatrix = tinygl::Mat4{};
+    auto tglMatrix = tinygl::Mat4(tinygl::MatInit::Identity);
     auto glmMatrix = glm::mat4(1.0f);
     compare(tglMatrix, glmMatrix);
 }
@@ -175,7 +175,7 @@ TEST_CASE("Mat4 translation benchmark", "[Mat4]")
 
 TEST_CASE("Mat4 postTranslate", "[Mat4]")
 {
-    auto tglMatrix = tinygl::Mat4{};
+    auto tglMatrix = tinygl::Mat4(tinygl::MatInit::Identity);
     tglMatrix.postTranslate(tinygl::Vec3{1.0f, 2.0f, 3.0f});
 
     auto glmMatrix = glm::mat4(1.0f);
@@ -198,7 +198,7 @@ TEST_CASE("Mat4 preRotate around x-axis", "[Mat4]")
 
 TEST_CASE("Mat4 postRotate around x-axis", "[Mat4]")
 {
-    auto tglMatrix = tinygl::Mat4{};
+    auto tglMatrix = tinygl::Mat4(tinygl::MatInit::Identity);
     tglMatrix.postRotate(45.0f, tinygl::Vec3{1.0f, 0.0f, 0.0f});
 
     auto glmMatrix = glm::mat4(1.0f);
@@ -221,7 +221,7 @@ TEST_CASE("Mat4 preRotate around y-axis", "[Mat4]")
 
 TEST_CASE("Mat4 postRotate around y-axis", "[Mat4]")
 {
-    auto tglMatrix = tinygl::Mat4{};
+    auto tglMatrix = tinygl::Mat4(tinygl::MatInit::Identity);
     tglMatrix.postRotate(45.0f, {0.0f, 1.0f, 0.0f});
 
     auto glmMatrix = glm::mat4(1.0f);
@@ -244,7 +244,7 @@ TEST_CASE("Mat4 preRotate around z-axis", "[Mat4]")
 
 TEST_CASE("Mat4 postRotate around z-axis", "[Mat4]")
 {
-    auto tglMatrix = tinygl::Mat4{};
+    auto tglMatrix = tinygl::Mat4(tinygl::MatInit::Identity);
     tglMatrix.postRotate(45.0f, {0.0f, 0.0f, 1.0f});
 
     auto glmMatrix = glm::mat4(1.0f);
@@ -296,7 +296,7 @@ TEST_CASE("operator*", "[Mat4]")
 
 TEST_CASE("Mat4 data", "[Mat4]")
 {
-    auto tglMatrix = tinygl::Mat4{};
+    auto tglMatrix = tinygl::Mat4(tinygl::MatInit::Identity);
     tglMatrix.postTranslate({1.0f, 2.0f, 3.0f});
 
     auto glmMatrix = glm::mat4(1.0f);
@@ -320,7 +320,7 @@ TEST_CASE("Mat4 perspective", "[Mat4]")
 TEST_CASE("Mat4 determinant", "[Mat4]")
 {
     {
-        auto tglMatrix = tinygl::Mat4(true);
+        auto tglMatrix = tinygl::Mat4(tinygl::MatInit::Identity);
         auto glmMatrix = glm::mat4(1.0f);
         REQUIRE(tglMatrix.determinant() == Catch::Approx(glm::determinant(glmMatrix)));
     }
@@ -334,7 +334,7 @@ TEST_CASE("Mat4 determinant", "[Mat4]")
 TEST_CASE("Mat4 inverted", "[Mat4]")
 {
     {
-        auto tglMatrix = tinygl::Mat4(true);
+        auto tglMatrix = tinygl::Mat4(tinygl::MatInit::Identity);
         auto glmMatrix = glm::mat4(1.0f);
         compare(tglMatrix.inverted(), glm::inverse(glmMatrix));
     }

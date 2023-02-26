@@ -11,6 +11,12 @@
 
 namespace tinygl
 {
+    enum class MatInit {
+        Uninitialized,
+        Identity,
+        Diagonal
+    };
+
     template<std::size_t N, typename T>
     requires(N >= 3)
     class Mat;
@@ -29,7 +35,7 @@ namespace tinygl
         static Mat rotation(T angle, const Vec<N-1,T>& axis) requires (N == 4);
         static Mat perspective(T verticalAngle, T aspectRatio, T nearPlane, T farPlane) requires(N == 4);
 
-        explicit Mat(bool identity = true);
+        Mat(MatInit init, Vec<N,T> v = {});
         Mat(std::initializer_list<T> values);
 
         constexpr T& operator()(std::size_t i, std::size_t j);
@@ -38,6 +44,7 @@ namespace tinygl
         Mat operator*=(const Mat& o);
 
         void setToIdentity();
+        void setToDiagonal(Vec<N,T> const& v);
 
         void preScale(T s) requires (N == 4);
         void postScale(T s) requires (N == 4);
@@ -79,10 +86,16 @@ namespace tinygl
 
 template<std::size_t N, typename T>
 requires(N >= 3)
-tinygl::Mat<N,T>::Mat(bool identity)
+tinygl::Mat<N,T>::Mat(tinygl::MatInit init, tinygl::Vec<N,T> v)
 {
-    if (identity) {
-        setToIdentity();
+    switch (init) {
+        case MatInit::Uninitialized:
+            break;
+        case MatInit::Identity:
+            setToIdentity();
+            break;
+        case MatInit::Diagonal:
+            break;
     }
 }
 
@@ -121,6 +134,21 @@ void tinygl::Mat<N,T>::setToIdentity()
         for (size_t j = 0; j < N; ++j) {
             if (i == j) {
                 m[i][j] = T{1};
+            } else {
+                m[i][j] = T{0};
+            }
+        }
+    }
+}
+
+template<std::size_t N, typename T>
+requires(N >= 3)
+void tinygl::Mat<N,T>::setToDiagonal(Vec<N,T> const& v)
+{
+    for (size_t i = 0; i < N; ++i) {
+        for (size_t j = 0; j < N; ++j) {
+            if (i == j) {
+                m[i][j] = v[i];
             } else {
                 m[i][j] = T{0};
             }
@@ -453,11 +481,11 @@ template<std::size_t N, typename T>
 requires(N >= 3)
 tinygl::Mat<N, T> tinygl::Mat<N,T>::inverted() const requires (N == 4)
 {
-    tinygl::Mat<N,T> inv(false);
+    tinygl::Mat<N,T> inv(tinygl::MatInit::Uninitialized);
 
     T det = det4(m);
     if (closeToZero(det)) {
-        return tinygl::Mat<N,T>(true);
+        return tinygl::Mat<N,T>(tinygl::MatInit::Identity);
     }
 
     det = T{1} / det;
@@ -509,7 +537,7 @@ tinygl::Mat<N, T> tinygl::Mat<N, T>::scaling(tinygl::Vec<N - 1, T> const& s) req
      * | 0   0   sz  0 |
      * | 0   0   0   1 |
      */
-    tinygl::Mat<N,T> mat(false);
+    tinygl::Mat<N,T> mat(tinygl::MatInit::Uninitialized);
 
     mat.m[0][0] = s.x();
     mat.m[0][1] = T{0};
@@ -544,7 +572,7 @@ tinygl::Mat<N,T> tinygl::Mat<N,T>::translation(const Vec<N-1,T>& t) requires (N 
      * | 0  0  1  tz |
      * | 0  0  0  1  |
      */
-    tinygl::Mat<N,T> mat(false);
+    tinygl::Mat<N,T> mat(tinygl::MatInit::Uninitialized);
 
     mat.m[0][0] = T{1};
     mat.m[0][1] = T{0};
@@ -591,7 +619,7 @@ tinygl::Mat<N,T> tinygl::Mat<N,T>::rotation(T angle, const Vec<N-1,T>& axis) req
     }
     T ic = T{1} - c;
 
-    tinygl::Mat<N,T> mat(false);
+    tinygl::Mat<N,T> mat(tinygl::MatInit::Uninitialized);
 
     mat.m[0][0] = x * x * ic + c;
     mat.m[0][1] = y * x * ic + z * s;
@@ -629,7 +657,7 @@ tinygl::Mat<N,T> tinygl::Mat<N,T>::perspective(T verticalAngle, T aspectRatio, T
     T cotan = std::cos(halfAngle) / sine;
     T clip = farPlane - nearPlane;
 
-    tinygl::Mat<N,T> p(false);
+    tinygl::Mat<N,T> p(tinygl::MatInit::Uninitialized);
 
     p.m[0][0] = cotan / aspectRatio;
     p.m[0][1] = T{0};
@@ -682,7 +710,7 @@ template<std::size_t N, typename T>
 requires(N >= 3)
 tinygl::Mat<N,T> tinygl::operator*(const Mat<N,T>& a, const Mat<N,T>& b)
 {
-    auto c = tinygl::Mat<N,T>(false);
+    auto c = tinygl::Mat<N,T>(tinygl::MatInit::Uninitialized);
     for (size_t i = 0; i < N; ++i) {
         for (size_t j = 0; j < N; ++j) {
             c.m[i][j] = T{0};
