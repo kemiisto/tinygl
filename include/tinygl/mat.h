@@ -95,6 +95,7 @@ tinygl::Mat<N,T>::Mat(tinygl::MatInit init, tinygl::Vec<N,T> v)
             setToIdentity();
             break;
         case MatInit::Diagonal:
+            setToDiagonal(v);
             break;
     }
 }
@@ -130,15 +131,7 @@ template<std::size_t N, typename T>
 requires(N >= 3)
 void tinygl::Mat<N,T>::setToIdentity()
 {
-    for (size_t i = 0; i < N; ++i) {
-        for (size_t j = 0; j < N; ++j) {
-            if (i == j) {
-                m[i][j] = T{1};
-            } else {
-                m[i][j] = T{0};
-            }
-        }
-    }
+    setToDiagonal(tinygl::Vec<N,T>(T{1}));
 }
 
 template<std::size_t N, typename T>

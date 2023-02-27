@@ -18,6 +18,7 @@ namespace tinygl
     {
     public:
         constexpr Vec() = default;
+        constexpr explicit Vec(const T& value);
         constexpr Vec(std::initializer_list<T> values);
 
         constexpr Vec(T c1, T c2) requires(N == 2) : v{c1, c2} {}
@@ -161,6 +162,13 @@ namespace tinygl
     using Vec2 = Vec<2, float>;
     using Vec3 = Vec<3, float>;
     using Vec4 = Vec<4, float>;
+}
+
+template<std::size_t N, typename T>
+requires(N >= 2)
+constexpr tinygl::Vec<N,T>::Vec(const T& value)
+{
+    v.fill(value);
 }
 
 template<std::size_t N, typename T>
