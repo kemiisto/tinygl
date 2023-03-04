@@ -156,14 +156,62 @@ void tinygl::ShaderProgram::setUniformValue(int location, GLfloat x, GLfloat y, 
     glUniform4f(location, x, y, z, w);
 }
 
-void tinygl::ShaderProgram::setUniformValue(int location, const tinygl::Vec3& value)
+void tinygl::ShaderProgram::setUniformValue(int location, const tinygl::Vec2& v)
 {
-    glUniform3fv(location, 1, value.data());
+    glUniform2fv(location, 1, v.data());
 }
 
-void tinygl::ShaderProgram::setUniformValue(int location, const tinygl::Mat4& value)
+void tinygl::ShaderProgram::setUniformValue(int location, const tinygl::Vec3& v)
 {
-    glUniformMatrix4fv(location, 1, GL_FALSE, value.data());
+    glUniform3fv(location, 1, v.data());
+}
+
+void tinygl::ShaderProgram::setUniformValue(int location, const tinygl::Vec4& v)
+{
+    glUniform4fv(location, 1, v.data());
+}
+
+void tinygl::ShaderProgram::setUniformValue(int location, const tinygl::Mat4& v)
+{
+    glUniformMatrix4fv(location, 1, GL_FALSE, v.data());
+}
+
+void tinygl::ShaderProgram::setAttributeValue(int location, GLfloat value)
+{
+    glVertexAttrib1fv(location, &value);
+}
+
+void tinygl::ShaderProgram::setAttributeValue(int location, GLfloat x, GLfloat y)
+{
+    GLfloat values[2] = {x, y};
+    glVertexAttrib2fv(location, values);
+}
+
+void tinygl::ShaderProgram::setAttributeValue(int location, GLfloat x, GLfloat y, GLfloat z)
+{
+    GLfloat values[3] = {x, y, z};
+    glVertexAttrib3fv(location, values);
+}
+
+void tinygl::ShaderProgram::setAttributeValue(int location, GLfloat x, GLfloat y, GLfloat z, GLfloat w)
+{
+    GLfloat values[4] = {x, y, z, w};
+    glVertexAttrib4fv(location, values);
+}
+
+void tinygl::ShaderProgram::setAttributeValue(int location, const tinygl::Vec2& v)
+{
+    glVertexAttrib2fv(location, v.data());
+}
+
+void tinygl::ShaderProgram::setAttributeValue(int location, const tinygl::Vec3& v)
+{
+    glVertexAttrib3fv(location, v.data());
+}
+
+void tinygl::ShaderProgram::setAttributeValue(int location, const tinygl::Vec4& v)
+{
+    glVertexAttrib4fv(location, v.data());
 }
 
 int tinygl::ShaderProgram::uniformLocation(const char* name) const

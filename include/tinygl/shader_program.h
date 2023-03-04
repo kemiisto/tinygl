@@ -32,8 +32,19 @@ namespace tinygl
         void setUniformValue(int location, GLfloat x, GLfloat y, GLfloat z);
         void setUniformValue(int location, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
 
-        void setUniformValue(int location, const tinygl::Vec3& value);
-        void setUniformValue(int location, const tinygl::Mat4& value);
+        void setUniformValue(int location, const Vec2& v);
+        void setUniformValue(int location, const Vec3& v);
+        void setUniformValue(int location, const Vec4& v);
+        void setUniformValue(int location, const Mat4& v);
+
+        void setAttributeValue(int location, GLfloat value);
+        void setAttributeValue(int location, GLfloat x, GLfloat y);
+        void setAttributeValue(int location, GLfloat x, GLfloat y, GLfloat z);
+        void setAttributeValue(int location, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
+
+        void setAttributeValue(int location, const Vec2& v);
+        void setAttributeValue(int location, const Vec3& v);
+        void setAttributeValue(int location, const Vec4& v);
 
         template<typename T>
         void setUniformValue(const char* name, T value)
