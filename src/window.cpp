@@ -221,6 +221,10 @@ std::tuple<int, int> tinygl::Window::getWindowSize()
     return {width, height};
 }
 
+void tinygl::Window::setTitle(const std::string& title)
+{
+    glfwSetWindowTitle(p->window, title.c_str());
+}
 
 void framebufferSizeCallback([[maybe_unused]] GLFWwindow* window, int width, int height)
 {

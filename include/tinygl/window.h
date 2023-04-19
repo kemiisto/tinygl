@@ -34,6 +34,8 @@ namespace tinygl
 
         std::tuple<int, int> getWindowSize();
 
+        void setTitle(const std::string& title);
+
         void setShouldClose(bool shouldClose);
 
         void setKeyCallback(KeyCallback callback);

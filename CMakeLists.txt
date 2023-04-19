@@ -43,4 +43,4 @@ target_link_libraries(tinygl_mat_tests PRIVATE tinygl Catch2::Catch2)
 add_executable(tinygl_vec_tests test/vec_tests.cpp)
 target_link_libraries(tinygl_vec_tests PRIVATE tinygl Catch2::Catch2)
 
-file(COPY fonts DESTINATION ..)
+file(COPY fonts DESTINATION ${CMAKE_BINARY_DIR})
