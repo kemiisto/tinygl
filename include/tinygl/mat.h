@@ -131,7 +131,9 @@ template<std::size_t N, typename T>
 requires(N >= 3)
 void tinygl::Mat<N,T>::setToIdentity()
 {
-    setToDiagonal(tinygl::Vec<N,T>(T{1}));
+    auto i = tinygl::Vec<N,T>{};
+    i.fill(T{1});
+    setToDiagonal(i);
 }
 
 template<std::size_t N, typename T>

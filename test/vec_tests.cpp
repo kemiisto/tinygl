@@ -252,6 +252,17 @@ TEST_CASE("Vec4 length", "[Vec4]")
     REQUIRE(tinygl::Vec4{ 2.0f, -2.0f,  2.0f,  2.0f}.length() == std::sqrt(16.0f));    // two
 }
 
+TEST_CASE("Vecn")
+{
+    auto v = tinygl::Vec{0, 1, 2, 3, 4, 5};
+    REQUIRE(v[0] == 0);
+    REQUIRE(v[1] == 1);
+    REQUIRE(v[2] == 2);
+    REQUIRE(v[3] == 3);
+    REQUIRE(v[4] == 4);
+    REQUIRE(v[5] == 5);
+}
+
 int main(int argc, const char* argv[])
 {
     return Catch::Session().run(argc, argv);

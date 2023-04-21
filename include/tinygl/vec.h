@@ -14,16 +14,10 @@ namespace tinygl
 {
     template<std::size_t N, typename T = float>
     requires(N >= 2)
-    class Vec
+    struct Vec
     {
     public:
-        constexpr Vec() = default;
-        constexpr explicit Vec(const T& value);
-        constexpr Vec(std::initializer_list<T> values);
-
-        constexpr Vec(T c1, T c2) requires(N == 2) : v{c1, c2} {}
-        constexpr Vec(T c1, T c2, T c3) requires(N == 3) : v{c1, c2, c3} {}
-        constexpr Vec(T c1, T c2, T c3, T c4) requires(N == 4) : v{c1, c2, c3, c4} {}
+        constexpr void fill(const T& value) { v.fill(value); }
 
         constexpr T& operator[](std::size_t i) { return v[i]; }
         constexpr T operator[](std::size_t i) const { return v[i]; }
@@ -155,31 +149,17 @@ namespace tinygl
         {
             return std::inner_product(vec1.v.begin(), vec1.v.end(), vec2.v.begin(), T{0});
         }
-    private:
+
         std::array<T, N> v;
     };
 
+    // deduction guide
+    template<typename T, typename... U>
+    Vec(T, U...) -> Vec<1 + sizeof...(U), T>;
+    
     using Vec2 = Vec<2, float>;
     using Vec3 = Vec<3, float>;
     using Vec4 = Vec<4, float>;
-}
-
-template<std::size_t N, typename T>
-requires(N >= 2)
-constexpr tinygl::Vec<N,T>::Vec(const T& value)
-{
-    v.fill(value);
-}
-
-template<std::size_t N, typename T>
-requires(N >= 2)
-constexpr tinygl::Vec<N,T>::Vec(std::initializer_list<T> values)
-{
-    assert(values.size() == N);
-    typename std::initializer_list<T>::iterator it = values.begin();
-    for (std::size_t i = 0; i < N; ++i) {
-        v[i] = *it++;
-    }
 }
 
 // If the vector is already normalized or zero, then this function simply returns it back.
