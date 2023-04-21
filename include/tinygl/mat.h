@@ -68,7 +68,7 @@ namespace tinygl
 
         friend Mat<N,T> operator* <>(const Mat<N,T>& a, const Mat<N,T>& b);
     private:
-        float m[N][N]{};
+        T m[N][N]{};
 
         void preRotateX(T c, T s) requires (N == 4);
         void postRotateX(T c, T s) requires (N == 4);
