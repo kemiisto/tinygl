@@ -171,9 +171,19 @@ void tinygl::ShaderProgram::setUniformValue(int location, const tinygl::Vec4& v)
     glUniform4fv(location, 1, v.data());
 }
 
-void tinygl::ShaderProgram::setUniformValue(int location, const tinygl::Mat4& v)
+void tinygl::ShaderProgram::setUniformValue(int location, const tinygl::Mat4& m)
 {
-    glUniformMatrix4fv(location, 1, GL_FALSE, v.data());
+    glUniformMatrix4fv(location, 1, GL_FALSE, m.data());
+}
+
+void tinygl::ShaderProgram::setUniformValue(int location, const GLfloat m[4][4])
+{
+    glUniformMatrix4fv(location, 1, GL_FALSE, m[0]);
+}
+
+void tinygl::ShaderProgram::setUniformValue(int location, const GLfloat m[16])
+{
+    glUniformMatrix4fv(location, 1, GL_FALSE, m);
 }
 
 void tinygl::ShaderProgram::setAttributeValue(int location, GLfloat value)

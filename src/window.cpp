@@ -221,6 +221,18 @@ std::tuple<int, int> tinygl::Window::getWindowSize()
     return {width, height};
 }
 
+template<std::floating_point T>
+T tinygl::Window::aspectRatio()
+{
+    int width, height;
+    glfwGetWindowSize(p->window, &width, &height);
+    return static_cast<T>(width) / height;
+}
+
+template float tinygl::Window::aspectRatio<float>();
+template double tinygl::Window::aspectRatio<double>();
+template long double tinygl::Window::aspectRatio<long double>();
+
 void tinygl::Window::setTitle(const std::string& title)
 {
     glfwSetWindowTitle(p->window, title.c_str());

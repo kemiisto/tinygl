@@ -35,7 +35,10 @@ namespace tinygl
         void setUniformValue(int location, const Vec2& v);
         void setUniformValue(int location, const Vec3& v);
         void setUniformValue(int location, const Vec4& v);
-        void setUniformValue(int location, const Mat4& v);
+
+        void setUniformValue(int location, const Mat4& m);
+        void setUniformValue(int location, const GLfloat m[4][4]);
+        void setUniformValue(int location, const GLfloat m[16]);
 
         void setAttributeValue(int location, GLfloat value);
         void setAttributeValue(int location, GLfloat x, GLfloat y);

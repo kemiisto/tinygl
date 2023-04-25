@@ -33,6 +33,8 @@ namespace tinygl
         std::tuple<T, T> getCursorPos();
 
         std::tuple<int, int> getWindowSize();
+        template<std::floating_point T>
+        T aspectRatio();
 
         void setTitle(const std::string& title);
 
@@ -58,5 +60,9 @@ namespace tinygl
 extern template std::tuple<float, float> tinygl::Window::getCursorPos<float>();
 extern template std::tuple<double, double> tinygl::Window::getCursorPos<double>();
 extern template std::tuple<long double, long double> tinygl::Window::getCursorPos<long double>();
+
+extern template float tinygl::Window::aspectRatio<float>();
+extern template double tinygl::Window::aspectRatio<double>();
+extern template long double tinygl::Window::aspectRatio<long double>();
 
 #endif // TINYGL_WINDOW_H
