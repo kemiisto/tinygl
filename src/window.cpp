@@ -70,10 +70,10 @@ struct tinygl::Window::WindowPrivate
     float deltaTime{};
 };
 
-tinygl::Window::Window(int width, int height, const std::string& title, bool vsync) :
+tinygl::Window::Window(int width, int height, std::string_view title, bool vsync) :
         p{std::make_unique<WindowPrivate>()}
 {
-    p->window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
+    p->window = glfwCreateWindow(width, height, title.data(), nullptr, nullptr);
     if (!p->window) {
         throw std::runtime_error("glfwCreateWindow() failed!");
     }
@@ -233,9 +233,9 @@ template float tinygl::Window::aspectRatio<float>();
 template double tinygl::Window::aspectRatio<double>();
 template long double tinygl::Window::aspectRatio<long double>();
 
-void tinygl::Window::setTitle(const std::string& title)
+void tinygl::Window::setTitle(std::string_view title)
 {
-    glfwSetWindowTitle(p->window, title.c_str());
+    glfwSetWindowTitle(p->window, title.data());
 }
 
 void framebufferSizeCallback([[maybe_unused]] GLFWwindow* window, int width, int height)

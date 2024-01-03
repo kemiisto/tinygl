@@ -21,7 +21,7 @@ namespace tinygl
         };
 
         Shader(Type type, const char* source);
-        Shader(Type type, const std::string& fileName);
+        Shader(Type type, std::string_view fileName);
         ~Shader();
 
         Shader(Shader&& other) noexcept;

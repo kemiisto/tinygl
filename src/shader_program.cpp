@@ -70,7 +70,7 @@ void tinygl::ShaderProgram::addShaderFromSourceCode(tinygl::Shader::Type type, c
     addShader(shader);
 }
 
-void tinygl::ShaderProgram::addShaderFromSourceFile(tinygl::Shader::Type type, const std::string& fileName)
+void tinygl::ShaderProgram::addShaderFromSourceFile(tinygl::Shader::Type type, std::string_view fileName)
 {
     auto shader = std::make_shared<Shader>(type, fileName);
     addShader(shader);

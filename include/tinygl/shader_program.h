@@ -19,7 +19,7 @@ namespace tinygl
 
         void addShader(const std::shared_ptr<Shader>& shader);
         void addShaderFromSourceCode(Shader::Type type, const char* source);
-        void addShaderFromSourceFile(Shader::Type type, const std::string& fileName);
+        void addShaderFromSourceFile(Shader::Type type, std::string_view fileName);
         void removeShader(std::shared_ptr<Shader> shader);
 
         int attributeLocation(const char* name) const;

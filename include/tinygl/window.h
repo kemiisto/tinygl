@@ -19,7 +19,7 @@ namespace tinygl
         typedef std::function<void(
             tinygl::mouse::Button, tinygl::input::Action, tinygl::input::Modifier)> MouseButtonCallback;
 
-        Window(int width, int height, const std::string& title, bool vsync = false);
+        Window(int width, int height, std::string_view title, bool vsync = false);
         virtual ~Window();
 
         Window(Window&& other) noexcept;
@@ -36,7 +36,7 @@ namespace tinygl
         template<std::floating_point T>
         T aspectRatio();
 
-        void setTitle(const std::string& title);
+        void setTitle(std::string_view title);
 
         void setShouldClose(bool shouldClose);
 

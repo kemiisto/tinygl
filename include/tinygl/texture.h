@@ -49,7 +49,7 @@ namespace tinygl
 
         Texture(
             Target target,
-            const std::string& fileName,
+            std::string_view fileName,
             GLint internalformat,
             GLenum format,
             bool genMipMaps,

@@ -19,7 +19,7 @@ struct tinygl::Shader::ShaderPrivate
     void compile();
 
     void compileSourceCode(const char* source);
-    void compileSourceFile(const std::string& fileName);
+    void compileSourceFile(std::string_view fileName);
 
     GLuint id = 0;
     Type shaderType;
@@ -73,13 +73,13 @@ void tinygl::Shader::ShaderPrivate::compileSourceCode(const char* source)
     compile();
 }
 
-void tinygl::Shader::ShaderPrivate::compileSourceFile(const std::string& fileName)
+void tinygl::Shader::ShaderPrivate::compileSourceFile(std::string_view fileName)
 {
     std::ostringstream sstream;
     std::ifstream fstream;
     fstream.exceptions(std::ifstream::failbit | std::ifstream::badbit);
     try {
-        fstream.open(fileName);
+        fstream.open(fileName.data());
         sstream << fstream.rdbuf();
         compileSourceCode(sstream.str().c_str());
     } catch ([[maybe_unused]] const std::ifstream::failure& e) {
@@ -96,7 +96,7 @@ tinygl::Shader::Shader(tinygl::Shader::Type type, const char* source) :
     p->compileSourceCode(source);
 }
 
-tinygl::Shader::Shader(tinygl::Shader::Type type, const std::string& fileName) :
+tinygl::Shader::Shader(tinygl::Shader::Type type, std::string_view fileName) :
         p{std::make_unique<ShaderPrivate>(type)}
 {
     p->create();
