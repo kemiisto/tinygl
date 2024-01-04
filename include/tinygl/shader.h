@@ -1,8 +1,9 @@
 #ifndef TINYGL_SHADER_H
 #define TINYGL_SHADER_H
 
+#include <filesystem>
 #include <memory>
-#include <string>
+#include <string_view>
 
 #include <GL/glew.h>
 
@@ -20,8 +21,8 @@ namespace tinygl
             Compute = GL_COMPUTE_SHADER
         };
 
-        Shader(Type type, const char* source);
-        Shader(Type type, std::string_view fileName);
+        Shader(Type type, std::string_view source);
+        Shader(Type type, const std::filesystem::path& fileName);
         ~Shader();
 
         Shader(Shader&& other) noexcept;

@@ -18,12 +18,12 @@ namespace tinygl
         ShaderProgram& operator=(ShaderProgram&& other) noexcept;
 
         void addShader(const std::shared_ptr<Shader>& shader);
-        void addShaderFromSourceCode(Shader::Type type, const char* source);
-        void addShaderFromSourceFile(Shader::Type type, std::string_view fileName);
+        void addShaderFromSourceCode(Shader::Type type, std::string_view source);
+        void addShaderFromSourceFile(Shader::Type type, const std::filesystem::path& fileName);
         void removeShader(std::shared_ptr<Shader> shader);
 
-        int attributeLocation(const char* name) const;
-        int uniformLocation(const char* name) const;
+        int attributeLocation(std::string_view name) const;
+        int uniformLocation(std::string_view name) const;
 
         void setUniformValue(int location, GLfloat value);
         void setUniformValue(int location, GLint value);
@@ -50,7 +50,7 @@ namespace tinygl
         void setAttributeValue(int location, const Vec4& v);
 
         template<typename T>
-        void setUniformValue(const char* name, T value)
+        void setUniformValue(std::string_view name, T value)
         {
             setUniformValue(uniformLocation(name), value);
         }

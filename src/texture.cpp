@@ -55,7 +55,7 @@ bool tinygl::Texture::TexturePrivate::bound()
 }
 
 tinygl::Texture::Texture(tinygl::Texture::Target target,
-                         std::string_view fileName,
+                         const std::filesystem::path& fileName,
                          GLint internalformat,
                          GLenum format,
                          bool genMipMaps,
@@ -64,7 +64,7 @@ tinygl::Texture::Texture(tinygl::Texture::Target target,
 {
     int width, height, channels;
     stbi_set_flip_vertically_on_load(true);
-    auto* data = stbi_load(fileName.data(), &width, &height, &channels, 0);
+    auto* data = stbi_load(fileName.string().c_str(), &width, &height, &channels, 0);
     if (!data) {
         throw std::runtime_error("Failed to load texture!");
     }

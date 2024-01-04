@@ -64,13 +64,13 @@ void tinygl::ShaderProgram::addShader(const std::shared_ptr<Shader>& shader) {
     }
 }
 
-void tinygl::ShaderProgram::addShaderFromSourceCode(tinygl::Shader::Type type, const char* source)
+void tinygl::ShaderProgram::addShaderFromSourceCode(tinygl::Shader::Type type, std::string_view source)
 {
     auto shader = std::make_shared<Shader>(type, source);
     addShader(shader);
 }
 
-void tinygl::ShaderProgram::addShaderFromSourceFile(tinygl::Shader::Type type, std::string_view fileName)
+void tinygl::ShaderProgram::addShaderFromSourceFile(tinygl::Shader::Type type, const std::filesystem::path& fileName)
 {
     auto shader = std::make_shared<Shader>(type, fileName);
     addShader(shader);
@@ -118,9 +118,9 @@ void tinygl::ShaderProgram::use() {
     glUseProgram(p->id);
 }
 
-int tinygl::ShaderProgram::attributeLocation(char const* name) const {
+int tinygl::ShaderProgram::attributeLocation(std::string_view name) const {
     if (p->id && p->linked) {
-        return glGetAttribLocation(p->id, name);
+        return glGetAttribLocation(p->id, name.data());
     } else {
         return -1;
     }
@@ -224,10 +224,10 @@ void tinygl::ShaderProgram::setAttributeValue(int location, const tinygl::Vec4& 
     glVertexAttrib4fv(location, v.data());
 }
 
-int tinygl::ShaderProgram::uniformLocation(const char* name) const
+int tinygl::ShaderProgram::uniformLocation(std::string_view name) const
 {
     if (p->id && p->linked) {
-        GLint location = glGetUniformLocation(p->id, name);
+        GLint location = glGetUniformLocation(p->id, name.data());
         if (location != -1) {
             return location;
         } else {

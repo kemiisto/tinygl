@@ -1,6 +1,7 @@
 #ifndef TINYGL_TEXTURE_H
 #define TINYGL_TEXTURE_H
 
+#include <filesystem>
 #include <memory>
 #include <string>
 
@@ -49,7 +50,7 @@ namespace tinygl
 
         Texture(
             Target target,
-            std::string_view fileName,
+            const std::filesystem::path& fileName,
             GLint internalformat,
             GLenum format,
             bool genMipMaps,
