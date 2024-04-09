@@ -33,6 +33,8 @@ namespace tinygl
         std::tuple<T, T> getCursorPos();
 
         std::tuple<int, int> getWindowSize();
+        std::tuple<int, int> getFramebufferSize();
+
         template<std::floating_point T>
         T aspectRatio();
 

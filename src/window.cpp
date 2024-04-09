@@ -221,6 +221,13 @@ std::tuple<int, int> tinygl::Window::getWindowSize()
     return {width, height};
 }
 
+std::tuple<int, int> tinygl::Window::getFramebufferSize()
+{
+    int width, height;
+    glfwGetFramebufferSize(p->window, &width, &height);
+    return {width, height};
+}
+
 template<std::floating_point T>
 T tinygl::Window::aspectRatio()
 {
