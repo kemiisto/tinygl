@@ -17,9 +17,6 @@ namespace tinygl
     struct Vec
     {
     public:
-        template <typename... Args>
-        constexpr Vec(Args... args) : v {args...} {}
-
         constexpr void fill(const T& value) { v.fill(value); }
 
         constexpr T& operator[](std::size_t i) { return v[i]; }
