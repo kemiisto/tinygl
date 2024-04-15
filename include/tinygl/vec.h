@@ -12,11 +12,20 @@
 
 namespace tinygl
 {
+    template<typename T, typename... Types>
+    concept is_all_same = (... && std::is_same<T, Types>::value);
+
     template<std::size_t N, typename T = float>
     requires(N >= 2)
     struct Vec
     {
     public:
+        constexpr Vec() = default;
+
+        template<is_all_same<T>... Types>
+        requires (sizeof...(Types) == N)
+        constexpr Vec(Types... args) : v {args...} {}
+
         constexpr void fill(const T& value) { v.fill(value); }
 
         constexpr T& operator[](std::size_t i) { return v[i]; }
