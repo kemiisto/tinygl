@@ -2,8 +2,8 @@
 #define TINYGL_SHADER_PROGRAM_H
 
 #include "tinygl/shader.h"
-#include "tinygl/vec.h"
-#include "tinygl/mat.h"
+#include <tinyla/mat.h>
+#include <tinyla/vec.h>
 #include <memory>
 
 namespace tinygl
@@ -32,11 +32,11 @@ namespace tinygl
         void setUniformValue(int location, GLfloat x, GLfloat y, GLfloat z);
         void setUniformValue(int location, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
 
-        void setUniformValue(int location, const Vec2& v);
-        void setUniformValue(int location, const Vec3& v);
-        void setUniformValue(int location, const Vec4& v);
+        void setUniformValue(int location, const tinyla::Vec2& v);
+        void setUniformValue(int location, const tinyla::Vec3& v);
+        void setUniformValue(int location, const tinyla::Vec4& v);
 
-        void setUniformValue(int location, const Mat4& m);
+        void setUniformValue(int location, const tinyla::Mat4& m);
         void setUniformValue(int location, const GLfloat m[4][4]);
         void setUniformValue(int location, const GLfloat m[16]);
 
@@ -45,9 +45,9 @@ namespace tinygl
         void setAttributeValue(int location, GLfloat x, GLfloat y, GLfloat z);
         void setAttributeValue(int location, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
 
-        void setAttributeValue(int location, const Vec2& v);
-        void setAttributeValue(int location, const Vec3& v);
-        void setAttributeValue(int location, const Vec4& v);
+        void setAttributeValue(int location, const tinyla::Vec2& v);
+        void setAttributeValue(int location, const tinyla::Vec3& v);
+        void setAttributeValue(int location, const tinyla::Vec4& v);
 
         template<typename T>
         void setUniformValue(std::string_view name, T value)

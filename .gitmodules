@@ -4,3 +4,6 @@
 [submodule "Catch2"]
 	path = Catch2
 	url = git@github.com:catchorg/Catch2.git
+[submodule "tinyla"]
+	path = tinyla
+	url = git@github.com:kemiisto/tinyla.git

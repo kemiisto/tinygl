@@ -19,10 +19,12 @@ else()
 endif()
 
 add_subdirectory(Catch2)
+add_subdirectory(tinyla)
 
 include_directories(.)
 include_directories(include)
 include_directories(imgui)
+include_directories(tinyla/include)
 include_directories(Catch2/src)
 include_directories(${PROJECT_BINARY_DIR}/Catch2/generated-includes)
 
@@ -36,11 +38,5 @@ file(GLOB SOURCES src/*.cpp imgui/*.cpp)
 list(APPEND SOURCES imgui/backends/imgui_impl_glfw.cpp)
 list(APPEND SOURCES imgui/backends/imgui_impl_opengl3.cpp)
 add_library(tinygl ${SOURCES})
-
-add_executable(tinygl_mat_tests test/mat_tests.cpp)
-target_link_libraries(tinygl_mat_tests PRIVATE tinygl Catch2::Catch2)
-
-add_executable(tinygl_vec_tests test/vec_tests.cpp)
-target_link_libraries(tinygl_vec_tests PRIVATE tinygl Catch2::Catch2)
 
 file(COPY fonts DESTINATION ${CMAKE_BINARY_DIR})

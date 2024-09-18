@@ -156,22 +156,22 @@ void tinygl::ShaderProgram::setUniformValue(int location, GLfloat x, GLfloat y, 
     glUniform4f(location, x, y, z, w);
 }
 
-void tinygl::ShaderProgram::setUniformValue(int location, const tinygl::Vec2& v)
+void tinygl::ShaderProgram::setUniformValue(int location, const tinyla::Vec2& v)
 {
     glUniform2fv(location, 1, v.data());
 }
 
-void tinygl::ShaderProgram::setUniformValue(int location, const tinygl::Vec3& v)
+void tinygl::ShaderProgram::setUniformValue(int location, const tinyla::Vec3& v)
 {
     glUniform3fv(location, 1, v.data());
 }
 
-void tinygl::ShaderProgram::setUniformValue(int location, const tinygl::Vec4& v)
+void tinygl::ShaderProgram::setUniformValue(int location, const tinyla::Vec4& v)
 {
     glUniform4fv(location, 1, v.data());
 }
 
-void tinygl::ShaderProgram::setUniformValue(int location, const tinygl::Mat4& m)
+void tinygl::ShaderProgram::setUniformValue(int location, const tinyla::Mat4& m)
 {
     glUniformMatrix4fv(location, 1, GL_FALSE, m.data());
 }
@@ -209,17 +209,17 @@ void tinygl::ShaderProgram::setAttributeValue(int location, GLfloat x, GLfloat y
     glVertexAttrib4fv(location, values);
 }
 
-void tinygl::ShaderProgram::setAttributeValue(int location, const tinygl::Vec2& v)
+void tinygl::ShaderProgram::setAttributeValue(int location, const tinyla::Vec2& v)
 {
     glVertexAttrib2fv(location, v.data());
 }
 
-void tinygl::ShaderProgram::setAttributeValue(int location, const tinygl::Vec3& v)
+void tinygl::ShaderProgram::setAttributeValue(int location, const tinyla::Vec3& v)
 {
     glVertexAttrib3fv(location, v.data());
 }
 
-void tinygl::ShaderProgram::setAttributeValue(int location, const tinygl::Vec4& v)
+void tinygl::ShaderProgram::setAttributeValue(int location, const tinyla::Vec4& v)
 {
     glVertexAttrib4fv(location, v.data());
 }
