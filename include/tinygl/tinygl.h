@@ -8,9 +8,9 @@
 #include "tinygl/vertex_array_object.h"
 #include "tinygl/window.h"
 #include "tinygl/keyboard.h"
-#include <tinyla/mat.h>
-#include <tinyla/util.h>
-#include <tinyla/vec.h>
+#include <tinyla/mat.hpp>
+#include <tinyla/util.hpp>
+#include <tinyla/vec.hpp>
 #include "imgui.h"
 
 namespace tinygl

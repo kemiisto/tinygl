@@ -2,8 +2,8 @@
 #define TINYGL_SHADER_PROGRAM_H
 
 #include "tinygl/shader.h"
-#include <tinyla/mat.h>
-#include <tinyla/vec.h>
+#include <tinyla/mat.hpp>
+#include <tinyla/vec.hpp>
 #include <memory>
 
 namespace tinygl
