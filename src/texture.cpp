@@ -6,65 +6,65 @@
 #include <map>
 #include <stdexcept>
 
-const static std::map<tinygl::Texture::Target, GLenum> textureBindings {
-    { tinygl::Texture::Target::Target1D, GL_TEXTURE_BINDING_1D },
-    { tinygl::Texture::Target::Target2D, GL_TEXTURE_BINDING_2D },
-    { tinygl::Texture::Target::Target3D, GL_TEXTURE_BINDING_3D },
-    { tinygl::Texture::Target::Target1DArray, GL_TEXTURE_BINDING_1D_ARRAY },
-    { tinygl::Texture::Target::Target2DArray, GL_TEXTURE_BINDING_2D_ARRAY },
-    { tinygl::Texture::Target::TargetRectangle, GL_TEXTURE_BINDING_RECTANGLE },
-    { tinygl::Texture::Target::TargetCubeMap, GL_TEXTURE_BINDING_CUBE_MAP },
-    { tinygl::Texture::Target::TargetCubeMapArray, GL_TEXTURE_BINDING_CUBE_MAP_ARRAY },
-    { tinygl::Texture::Target::TargetBuffer, GL_TEXTURE_BINDING_BUFFER },
-    { tinygl::Texture::Target::Target2DMultisample, GL_TEXTURE_BINDING_2D_MULTISAMPLE },
-    { tinygl::Texture::Target::Target2DMultisampleArray, GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY }
+const static std::map<tinygl::texture::target, GLenum> texture_bindings {
+    { tinygl::texture::target::target_1d, GL_TEXTURE_BINDING_1D },
+    { tinygl::texture::target::target_2d, GL_TEXTURE_BINDING_2D },
+    { tinygl::texture::target::target_3d, GL_TEXTURE_BINDING_3D },
+    { tinygl::texture::target::target_1d_array, GL_TEXTURE_BINDING_1D_ARRAY },
+    { tinygl::texture::target::target_2d_array, GL_TEXTURE_BINDING_2D_ARRAY },
+    { tinygl::texture::target::target_rectangle, GL_TEXTURE_BINDING_RECTANGLE },
+    { tinygl::texture::target::target_cube_map, GL_TEXTURE_BINDING_CUBE_MAP },
+    { tinygl::texture::target::target_cube_map_array, GL_TEXTURE_BINDING_CUBE_MAP_ARRAY },
+    { tinygl::texture::target::target_buffer, GL_TEXTURE_BINDING_BUFFER },
+    { tinygl::texture::target::target_2d_multisample, GL_TEXTURE_BINDING_2D_MULTISAMPLE },
+    { tinygl::texture::target::target_2d_multisample_array, GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY }
 };
 
-struct tinygl::Texture::TexturePrivate
+struct tinygl::texture::texture_private
 {
-    explicit TexturePrivate(Target t, GLuint u);
-    ~TexturePrivate() = default;
+    explicit texture_private(target t, GLuint u);
+    ~texture_private() = default;
 
     bool bound();
 
-    Target target;
+    target texture_target;
     GLuint id = 0;
     GLuint unit = 0;
 
-    std::map<Texture::CoordinateDirection, Texture::WrapMode> wrapModes = {
-        { Texture::CoordinateDirection::S, Texture::WrapMode::Repeat },
-        { Texture::CoordinateDirection::T, Texture::WrapMode::Repeat },
-        { Texture::CoordinateDirection::R, Texture::WrapMode::Repeat }
+    std::map<texture::coordinate_direction, texture::wrap_mode> wrap_modes = {
+        { texture::coordinate_direction::s, texture::wrap_mode::repeat },
+        { texture::coordinate_direction::t, texture::wrap_mode::repeat },
+        { texture::coordinate_direction::r, texture::wrap_mode::repeat }
     };
 
-    Texture::Filter minFilter = NearestMipMapLinear;
-    Texture::Filter magFilter = Linear;
+    texture::filter min_filter = nearest_mip_map_linear;
+    texture::filter mag_filter = linear;
 };
 
-tinygl::Texture::TexturePrivate::TexturePrivate(Target t, GLuint u) :
-        target{t}, unit{u}
+tinygl::texture::texture_private::texture_private(target t, GLuint u) :
+        texture_target{t}, unit{u}
 {
     glGenTextures(1, &id);
 }
 
-bool tinygl::Texture::TexturePrivate::bound()
+bool tinygl::texture::texture_private::bound()
 {
-    GLint boundId;
-    glGetIntegerv(textureBindings.at(target), &boundId);
-    return id == static_cast<GLuint>(boundId);
+    GLint bound_id;
+    glGetIntegerv(texture_bindings.at(texture_target), &bound_id);
+    return id == static_cast<GLuint>(bound_id);
 }
 
-tinygl::Texture::Texture(tinygl::Texture::Target target,
-                         const std::filesystem::path& fileName,
+tinygl::texture::texture(tinygl::texture::target target,
+                         const std::filesystem::path& file_name,
                          GLint internalformat,
                          GLenum format,
                          bool genMipMaps,
                          GLuint unit) :
-        p{std::make_unique<TexturePrivate>(target, unit)}
+        p{std::make_unique<texture_private>(target, unit)}
 {
     int width, height, channels;
     stbi_set_flip_vertically_on_load(true);
-    auto* data = stbi_load(fileName.string().c_str(), &width, &height, &channels, 0);
+    auto* data = stbi_load(file_name.string().c_str(), &width, &height, &channels, 0);
     if (!data) {
         throw std::runtime_error("Failed to load texture!");
     }
@@ -72,7 +72,7 @@ tinygl::Texture::Texture(tinygl::Texture::Target target,
     bind();
 
     switch (target) {
-        case Target::Target2D:
+        case target::target_2d:
             glTexImage2D(GL_TEXTURE_2D, 0, internalformat, width, height, 0, format, GL_UNSIGNED_BYTE, data);
             break;
         default:
@@ -88,11 +88,11 @@ tinygl::Texture::Texture(tinygl::Texture::Target target,
     stbi_image_free(data);
 }
 
-tinygl::Texture::~Texture() = default;
+tinygl::texture::~texture() = default;
 
-tinygl::Texture::Texture(tinygl::Texture&& other) noexcept = default;
+tinygl::texture::texture(tinygl::texture&& other) noexcept = default;
 
-tinygl::Texture& tinygl::Texture::operator=(tinygl::Texture&& other) noexcept
+tinygl::texture& tinygl::texture::operator=(tinygl::texture&& other) noexcept
 {
     if (this != &other) {
         p = std::move(other.p);
@@ -100,144 +100,144 @@ tinygl::Texture& tinygl::Texture::operator=(tinygl::Texture&& other) noexcept
     return *this;
 }
 
-void tinygl::Texture::bind()
+void tinygl::texture::bind()
 {
     glActiveTexture(GL_TEXTURE0 + p->unit);
-    glBindTexture(static_cast<GLenum>(p->target), p->id);
+    glBindTexture(static_cast<GLenum>(p->texture_target), p->id);
 }
 
-void tinygl::Texture::unbind()
+void tinygl::texture::unbind()
 {
     glActiveTexture(GL_TEXTURE0 + p->unit);
-    glBindTexture(static_cast<GLenum>(p->target), 0);
+    glBindTexture(static_cast<GLenum>(p->texture_target), 0);
 }
 
-void tinygl::Texture::setWrapMode(tinygl::Texture::WrapMode mode)
+void tinygl::texture::set_wrap_mode(tinygl::texture::wrap_mode mode)
 {
     assert(p->bound());
 
-    switch (p->target) {
-        case Target::Target1D:
-        case Target::Target1DArray:
-        case Target::TargetBuffer:
-            p->wrapModes.at(CoordinateDirection::S) = mode;
-            glTexParameteri(static_cast<GLenum>(p->target), GL_TEXTURE_WRAP_S, static_cast<GLint>(mode));
+    switch (p->texture_target) {
+        case target::target_1d:
+        case target::target_1d_array:
+        case target::target_buffer:
+            p->wrap_modes.at(coordinate_direction::s) = mode;
+            glTexParameteri(static_cast<GLenum>(p->texture_target), GL_TEXTURE_WRAP_S, static_cast<GLint>(mode));
             break;
-        case Target::Target2D:
-        case Target::Target2DArray:
-        case Target::TargetCubeMap:
-        case Target::TargetCubeMapArray:
-        case Target::Target2DMultisample:
-        case Target::Target2DMultisampleArray:
-        case Target::TargetRectangle:
-            p->wrapModes.at(CoordinateDirection::S) = p->wrapModes.at(CoordinateDirection::T) = mode;
-            glTexParameteri(static_cast<GLenum>(p->target), GL_TEXTURE_WRAP_S, static_cast<GLint>(mode));
-            glTexParameteri(static_cast<GLenum>(p->target), GL_TEXTURE_WRAP_T, static_cast<GLint>(mode));
+        case target::target_2d:
+        case target::target_2d_array:
+        case target::target_cube_map:
+        case target::target_cube_map_array:
+        case target::target_2d_multisample:
+        case target::target_2d_multisample_array:
+        case target::target_rectangle:
+            p->wrap_modes.at(coordinate_direction::s) = p->wrap_modes.at(coordinate_direction::t) = mode;
+            glTexParameteri(static_cast<GLenum>(p->texture_target), GL_TEXTURE_WRAP_S, static_cast<GLint>(mode));
+            glTexParameteri(static_cast<GLenum>(p->texture_target), GL_TEXTURE_WRAP_T, static_cast<GLint>(mode));
             break;
-        case Target::Target3D:
-            p->wrapModes.at(CoordinateDirection::S) =
-                p->wrapModes.at(CoordinateDirection::T) =
-                    p->wrapModes.at(CoordinateDirection::R) = mode;
-            glTexParameteri(static_cast<GLenum>(p->target), GL_TEXTURE_WRAP_S, static_cast<GLint>(mode));
-            glTexParameteri(static_cast<GLenum>(p->target), GL_TEXTURE_WRAP_T, static_cast<GLint>(mode));
-            glTexParameteri(static_cast<GLenum>(p->target), GL_TEXTURE_WRAP_R, static_cast<GLint>(mode));
+        case target::target_3d:
+            p->wrap_modes.at(coordinate_direction::s) =
+                p->wrap_modes.at(coordinate_direction::t) =
+                    p->wrap_modes.at(coordinate_direction::r) = mode;
+            glTexParameteri(static_cast<GLenum>(p->texture_target), GL_TEXTURE_WRAP_S, static_cast<GLint>(mode));
+            glTexParameteri(static_cast<GLenum>(p->texture_target), GL_TEXTURE_WRAP_T, static_cast<GLint>(mode));
+            glTexParameteri(static_cast<GLenum>(p->texture_target), GL_TEXTURE_WRAP_R, static_cast<GLint>(mode));
             break;
     }
 }
 
-void tinygl::Texture::setWrapMode(
-        tinygl::Texture::CoordinateDirection direction,
-        tinygl::Texture::WrapMode mode)
+void tinygl::texture::set_wrap_mode(
+        tinygl::texture::coordinate_direction direction,
+        tinygl::texture::wrap_mode mode)
 {
     assert(p->bound());
 
-    switch (p->target) {
-        case Target::Target1D:
-        case Target::Target1DArray:
-        case Target::TargetBuffer:
-            assert(direction == CoordinateDirection::S);
-            p->wrapModes.at(direction) = mode;
-            glTexParameteri(static_cast<GLenum>(p->target), direction, static_cast<GLint>(mode));
+    switch (p->texture_target) {
+        case target::target_1d:
+        case target::target_1d_array:
+        case target::target_buffer:
+            assert(direction == coordinate_direction::s);
+            p->wrap_modes.at(direction) = mode;
+            glTexParameteri(static_cast<GLenum>(p->texture_target), direction, static_cast<GLint>(mode));
             break;
-        case Texture::Target::Target2D:
-        case Texture::Target::Target2DArray:
-        case Texture::Target::TargetCubeMap:
-        case Texture::Target::TargetCubeMapArray:
-        case Texture::Target::Target2DMultisample:
-        case Texture::Target::Target2DMultisampleArray:
-        case Texture::Target::TargetRectangle:
-            assert(direction == CoordinateDirection::S || direction == CoordinateDirection::T);
-            p->wrapModes.at(direction) = mode;
-            glTexParameteri(static_cast<GLenum>(p->target), direction, static_cast<GLint>(mode));
+        case texture::target::target_2d:
+        case texture::target::target_2d_array:
+        case texture::target::target_cube_map:
+        case texture::target::target_cube_map_array:
+        case texture::target::target_2d_multisample:
+        case texture::target::target_2d_multisample_array:
+        case texture::target::target_rectangle:
+            assert(direction == coordinate_direction::s || direction == coordinate_direction::t);
+            p->wrap_modes.at(direction) = mode;
+            glTexParameteri(static_cast<GLenum>(p->texture_target), direction, static_cast<GLint>(mode));
             break;
-        case Target::Target3D:
-            p->wrapModes.at(direction) = mode;
-            glTexParameteri(static_cast<GLenum>(p->target), direction, static_cast<GLint>(mode));
+        case target::target_3d:
+            p->wrap_modes.at(direction) = mode;
+            glTexParameteri(static_cast<GLenum>(p->texture_target), direction, static_cast<GLint>(mode));
             break;
     }
 }
 
-tinygl::Texture::WrapMode tinygl::Texture::wrapMode(tinygl::Texture::CoordinateDirection direction) const
+tinygl::texture::wrap_mode tinygl::texture::get_wrap_mode(tinygl::texture::coordinate_direction direction) const
 {
-    return p->wrapModes.at(direction);
+    return p->wrap_modes.at(direction);
 }
 
-void tinygl::Texture::setMinificationFilter(tinygl::Texture::Filter filter)
-{
-    assert(p->bound());
-    glTexParameteri(static_cast<GLenum>(p->target), GL_TEXTURE_MIN_FILTER, static_cast<GLint>(filter));
-    p->minFilter = filter;
-}
-
-tinygl::Texture::Filter tinygl::Texture::minificationFilter() const
-{
-    return p->minFilter;
-}
-
-void tinygl::Texture::setMagnificationFilter(tinygl::Texture::Filter filter)
+void tinygl::texture::set_minification_filter(tinygl::texture::filter filter)
 {
     assert(p->bound());
-    glTexParameteri(static_cast<GLenum>(p->target), GL_TEXTURE_MAG_FILTER, static_cast<GLint>(filter));
-    p->magFilter = filter;
+    glTexParameteri(static_cast<GLenum>(p->texture_target), GL_TEXTURE_MIN_FILTER, static_cast<GLint>(filter));
+    p->min_filter = filter;
 }
 
-tinygl::Texture::Filter tinygl::Texture::magnificationFilter() const
+tinygl::texture::filter tinygl::texture::minification_filter() const
 {
-    return p->magFilter;
+    return p->min_filter;
 }
 
-void tinygl::Texture::setMinMagFilters(
-    tinygl::Texture::Filter minificationFilter, tinygl::Texture::Filter magnificationFilter)
+void tinygl::texture::set_magnification_filter(tinygl::texture::filter filter)
 {
     assert(p->bound());
-    setMinificationFilter(minificationFilter);
-    setMagnificationFilter(magnificationFilter);
+    glTexParameteri(static_cast<GLenum>(p->texture_target), GL_TEXTURE_MAG_FILTER, static_cast<GLint>(filter));
+    p->mag_filter = filter;
 }
 
-std::string tinygl::Texture::toString(const tinygl::Texture::CoordinateDirection& direction)
+tinygl::texture::filter tinygl::texture::magnification_filter() const
+{
+    return p->mag_filter;
+}
+
+void tinygl::texture::set_min_mag_filters(
+    tinygl::texture::filter minification_filter, tinygl::texture::filter magnification_filter)
+{
+    assert(p->bound());
+    set_minification_filter(minification_filter);
+    set_magnification_filter(magnification_filter);
+}
+
+std::string tinygl::texture::to_string(const tinygl::texture::coordinate_direction& direction)
 {
     switch (direction) {
-        case S: return "S";
-        case T: return "T";
-        case R: return "R";
+        case s: return "S";
+        case t: return "T";
+        case r: return "R";
         default: return "";
     }
 }
 
-std::string tinygl::Texture::toString(const tinygl::Texture::Target& target)
+std::string tinygl::texture::to_string(const tinygl::texture::target& target)
 {
     switch (target) {
-        case Target::Target1D: return "1D";
-        case Target::Target2D: return "2D";
-        case Target::Target3D: return "3D";
-        case Target::Target1DArray: return "1DArray";
-        case Target::Target2DArray: return "2DArray";
-        case Target::TargetRectangle: return "Rectangle";
-        case Target::TargetCubeMap: return "CubeMap";
-        case Target::TargetCubeMapArray: return "CubeMapArray";
-        case Target::TargetBuffer: return "Buffer";
-        case Target::Target2DMultisample: return "2DMultisample";
-        case Target::Target2DMultisampleArray: return "2DMultisampleArray";
+        case target::target_1d: return "1D";
+        case target::target_2d: return "2D";
+        case target::target_3d: return "3D";
+        case target::target_1d_array: return "1DArray";
+        case target::target_2d_array: return "2DArray";
+        case target::target_rectangle: return "Rectangle";
+        case target::target_cube_map: return "CubeMap";
+        case target::target_cube_map_array: return "CubeMapArray";
+        case target::target_buffer: return "Buffer";
+        case target::target_2d_multisample: return "2DMultisample";
+        case target::target_2d_multisample_array: return "2DMultisampleArray";
         default: return "";
     }
 }

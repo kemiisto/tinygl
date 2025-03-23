@@ -9,31 +9,31 @@
 
 namespace tinygl
 {
-    class Buffer final
+    class buffer final
     {
     public:
-        enum class Type {
-            VertexBuffer = GL_ARRAY_BUFFER,
-            IndexBuffer = GL_ELEMENT_ARRAY_BUFFER
+        enum class type {
+            vertex_buffer = GL_ARRAY_BUFFER,
+            index_buffer = GL_ELEMENT_ARRAY_BUFFER
         };
 
-        enum class UsagePattern {
-            StreamDraw = GL_STREAM_DRAW,
-            StreamRead = GL_STREAM_READ,
-            StreamCopy = GL_STREAM_COPY,
-            StaticDraw = GL_STATIC_DRAW,
-            StaticRead = GL_STATIC_READ,
-            StaticCopy = GL_STATIC_COPY,
-            DynamicDraw = GL_DYNAMIC_DRAW,
-            DynamicRead = GL_DYNAMIC_READ,
-            DynamicCopy = GL_DYNAMIC_COPY
+        enum class usage_pattern {
+            stream_draw = GL_STREAM_DRAW,
+            stream_read = GL_STREAM_READ,
+            stream_copy = GL_STREAM_COPY,
+            static_draw = GL_STATIC_DRAW,
+            static_read = GL_STATIC_READ,
+            static_copy = GL_STATIC_COPY,
+            dynamic_draw = GL_DYNAMIC_DRAW,
+            dynamic_read = GL_DYNAMIC_READ,
+            dynamic_copy = GL_DYNAMIC_COPY
         };
 
-        Buffer(Type type, UsagePattern usagePattern);
-        ~Buffer();
+        buffer(type type, usage_pattern usage_pattern);
+        ~buffer();
 
-        Buffer(Buffer&& other) noexcept;
-        Buffer& operator=(Buffer&& other) noexcept;
+        buffer(buffer&& other) noexcept;
+        buffer& operator=(buffer&& other) noexcept;
 
         void bind();
         void unbind();
@@ -54,8 +54,8 @@ namespace tinygl
         }
 
     private:
-        struct BufferPrivate;
-        std::unique_ptr<BufferPrivate> p;
+        struct buffer_private;
+        std::unique_ptr<buffer_private> p;
     };
 }
 

@@ -7,22 +7,22 @@
 
 namespace tinygl::input
 {
-    enum class Action {
-        Release = GLFW_RELEASE,
-        Press = GLFW_PRESS,
-        Repeat = GLFW_REPEAT
+    enum class action {
+        release = GLFW_RELEASE,
+        press = GLFW_PRESS,
+        repeat = GLFW_REPEAT
     };
 
-    enum class Modifier {
-        Shift = GLFW_MOD_SHIFT,
-        Control = GLFW_MOD_CONTROL,
-        Alt = GLFW_MOD_ALT,
-        Super = GLFW_MOD_SUPER,
+    enum class modifier {
+        shift = GLFW_MOD_SHIFT,
+        control = GLFW_MOD_CONTROL,
+        alt = GLFW_MOD_ALT,
+        super = GLFW_MOD_SUPER,
     };
 }
 
 template<>
-struct enable_bitmask_operators<tinygl::input::Modifier> {
+struct enable_bitmask_operators<tinygl::input::modifier> {
     static const bool enable = true;
 };
 

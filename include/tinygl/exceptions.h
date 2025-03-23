@@ -7,15 +7,15 @@
 
 namespace tinygl
 {
-    class InvalidDirection : public std::runtime_error
+    class invalid_direction : public std::runtime_error
     {
     public:
-        InvalidDirection(const Texture::CoordinateDirection& direction, const Texture::Target& target) :
+        invalid_direction(const texture::coordinate_direction& direction, const texture::target& target) :
             std::runtime_error(
                 fmt::format(
                     "[tinygl::Texture] invalid direction {} for target {}!",
-                    Texture::toString(direction),
-                    Texture::toString(target)
+                    texture::to_string(direction),
+                    texture::to_string(target)
                 )
             ) {}
     };

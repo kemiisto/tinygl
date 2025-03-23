@@ -5,43 +5,43 @@
 #include <fstream>
 #include <map>
 
-static const std::map<tinygl::Shader::Type, std::string> shaderTypeName = {
-    { tinygl::Shader::Type::Vertex,   "vertex" },
-    { tinygl::Shader::Type::Fragment, "fragment" }
+static const std::map<tinygl::shader::type, std::string> shader_type_name = {
+    { tinygl::shader::type::vertex,   "vertex" },
+    { tinygl::shader::type::fragment, "fragment" }
 };
 
-struct tinygl::Shader::ShaderPrivate
+struct tinygl::shader::shader_private
 {
-    explicit ShaderPrivate(Type type) : shaderType(type) {}
-    ~ShaderPrivate();
+    explicit shader_private(type type) : shader_type(type) {}
+    ~shader_private();
 
     void create();
     void compile();
 
-    void compileSourceCode(std::string_view source);
-    void compileSourceFile(const std::filesystem::path& fileName);
+    void compile_source_code(std::string_view source);
+    void compile_source_file(const std::filesystem::path& file_name);
 
     GLuint id = 0;
-    Type shaderType;
+    type shader_type;
     bool compiled = false;
 };
 
-tinygl::Shader::ShaderPrivate::~ShaderPrivate()
+tinygl::shader::shader_private::~shader_private()
 {
     glDeleteShader(id);
 }
 
-void tinygl::Shader::ShaderPrivate::create()
+void tinygl::shader::shader_private::create()
 {
-    id = glCreateShader(static_cast<GLenum>(shaderType));
+    id = glCreateShader(static_cast<GLenum>(shader_type));
     if (!id) {
         throw std::runtime_error(
-            fmt::format("tinygl::Shader: could not create {} shader!", shaderTypeName.at(shaderType))
+            fmt::format("tinygl::Shader: could not create {} shader!", shader_type_name.at(shader_type))
         );
     }
 }
 
-void tinygl::Shader::ShaderPrivate::compile()
+void tinygl::shader::shader_private::compile()
 {
     if (!id || !glIsShader(id)) {
         throw std::runtime_error(
@@ -58,57 +58,57 @@ void tinygl::Shader::ShaderPrivate::compile()
     if (!compiled) {
         GLint length = 0;
         glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
-        std::string infoLog(length, ' ');
-        glGetShaderInfoLog(id, length, &length, &infoLog[0]);
-        std::cerr << "tinygl::Shader::ShaderPrivate::compile(): " << infoLog << std::endl;
+        std::string info_log(length, ' ');
+        glGetShaderInfoLog(id, length, &length, &info_log[0]);
+        std::cerr << "tinygl::Shader::ShaderPrivate::compile(): " << info_log << std::endl;
         throw std::runtime_error(
-            fmt::format("tinygl::Shader: could not compile {} shader!", shaderTypeName.at(shaderType))
+            fmt::format("tinygl::Shader: could not compile {} shader!", shader_type_name.at(shader_type))
         );
     }
 }
 
-void tinygl::Shader::ShaderPrivate::compileSourceCode(std::string_view source)
+void tinygl::shader::shader_private::compile_source_code(std::string_view source)
 {
     const char* c_str = source.data();
     glShaderSource(id, 1, &c_str, nullptr);
     compile();
 }
 
-void tinygl::Shader::ShaderPrivate::compileSourceFile(const std::filesystem::path& fileName)
+void tinygl::shader::shader_private::compile_source_file(const std::filesystem::path& file_name)
 {
     std::ostringstream sstream;
     std::ifstream fstream;
     fstream.exceptions(std::ifstream::failbit | std::ifstream::badbit);
     try {
-        fstream.open(fileName);
+        fstream.open(file_name);
         sstream << fstream.rdbuf();
-        compileSourceCode(sstream.str().c_str());
+        compile_source_code(sstream.str().c_str());
     } catch ([[maybe_unused]] const std::ifstream::failure& e) {
         throw std::runtime_error(
             fmt::format(
-                "tinygl::Shader::ShaderPrivate::compileSourceFile(): failed to read {}!", fileName.string()));
+                "tinygl::Shader::ShaderPrivate::compileSourceFile(): failed to read {}!", file_name.string()));
     }
 }
 
-tinygl::Shader::Shader(tinygl::Shader::Type type, std::string_view source) :
-        p{std::make_unique<ShaderPrivate>(type)}
+tinygl::shader::shader(tinygl::shader::type type, std::string_view source) :
+        p{std::make_unique<shader_private>(type)}
 {
     p->create();
-    p->compileSourceCode(source);
+    p->compile_source_code(source);
 }
 
-tinygl::Shader::Shader(tinygl::Shader::Type type, const std::filesystem::path& fileName) :
-        p{std::make_unique<ShaderPrivate>(type)}
+tinygl::shader::shader(tinygl::shader::type type, const std::filesystem::path& file_name) :
+        p{std::make_unique<shader_private>(type)}
 {
     p->create();
-    p->compileSourceFile(fileName);
+    p->compile_source_file(file_name);
 }
 
-tinygl::Shader::~Shader() = default;
+tinygl::shader::~shader() = default;
 
-tinygl::Shader::Shader(tinygl::Shader&& other) noexcept = default;
+tinygl::shader::shader(tinygl::shader&& other) noexcept = default;
 
-tinygl::Shader& tinygl::Shader::operator=(tinygl::Shader&& other) noexcept
+tinygl::shader& tinygl::shader::operator=(tinygl::shader&& other) noexcept
 {
     if (this != &other) {
         p = std::move(other.p);
@@ -116,12 +116,12 @@ tinygl::Shader& tinygl::Shader::operator=(tinygl::Shader&& other) noexcept
     return *this;
 }
 
-GLuint tinygl::Shader::id() const
+GLuint tinygl::shader::id() const
 {
     return p->id;
 }
 
-tinygl::Shader::Type tinygl::Shader::shaderType() const
+tinygl::shader::type tinygl::shader::shader_type() const
 {
-    return p->shaderType;
+    return p->shader_type;
 }

@@ -6,25 +6,25 @@
 
 namespace tinygl
 {
-    class VertexArrayObject final
+    class vertex_array_object final
     {
     public:
-        VertexArrayObject();
-        ~VertexArrayObject();
+        vertex_array_object();
+        ~vertex_array_object();
 
-        VertexArrayObject(VertexArrayObject&& other) noexcept;
-        VertexArrayObject& operator=(VertexArrayObject&& other) noexcept;
+        vertex_array_object(vertex_array_object&& other) noexcept;
+        vertex_array_object& operator=(vertex_array_object&& other) noexcept;
 
         void bind();
         void unbind();
 
-        void setAttributeArray(
-            int location, int tupleSize, GLenum type, bool normalize, int stride = 0, int offset = 0);
-        void enableAttributeArray(int location);
+        void set_attribute_array(
+            int location, int tuple_size, GLenum type, bool normalize, int stride = 0, int offset = 0);
+        void enable_attribute_array(int location);
 
     private:
-        struct VertexArrayObjectPrivate;
-        std::unique_ptr<VertexArrayObjectPrivate> p;
+        struct vertex_array_object_private;
+        std::unique_ptr<vertex_array_object_private> p;
     };
 }
 

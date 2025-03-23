@@ -9,37 +9,37 @@
 
 namespace tinygl
 {
-    class Shader final
+    class shader final
     {
     public:
-        enum class Type {
-            Vertex = GL_VERTEX_SHADER,
-            Fragment = GL_FRAGMENT_SHADER,
-            Geometry = GL_GEOMETRY_SHADER,
-            TessellationControl = GL_TESS_CONTROL_SHADER,
-            TessellationEvaluation = GL_TESS_EVALUATION_SHADER,
-            Compute = GL_COMPUTE_SHADER
+        enum class type {
+            vertex = GL_VERTEX_SHADER,
+            fragment = GL_FRAGMENT_SHADER,
+            geometry = GL_GEOMETRY_SHADER,
+            tessellation_control = GL_TESS_CONTROL_SHADER,
+            tessellation_evaluation = GL_TESS_EVALUATION_SHADER,
+            compute = GL_COMPUTE_SHADER
         };
 
-        Shader(Type type, std::string_view source);
-        Shader(Type type, const std::filesystem::path& fileName);
-        ~Shader();
+        shader(type type, std::string_view source);
+        shader(type type, const std::filesystem::path& file_name);
+        ~shader();
 
-        Shader(Shader&& other) noexcept;
-        Shader& operator=(Shader&& other) noexcept;
+        shader(shader&& other) noexcept;
+        shader& operator=(shader&& other) noexcept;
 
-        Shader(const Shader&) = delete;
-        Shader& operator=(const Shader&) = delete;
+        shader(const shader&) = delete;
+        shader& operator=(const shader&) = delete;
 
-        Type shaderType() const;
+        type shader_type() const;
 
     private:
         GLuint id() const;
 
-        struct ShaderPrivate;
-        std::unique_ptr<ShaderPrivate> p;
+        struct shader_private;
+        std::unique_ptr<shader_private> p;
 
-        friend class ShaderProgram;
+        friend class shader_program;
     };
 }
 

@@ -31,7 +31,7 @@ void tinygl::terminate()
 }
 
 template<std::floating_point T>
-T tinygl::getTime()
+T tinygl::get_time()
 {
     if constexpr (std::is_same<T, double>::value) {
         return glfwGetTime();
@@ -40,11 +40,11 @@ T tinygl::getTime()
     }
 }
 
-template float tinygl::getTime<float>();
-template double tinygl::getTime<double>();
-template long double tinygl::getTime<long double>();
+template float tinygl::get_time<float>();
+template double tinygl::get_time<double>();
+template long double tinygl::get_time<long double>();
 
-const char* tinygl::getString(GLenum name)
+const char* tinygl::get_string(GLenum name)
 {
     return reinterpret_cast<const char*>(glGetString(name));
 }

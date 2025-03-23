@@ -4,47 +4,47 @@
 #include <iostream>
 #include <vector>
 
-struct tinygl::ShaderProgram::ShaderProgramPrivate
+struct tinygl::shader_program::shader_program_private
 {
-    ShaderProgramPrivate();
-    ~ShaderProgramPrivate();
+    shader_program_private();
+    ~shader_program_private();
 
-    bool hasShader(Shader::Type type) const;
+    bool has_shader(shader::type type) const;
 
     GLuint id = 0;
     bool linked = false;
-    std::vector<std::shared_ptr<Shader>> shaders;
+    std::vector<std::shared_ptr<shader>> shaders;
 };
 
-tinygl::ShaderProgram::ShaderProgramPrivate::ShaderProgramPrivate()
+tinygl::shader_program::shader_program_private::shader_program_private()
 {
     id = glCreateProgram();
 }
 
-tinygl::ShaderProgram::ShaderProgramPrivate::~ShaderProgramPrivate()
+tinygl::shader_program::shader_program_private::~shader_program_private()
 {
     glDeleteProgram(id);
 }
 
-bool tinygl::ShaderProgram::ShaderProgramPrivate::hasShader(tinygl::Shader::Type type) const
+bool tinygl::shader_program::shader_program_private::has_shader(tinygl::shader::type type) const
 {
     for (const auto& shader : shaders) {
-        if (shader->shaderType() == type) {
+        if (shader->shader_type() == type) {
             return true;
         }
     }
     return false;
 }
 
-tinygl::ShaderProgram::ShaderProgram() : p{std::make_unique<ShaderProgramPrivate>()}
+tinygl::shader_program::shader_program() : p{std::make_unique<shader_program_private>()}
 {
 }
 
-tinygl::ShaderProgram::~ShaderProgram() = default;
+tinygl::shader_program::~shader_program() = default;
 
-tinygl::ShaderProgram::ShaderProgram(tinygl::ShaderProgram&& other) noexcept = default;
+tinygl::shader_program::shader_program(tinygl::shader_program&& other) noexcept = default;
 
-tinygl::ShaderProgram& tinygl::ShaderProgram::operator=(ShaderProgram&& other) noexcept
+tinygl::shader_program& tinygl::shader_program::operator=(shader_program&& other) noexcept
 {
     if (this != &other) {
         p = std::move(other.p);
@@ -52,7 +52,7 @@ tinygl::ShaderProgram& tinygl::ShaderProgram::operator=(ShaderProgram&& other) n
     return *this;
 }
 
-void tinygl::ShaderProgram::addShader(const std::shared_ptr<Shader>& shader) {
+void tinygl::shader_program::add_shader(const std::shared_ptr<shader>& shader) {
     if (std::find(p->shaders.begin(), p->shaders.end(), shader) != p->shaders.end()) {
         std::cout << "Shader is already added to the program!" << std::endl;
         return;
@@ -64,19 +64,19 @@ void tinygl::ShaderProgram::addShader(const std::shared_ptr<Shader>& shader) {
     }
 }
 
-void tinygl::ShaderProgram::addShaderFromSourceCode(tinygl::Shader::Type type, std::string_view source)
+void tinygl::shader_program::add_shader_from_source_code(tinygl::shader::type type, std::string_view source)
 {
-    auto shader = std::make_shared<Shader>(type, source);
-    addShader(shader);
+    auto s = std::make_shared<shader>(type, source);
+    add_shader(s);
 }
 
-void tinygl::ShaderProgram::addShaderFromSourceFile(tinygl::Shader::Type type, const std::filesystem::path& fileName)
+void tinygl::shader_program::add_shader_from_source_file(tinygl::shader::type type, const std::filesystem::path& file_name)
 {
-    auto shader = std::make_shared<Shader>(type, fileName);
-    addShader(shader);
+    auto s = std::make_shared<shader>(type, file_name);
+    add_shader(s);
 }
 
-void tinygl::ShaderProgram::removeShader(std::shared_ptr<Shader> shader)
+void tinygl::shader_program::remove_shader(std::shared_ptr<shader> shader)
 {
     if (p->id && shader) {
         glDetachShader(p->id, shader->id());
@@ -86,7 +86,7 @@ void tinygl::ShaderProgram::removeShader(std::shared_ptr<Shader> shader)
     p->linked = false;
 }
 
-void tinygl::ShaderProgram::link()
+void tinygl::shader_program::link()
 {
     if (!p->id || p->shaders.empty()) {
         return;
@@ -99,16 +99,16 @@ void tinygl::ShaderProgram::link()
 
     p->linked = (result != GL_FALSE);
     if (!p->linked) {
-        GLint infoLogLength = 0;
-        glGetProgramiv(p->id, GL_INFO_LOG_LENGTH, &infoLogLength);
-        std::string infoLog(infoLogLength, ' ');
-        glGetProgramInfoLog(p->id, infoLogLength, &infoLogLength, &infoLog[0]);
-        std::cerr << infoLog << std::endl;
+        GLint info_log_length = 0;
+        glGetProgramiv(p->id, GL_INFO_LOG_LENGTH, &info_log_length);
+        std::string info_log(info_log_length, ' ');
+        glGetProgramInfoLog(p->id, info_log_length, &info_log_length, &info_log[0]);
+        std::cerr << info_log << std::endl;
         throw std::runtime_error("tinygl::ShaderProgram::link(): could not link shader program!");
     }
 }
 
-void tinygl::ShaderProgram::use() {
+void tinygl::shader_program::use() {
     if (!p->id) {
         return;
     }
@@ -118,7 +118,7 @@ void tinygl::ShaderProgram::use() {
     glUseProgram(p->id);
 }
 
-int tinygl::ShaderProgram::attributeLocation(std::string_view name) const {
+int tinygl::shader_program::attribute_location(std::string_view name) const {
     if (p->id && p->linked) {
         return glGetAttribLocation(p->id, name.data());
     } else {
@@ -126,105 +126,105 @@ int tinygl::ShaderProgram::attributeLocation(std::string_view name) const {
     }
 }
 
-void tinygl::ShaderProgram::setUniformValue(int location, GLfloat value)
+void tinygl::shader_program::set_uniform_value(int location, GLfloat value)
 {
     glUniform1f(location, value);
 }
 
-void tinygl::ShaderProgram::setUniformValue(int location, GLint value)
+void tinygl::shader_program::set_uniform_value(int location, GLint value)
 {
     glUniform1i(location, value);
 }
 
-void tinygl::ShaderProgram::setUniformValue(int location, GLuint value)
+void tinygl::shader_program::set_uniform_value(int location, GLuint value)
 {
     glUniform1ui(location, value);
 }
 
-void tinygl::ShaderProgram::setUniformValue(int location, GLfloat x, GLfloat y)
+void tinygl::shader_program::set_uniform_value(int location, GLfloat x, GLfloat y)
 {
     glUniform2f(location, x, y);
 }
 
-void tinygl::ShaderProgram::setUniformValue(int location, GLfloat x, GLfloat y, GLfloat z)
+void tinygl::shader_program::set_uniform_value(int location, GLfloat x, GLfloat y, GLfloat z)
 {
     glUniform3f(location, x, y, z);
 }
 
-void tinygl::ShaderProgram::setUniformValue(int location, GLfloat x, GLfloat y, GLfloat z, GLfloat w)
+void tinygl::shader_program::set_uniform_value(int location, GLfloat x, GLfloat y, GLfloat z, GLfloat w)
 {
     glUniform4f(location, x, y, z, w);
 }
 
-void tinygl::ShaderProgram::setUniformValue(int location, const tinyla::vec2f& v)
+void tinygl::shader_program::set_uniform_value(int location, const tinyla::vec2f& v)
 {
     glUniform2fv(location, 1, v.data());
 }
 
-void tinygl::ShaderProgram::setUniformValue(int location, const tinyla::vec3f& v)
+void tinygl::shader_program::set_uniform_value(int location, const tinyla::vec3f& v)
 {
     glUniform3fv(location, 1, v.data());
 }
 
-void tinygl::ShaderProgram::setUniformValue(int location, const tinyla::vec4f& v)
+void tinygl::shader_program::set_uniform_value(int location, const tinyla::vec4f& v)
 {
     glUniform4fv(location, 1, v.data());
 }
 
-void tinygl::ShaderProgram::setUniformValue(int location, const tinyla::mat4f& m)
+void tinygl::shader_program::set_uniform_value(int location, const tinyla::mat4f& m)
 {
     glUniformMatrix4fv(location, 1, GL_FALSE, m.data());
 }
 
-void tinygl::ShaderProgram::setUniformValue(int location, const GLfloat m[4][4])
+void tinygl::shader_program::set_uniform_value(int location, const GLfloat m[4][4])
 {
     glUniformMatrix4fv(location, 1, GL_FALSE, m[0]);
 }
 
-void tinygl::ShaderProgram::setUniformValue(int location, const GLfloat m[16])
+void tinygl::shader_program::set_uniform_value(int location, const GLfloat m[16])
 {
     glUniformMatrix4fv(location, 1, GL_FALSE, m);
 }
 
-void tinygl::ShaderProgram::setAttributeValue(int location, GLfloat value)
+void tinygl::shader_program::set_attribute_value(int location, GLfloat value)
 {
     glVertexAttrib1fv(location, &value);
 }
 
-void tinygl::ShaderProgram::setAttributeValue(int location, GLfloat x, GLfloat y)
+void tinygl::shader_program::set_attribute_value(int location, GLfloat x, GLfloat y)
 {
     GLfloat values[2] = {x, y};
     glVertexAttrib2fv(location, values);
 }
 
-void tinygl::ShaderProgram::setAttributeValue(int location, GLfloat x, GLfloat y, GLfloat z)
+void tinygl::shader_program::set_attribute_value(int location, GLfloat x, GLfloat y, GLfloat z)
 {
     GLfloat values[3] = {x, y, z};
     glVertexAttrib3fv(location, values);
 }
 
-void tinygl::ShaderProgram::setAttributeValue(int location, GLfloat x, GLfloat y, GLfloat z, GLfloat w)
+void tinygl::shader_program::set_attribute_value(int location, GLfloat x, GLfloat y, GLfloat z, GLfloat w)
 {
     GLfloat values[4] = {x, y, z, w};
     glVertexAttrib4fv(location, values);
 }
 
-void tinygl::ShaderProgram::setAttributeValue(int location, const tinyla::vec2f& v)
+void tinygl::shader_program::set_attribute_value(int location, const tinyla::vec2f& v)
 {
     glVertexAttrib2fv(location, v.data());
 }
 
-void tinygl::ShaderProgram::setAttributeValue(int location, const tinyla::vec3f& v)
+void tinygl::shader_program::set_attribute_value(int location, const tinyla::vec3f& v)
 {
     glVertexAttrib3fv(location, v.data());
 }
 
-void tinygl::ShaderProgram::setAttributeValue(int location, const tinyla::vec4f& v)
+void tinygl::shader_program::set_attribute_value(int location, const tinyla::vec4f& v)
 {
     glVertexAttrib4fv(location, v.data());
 }
 
-int tinygl::ShaderProgram::uniformLocation(std::string_view name) const
+int tinygl::shader_program::uniform_location(std::string_view name) const
 {
     if (p->id && p->linked) {
         GLint location = glGetUniformLocation(p->id, name.data());

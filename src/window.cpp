@@ -10,9 +10,9 @@
 #include <map>
 #include <utility>
 
-void framebufferSizeCallback(GLFWwindow* window, int width, int height);
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
-static const std::map<GLenum, std::string> glDebugSource = {
+static const std::map<GLenum, std::string> gl_debug_source = {
     { GL_DEBUG_SOURCE_API            , "API"             },
     { GL_DEBUG_SOURCE_WINDOW_SYSTEM  , "Window System"   },
     { GL_DEBUG_SOURCE_SHADER_COMPILER, "Shader Compiler" },
@@ -21,7 +21,7 @@ static const std::map<GLenum, std::string> glDebugSource = {
     { GL_DEBUG_SOURCE_OTHER          , "Other"           }
 };
 
-static const std::map<GLenum, std::string> glDebugType = {
+static const std::map<GLenum, std::string> gl_debug_type = {
     { GL_DEBUG_TYPE_ERROR              , "Error"               },
     { GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR, "Deprecated Behavior" },
     { GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR , "Undefined Behavior"  },
@@ -33,45 +33,45 @@ static const std::map<GLenum, std::string> glDebugType = {
     { GL_DEBUG_TYPE_OTHER              , "Other"               }
 };
 
-static const std::map<GLenum, std::string> glDebugSeverity = {
+static const std::map<GLenum, std::string> gl_debug_severity = {
     { GL_DEBUG_SEVERITY_HIGH        , "High"         },
     { GL_DEBUG_SEVERITY_MEDIUM      , "Medium"       },
     { GL_DEBUG_SEVERITY_LOW         , "Low"          },
     { GL_DEBUG_SEVERITY_NOTIFICATION, "Notification" }
 };
 
-void GLAPIENTRY glDebugOutput(
+void GLAPIENTRY gl_debug_output(
         GLenum source,
         GLenum type,
         [[maybe_unused]] GLuint id,
         GLenum severity,
         [[maybe_unused]] GLsizei length,
         const GLchar* message,
-        [[maybe_unused]] const void* userParam)
+        [[maybe_unused]] const void* user_param)
 {
     std::cerr <<
         "================================[ OpenGL error ]================================\n" <<
-        "Source: " << glDebugSource.at(source) << '\n' <<
-        "Type: " << glDebugType.at(type) << '\n' <<
-        "Severity: " << glDebugSeverity.at(severity) << '\n' <<
+        "Source: " << gl_debug_source.at(source) << '\n' <<
+        "Type: " << gl_debug_type.at(type) << '\n' <<
+        "Severity: " << gl_debug_severity.at(severity) << '\n' <<
         "Message: " << message << '\n' <<
         "================================[ Stack  Trace ]================================\n";
     std::cerr <<
         "================================================================================\n";
 }
 
-struct tinygl::Window::WindowPrivate
+struct tinygl::window::window_private
 {
     GLFWwindow* window = nullptr;
-    KeyCallback keyCallback;
-    MouseButtonCallback mouseButtonCallback;
-    float previousTime{};
-    float currentTime{};
-    float deltaTime{};
+    key_callback key_callback;
+    mouse_button_callback mouse_button_callback;
+    float previous_time{};
+    float current_time{};
+    float delta_time{};
 };
 
-tinygl::Window::Window(int width, int height, std::string_view title, bool vsync) :
-        p{std::make_unique<WindowPrivate>()}
+tinygl::window::window(int width, int height, std::string_view title, bool vsync) :
+        p{std::make_unique<window_private>()}
 {
     p->window = glfwCreateWindow(width, height, title.data(), nullptr, nullptr);
     if (!p->window) {
@@ -81,7 +81,7 @@ tinygl::Window::Window(int width, int height, std::string_view title, bool vsync
     if (vsync) {
         glfwSwapInterval(1);
     }
-    glfwSetFramebufferSizeCallback(p->window, framebufferSizeCallback);
+    glfwSetFramebufferSizeCallback(p->window, framebuffer_size_callback);
 
     // see setKeyCallback() method
     glfwSetWindowUserPointer(p->window, reinterpret_cast<void*>(this));
@@ -92,47 +92,47 @@ tinygl::Window::Window(int width, int height, std::string_view title, bool vsync
     }
 
     spdlog::info("[tinygl::Window] ========== OpenGL properties ==========");
-    const std::map<GLenum, std::string> glProperties = {
+    const std::map<GLenum, std::string> gl_properties = {
         { GL_VENDOR,   "Vendor"   },
         { GL_RENDERER, "Renderer" },
         { GL_VERSION,  "Version"  }
     };
-    for (const auto& [flag, desc] : glProperties) {
-        spdlog::info("[tinygl::Window] {}: {}", desc, tinygl::getString(flag));
+    for (const auto& [flag, desc] : gl_properties) {
+        spdlog::info("[tinygl::Window] {}: {}", desc, tinygl::get_string(flag));
     }
 
     int flags;
     glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
 
     spdlog::info("[tinygl::Window] ========== OpenGL context properties ==========");
-    const std::map<GLenum, std::string> glContextFlags = {
+    const std::map<GLenum, std::string> gl_context_flags = {
         { GL_CONTEXT_FLAG_FORWARD_COMPATIBLE_BIT, "FORWARD_COMPATIBLE" },
         { GL_CONTEXT_FLAG_DEBUG_BIT, "DEBUG" },
         { GL_CONTEXT_FLAG_ROBUST_ACCESS_BIT, "ROBUST_ACCESS" },
         { GL_CONTEXT_FLAG_NO_ERROR_BIT, "NO_ERROR" }
     };
 
-    for (const auto& [flag, desc] : glContextFlags) {
+    for (const auto& [flag, desc] : gl_context_flags) {
         spdlog::info("[tinygl::Window] [{}] {}", flags & flag ? "V" : " ", desc);
     }
 
     if (flags & GL_CONTEXT_FLAG_DEBUG_BIT) {
         glEnable(GL_DEBUG_OUTPUT);
         glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-        glDebugMessageCallback(glDebugOutput, nullptr);
+        glDebugMessageCallback(gl_debug_output, nullptr);
         glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
     }
 }
 
-tinygl::Window::~Window()
+tinygl::window::~window()
 {
     if (p->window) {
         glfwDestroyWindow(p->window);
     }
 }
 
-tinygl::Window::Window(Window&& other) noexcept = default;
-tinygl::Window& tinygl::Window::operator=(Window&& other) noexcept
+tinygl::window::window(window&& other) noexcept = default;
+tinygl::window& tinygl::window::operator=(window&& other) noexcept
 {
     if (this != &other) {
         p = std::move(other.p);
@@ -140,7 +140,7 @@ tinygl::Window& tinygl::Window::operator=(Window&& other) noexcept
     return *this;
 }
 
-void tinygl::Window::run()
+void tinygl::window::run()
 {
     init();
 
@@ -151,21 +151,21 @@ void tinygl::Window::run()
     ImGui_ImplOpenGL3_Init("#version 330");
 
     auto& io = ImGui::GetIO();
-    auto fontSize = 14.0f;
+    auto font_size = 14.0f;
 #ifndef __APPLE__
     auto* monitor = glfwGetPrimaryMonitor();
     float xscale, yscale;
     glfwGetMonitorContentScale(monitor, &xscale, &yscale);
     if (xscale > 1.0f || yscale > 1.0f) {
-        fontSize *= xscale;
+        font_size *= xscale;
         ImGuiStyle& style = ImGui::GetStyle();
         style.ScaleAllSizes(xscale);
     }
 #endif
-    io.Fonts->AddFontFromFileTTF("fonts/JetBrainsMono-Light.ttf", fontSize, nullptr, nullptr);
+    io.Fonts->AddFontFromFileTTF("fonts/JetBrainsMono-Light.ttf", font_size, nullptr, nullptr);
 
     while (!glfwWindowShouldClose(p->window)) {
-        processInput();
+        process_input();
 
         draw();
 
@@ -174,7 +174,7 @@ void tinygl::Window::run()
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        drawUi();
+        draw_ui();
 
         // Render dear imgui into screen
         ImGui::Render();
@@ -183,9 +183,9 @@ void tinygl::Window::run()
         glfwSwapBuffers(p->window);
         glfwPollEvents();
 
-        p->currentTime = tinygl::getTime<float>();
-        p->deltaTime = (p->currentTime - p->previousTime);
-        p->previousTime = p->currentTime;
+        p->current_time = tinygl::get_time<float>();
+        p->delta_time = (p->current_time - p->previous_time);
+        p->previous_time = p->current_time;
     }
 
     ImGui_ImplOpenGL3_Shutdown();
@@ -193,13 +193,13 @@ void tinygl::Window::run()
     ImGui::DestroyContext();
 }
 
-tinygl::keyboard::KeyState tinygl::Window::getKey(tinygl::keyboard::Key key)
+tinygl::keyboard::key_state tinygl::window::get_key(tinygl::keyboard::key key)
 {
-    return static_cast<tinygl::keyboard::KeyState>(glfwGetKey(p->window, static_cast<int>(key)));
+    return static_cast<tinygl::keyboard::key_state>(glfwGetKey(p->window, static_cast<int>(key)));
 }
 
 template<std::floating_point T>
-std::tuple<T, T> tinygl::Window::getCursorPos()
+std::tuple<T, T> tinygl::window::get_cursor_pos()
 {
     double x, y;
     glfwGetCursorPos(p->window, &x, &y);
@@ -210,18 +210,18 @@ std::tuple<T, T> tinygl::Window::getCursorPos()
     }
 }
 
-template std::tuple<float, float> tinygl::Window::getCursorPos<float>();
-template std::tuple<double, double> tinygl::Window::getCursorPos<double>();
-template std::tuple<long double, long double> tinygl::Window::getCursorPos<long double>();
+template std::tuple<float, float> tinygl::window::get_cursor_pos<float>();
+template std::tuple<double, double> tinygl::window::get_cursor_pos<double>();
+template std::tuple<long double, long double> tinygl::window::get_cursor_pos<long double>();
 
-std::tuple<int, int> tinygl::Window::getWindowSize()
+std::tuple<int, int> tinygl::window::get_window_size()
 {
     int width, height;
     glfwGetWindowSize(p->window, &width, &height);
     return {width, height};
 }
 
-std::tuple<int, int> tinygl::Window::getFramebufferSize()
+std::tuple<int, int> tinygl::window::get_framebuffer_size()
 {
     int width, height;
     glfwGetFramebufferSize(p->window, &width, &height);
@@ -229,64 +229,64 @@ std::tuple<int, int> tinygl::Window::getFramebufferSize()
 }
 
 template<std::floating_point T>
-T tinygl::Window::aspectRatio()
+T tinygl::window::aspect_ratio()
 {
     int width, height;
     glfwGetWindowSize(p->window, &width, &height);
     return static_cast<T>(width) / height;
 }
 
-template float tinygl::Window::aspectRatio<float>();
-template double tinygl::Window::aspectRatio<double>();
-template long double tinygl::Window::aspectRatio<long double>();
+template float tinygl::window::aspect_ratio<float>();
+template double tinygl::window::aspect_ratio<double>();
+template long double tinygl::window::aspect_ratio<long double>();
 
-void tinygl::Window::setTitle(std::string_view title)
+void tinygl::window::set_title(std::string_view title)
 {
     glfwSetWindowTitle(p->window, title.data());
 }
 
-void framebufferSizeCallback([[maybe_unused]] GLFWwindow* window, int width, int height)
+void framebuffer_size_callback([[maybe_unused]] GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
 }
 
-void tinygl::Window::setShouldClose(bool shouldClose)
+void tinygl::window::set_should_close(bool should_close)
 {
-    glfwSetWindowShouldClose(p->window, shouldClose);
+    glfwSetWindowShouldClose(p->window, should_close);
 }
 
-void tinygl::Window::setKeyCallback(tinygl::Window::KeyCallback callback)
+void tinygl::window::set_key_callback(tinygl::window::key_callback callback)
 {
     // https://stackoverflow.com/questions/7676971/pointing-to-a-function-that-is-a-class-member-glfw-setkeycallback
     // https://www.glfw.org/faq.html#216---how-do-i-use-c-methods-as-callbacks
-    p->keyCallback = std::move(callback);
-    auto glfwKeyCallback = [](GLFWwindow* w, int key, int scancode, int action, int mods) {
-        static_cast<tinygl::Window*>(glfwGetWindowUserPointer(w))->p->keyCallback(
-            static_cast<tinygl::keyboard::Key>(key),
+    p->key_callback = std::move(callback);
+    auto glfw_key_callback = [](GLFWwindow* w, int key, int scancode, int action, int mods) {
+        static_cast<tinygl::window*>(glfwGetWindowUserPointer(w))->p->key_callback(
+            static_cast<tinygl::keyboard::key>(key),
             scancode,
-            static_cast<input::Action>(action),
-            static_cast<tinygl::input::Modifier>(mods)
+            static_cast<input::action>(action),
+            static_cast<tinygl::input::modifier>(mods)
         );
     };
-    glfwSetKeyCallback(p->window, glfwKeyCallback);
+    glfwSetKeyCallback(p->window, glfw_key_callback);
 }
 
-void tinygl::Window::setMouseButtonCallback(tinygl::Window::MouseButtonCallback callback)
+void tinygl::window::set_mouse_button_callback(tinygl::window::mouse_button_callback callback)
 {
-    p->mouseButtonCallback = std::move(callback);
-    auto glfwMouseButtonCallback = [](GLFWwindow* w, int button, int action, int mods) {
+    p->mouse_button_callback = std::move(callback);
+    auto glfw_mouse_button_callback = [](GLFWwindow* w, int button, int action, int mods) {
         ImGuiIO& io = ImGui::GetIO();
         if (io.WantCaptureMouse) return;
-        static_cast<tinygl::Window*>(glfwGetWindowUserPointer(w))->p->mouseButtonCallback(
-            static_cast<tinygl::mouse::Button>(button),
-            static_cast<input::Action>(action),
-            static_cast<tinygl::input::Modifier>(mods)
+        static_cast<tinygl::window*>(glfwGetWindowUserPointer(w))->p->mouse_button_callback(
+            static_cast<tinygl::mouse::button>(button),
+            static_cast<input::action>(action),
+            static_cast<tinygl::input::modifier>(mods)
         );
     };
-    glfwSetMouseButtonCallback(p->window, glfwMouseButtonCallback);
+    glfwSetMouseButtonCallback(p->window, glfw_mouse_button_callback);
 }
 
-float tinygl::Window::deltaTime() const
+float tinygl::window::delta_time() const
 {
-    return p->deltaTime;
+    return p->delta_time;
 }

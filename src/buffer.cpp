@@ -1,38 +1,38 @@
 #include "tinygl/buffer.h"
 #include <GL/glew.h>
 
-struct tinygl::Buffer::BufferPrivate
+struct tinygl::buffer::buffer_private
 {
-    BufferPrivate(Buffer::Type t, Buffer::UsagePattern pattern);
-    ~BufferPrivate();
+    buffer_private(buffer::type t, buffer::usage_pattern pattern);
+    ~buffer_private();
 
     GLuint id = 0;
-    Type type;
-    UsagePattern usagePattern;
+    type type;
+    usage_pattern buffer_usage_pattern;
 };
 
-tinygl::Buffer::BufferPrivate::BufferPrivate(tinygl::Buffer::Type t, Buffer::UsagePattern pattern) :
+tinygl::buffer::buffer_private::buffer_private(tinygl::buffer::type t, buffer::usage_pattern pattern) :
         type{t},
-        usagePattern{pattern}
+        buffer_usage_pattern{pattern}
 {
     glGenBuffers(1, &id);
 }
 
-tinygl::Buffer::BufferPrivate::~BufferPrivate()
+tinygl::buffer::buffer_private::~buffer_private()
 {
     glDeleteBuffers(1, &id);
 }
 
-tinygl::Buffer::Buffer(Buffer::Type type, Buffer::UsagePattern usagePattern) :
-        p{std::make_unique<BufferPrivate>(type, usagePattern)}
+tinygl::buffer::buffer(buffer::type type, buffer::usage_pattern usage_pattern) :
+        p{std::make_unique<buffer_private>(type, usage_pattern)}
 {
 }
 
-tinygl::Buffer::~Buffer() = default;
+tinygl::buffer::~buffer() = default;
 
-tinygl::Buffer::Buffer(tinygl::Buffer&& other) noexcept = default;
+tinygl::buffer::buffer(tinygl::buffer&& other) noexcept = default;
 
-tinygl::Buffer& tinygl::Buffer::operator=(tinygl::Buffer&& other) noexcept
+tinygl::buffer& tinygl::buffer::operator=(tinygl::buffer&& other) noexcept
 {
     if (this != &other) {
         p = std::move(other.p);
@@ -40,27 +40,27 @@ tinygl::Buffer& tinygl::Buffer::operator=(tinygl::Buffer&& other) noexcept
     return *this;
 }
 
-void tinygl::Buffer::bind()
+void tinygl::buffer::bind()
 {
     glBindBuffer(static_cast<GLenum>(p->type), p->id);
 }
 
-void tinygl::Buffer::unbind()
+void tinygl::buffer::unbind()
 {
     glBindBuffer(static_cast<GLenum>(p->type), 0);
 }
 
-void tinygl::Buffer::create(std::size_t size, const void* data)
+void tinygl::buffer::create(std::size_t size, const void* data)
 {
     glBufferData(
         static_cast<GLenum>(p->type),
         static_cast<GLsizeiptr>(size),
         data,
-        static_cast<GLenum>(p->usagePattern)
+        static_cast<GLenum>(p->buffer_usage_pattern)
     );
 }
 
-void tinygl::Buffer::update(std::size_t offset, std::size_t size, void const* data)
+void tinygl::buffer::update(std::size_t offset, std::size_t size, void const* data)
 {
     glBufferSubData(
         static_cast<GLenum>(p->type),
