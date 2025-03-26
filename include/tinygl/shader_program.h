@@ -52,7 +52,7 @@ namespace tinygl
         template<typename T>
         void set_uniform_value(std::string_view name, T value)
         {
-            setUniformValue(uniform_location(name), value);
+            set_uniform_value(uniform_location(name), value);
         }
 
         void link();

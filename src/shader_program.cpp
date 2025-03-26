@@ -104,7 +104,7 @@ void tinygl::shader_program::link()
         std::string info_log(info_log_length, ' ');
         glGetProgramInfoLog(p->id, info_log_length, &info_log_length, &info_log[0]);
         std::cerr << info_log << std::endl;
-        throw std::runtime_error("tinygl::ShaderProgram::link(): could not link shader program!");
+        throw std::runtime_error("tinygl::shader_program::link(): could not link shader program!");
     }
 }
 
@@ -232,11 +232,11 @@ int tinygl::shader_program::uniform_location(std::string_view name) const
             return location;
         } else {
             throw std::runtime_error(
-                fmt::format("tinygl::ShaderProgram::uniformLocation(): invalid uniform variable name {}!",name));
+                fmt::format("tinygl::shader_program::uniform_location(): invalid uniform variable name {}!",name));
         }
     } else {
         throw std::runtime_error(
-            "tinygl::ShaderProgram::uniformLocation(): program was not created or linked!"
+            "tinygl::shader_program::uniform_location(): program was not created or linked!"
         );
     }
 }

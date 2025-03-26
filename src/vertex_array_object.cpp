@@ -40,7 +40,7 @@ tinygl::vertex_array_object& tinygl::vertex_array_object::operator=(vertex_array
 void tinygl::vertex_array_object::bind()
 {
     if (!p->id) {
-        throw std::runtime_error("tinygl::VertexArrayObject::bind(): vao not created!");
+        throw std::runtime_error("tinygl::vertex_array_object::bind(): vao not created!");
     }
     glBindVertexArray(p->id);
 }
@@ -48,7 +48,7 @@ void tinygl::vertex_array_object::bind()
 void tinygl::vertex_array_object::unbind()
 {
     if (!p->id) {
-        throw std::runtime_error("tinygl::VertexArrayObject::unbind(): vao not created!");
+        throw std::runtime_error("tinygl::vertex_array_object::unbind(): vao not created!");
     }
     glBindVertexArray(0);
 }

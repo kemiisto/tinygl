@@ -77,7 +77,7 @@ tinygl::texture::texture(tinygl::texture::target target,
             break;
         default:
             stbi_image_free(data);
-            throw std::runtime_error("[tinygl::Texture] texture target is not handled yet!");
+            throw std::runtime_error("[tinygl::texture] texture target is not handled yet!");
     }
 
     if (genMipMaps) {

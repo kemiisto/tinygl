@@ -91,20 +91,20 @@ tinygl::window::window(int width, int height, std::string_view title, bool vsync
         throw std::runtime_error("glewInit() failed!");
     }
 
-    spdlog::info("[tinygl::Window] ========== OpenGL properties ==========");
+    spdlog::info("[tinygl::window] ========== OpenGL properties ==========");
     const std::map<GLenum, std::string> gl_properties = {
         { GL_VENDOR,   "Vendor"   },
         { GL_RENDERER, "Renderer" },
         { GL_VERSION,  "Version"  }
     };
     for (const auto& [flag, desc] : gl_properties) {
-        spdlog::info("[tinygl::Window] {}: {}", desc, tinygl::get_string(flag));
+        spdlog::info("[tinygl::window] {}: {}", desc, tinygl::get_string(flag));
     }
 
     int flags;
     glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
 
-    spdlog::info("[tinygl::Window] ========== OpenGL context properties ==========");
+    spdlog::info("[tinygl::window] ========== OpenGL context properties ==========");
     const std::map<GLenum, std::string> gl_context_flags = {
         { GL_CONTEXT_FLAG_FORWARD_COMPATIBLE_BIT, "FORWARD_COMPATIBLE" },
         { GL_CONTEXT_FLAG_DEBUG_BIT, "DEBUG" },
@@ -113,7 +113,7 @@ tinygl::window::window(int width, int height, std::string_view title, bool vsync
     };
 
     for (const auto& [flag, desc] : gl_context_flags) {
-        spdlog::info("[tinygl::Window] [{}] {}", flags & flag ? "V" : " ", desc);
+        spdlog::info("[tinygl::window] [{}] {}", flags & flag ? "V" : " ", desc);
     }
 
     if (flags & GL_CONTEXT_FLAG_DEBUG_BIT) {

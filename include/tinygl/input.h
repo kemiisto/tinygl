@@ -23,7 +23,7 @@ namespace tinygl::input
 
 template<>
 struct enable_bitmask_operators<tinygl::input::modifier> {
-    static const bool enable = true;
+    static constexpr bool enable = true;
 };
 
 #endif // TINYGL_INPUT_H
