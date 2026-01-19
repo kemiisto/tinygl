@@ -48,3 +48,12 @@ const char* tinygl::get_string(GLenum name)
 {
     return reinterpret_cast<const char*>(glGetString(name));
 }
+
+void tinygl::check_opengl_errors()
+{
+    auto error = glGetError();
+    while (error != GL_NO_ERROR) {
+        std::cerr << "OpenGL error: " << error << '\n';
+        error = glGetError();
+    }
+}

@@ -22,6 +22,8 @@ namespace tinygl
     T get_time();
 
     const char* get_string(GLenum name);
+
+    void check_opengl_errors();
 }
 
 extern template float tinygl::get_time<float>();
