@@ -7,6 +7,7 @@
 
 #include <spdlog/spdlog.h>
 #include <iostream>
+#include <filesystem>
 #include <map>
 #include <utility>
 
@@ -162,7 +163,10 @@ void tinygl::window::run()
         style.ScaleAllSizes(xscale);
     }
 #endif
-    io.Fonts->AddFontFromFileTTF("fonts/JetBrainsMono-Light.ttf", font_size, nullptr, nullptr);
+    const char* font_path = "fonts/JetBrainsMono-Light.ttf";
+    if (std::filesystem::exists(font_path)) {
+        io.Fonts->AddFontFromFileTTF(font_path, font_size, nullptr, nullptr);
+    }
 
     while (!glfwWindowShouldClose(p->window)) {
         process_input();
