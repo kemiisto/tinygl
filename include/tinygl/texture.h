@@ -25,17 +25,18 @@ namespace tinygl
             gl_target_2d_multisample_array
         };
 
-        enum class coordinate_direction : uint32_t {
+        enum class coordinate : uint32_t {
             s,
             t,
             r
         };
 
         enum class wrap_mode : uint32_t {
-            repeat,
-            mirrored_repeat,
-            clamp_to_edge,
-            clamp_to_border
+            gl_clamp_to_edge,
+            gl_clamp_to_border,
+            gl_mirrored_repeat,
+            gl_repeat,
+            gl_mirror_clamp_to_edge
         };
 
         enum class filter : uint32_t {
@@ -169,8 +170,8 @@ namespace tinygl
         void unbind();
 
         void set_wrap_mode(wrap_mode mode);
-        void set_wrap_mode(coordinate_direction direction, wrap_mode mode);
-        wrap_mode get_wrap_mode(coordinate_direction direction) const;
+        void set_wrap_mode(coordinate direction, wrap_mode mode);
+        wrap_mode get_wrap_mode(coordinate direction) const;
 
         void set_minification_filter(filter filter);
         filter minification_filter() const;
@@ -181,7 +182,7 @@ namespace tinygl
         void set_min_mag_filters(filter minification_filter, filter magnification_filter);
         std::pair<filter, filter> min_mag_filters() const;
 
-        static std::string to_string(const coordinate_direction& direction);
+        static std::string to_string(const coordinate& direction);
         static std::string to_string(const target& target);
 
     private:

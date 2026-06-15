@@ -24,22 +24,23 @@ namespace {
         }
     }
 
-    constexpr GLenum gl_enum(tinygl::texture::coordinate_direction coordinate_direction)
+    constexpr GLenum gl_enum(tinygl::texture::coordinate coordinate_direction)
     {
         switch(coordinate_direction) {
-        case tinygl::texture::coordinate_direction::s: return GL_TEXTURE_WRAP_S;
-        case tinygl::texture::coordinate_direction::t: return GL_TEXTURE_WRAP_T;
-        case tinygl::texture::coordinate_direction::r: return GL_TEXTURE_WRAP_R;
+        case tinygl::texture::coordinate::s: return GL_TEXTURE_WRAP_S;
+        case tinygl::texture::coordinate::t: return GL_TEXTURE_WRAP_T;
+        case tinygl::texture::coordinate::r: return GL_TEXTURE_WRAP_R;
         }
     }
 
     constexpr GLint gl_int(tinygl::texture::wrap_mode wrap_mode)
     {
         switch(wrap_mode) {
-        case tinygl::texture::wrap_mode::repeat: return GL_REPEAT;
-        case tinygl::texture::wrap_mode::mirrored_repeat: return GL_MIRRORED_REPEAT;
-        case tinygl::texture::wrap_mode::clamp_to_edge: return GL_CLAMP_TO_EDGE;
-        case tinygl::texture::wrap_mode::clamp_to_border: return GL_CLAMP_TO_BORDER;
+        case tinygl::texture::wrap_mode::gl_clamp_to_edge: return GL_CLAMP_TO_EDGE;
+        case tinygl::texture::wrap_mode::gl_clamp_to_border: return GL_CLAMP_TO_BORDER;
+        case tinygl::texture::wrap_mode::gl_mirrored_repeat: return GL_MIRRORED_REPEAT;
+        case tinygl::texture::wrap_mode::gl_repeat: return GL_REPEAT;
+        case tinygl::texture::wrap_mode::gl_mirror_clamp_to_edge: return GL_MIRROR_CLAMP_TO_EDGE;
         }
     }
 
@@ -174,10 +175,11 @@ struct tinygl::texture::texture_private
     GLuint id = 0;
     GLuint unit = 0;
 
-    std::map<texture::coordinate_direction, texture::wrap_mode> wrap_modes = {
-        { texture::coordinate_direction::s, texture::wrap_mode::repeat },
-        { texture::coordinate_direction::t, texture::wrap_mode::repeat },
-        { texture::coordinate_direction::r, texture::wrap_mode::repeat }
+    // Initially, GL_TEXTURE_WRAP_S/T/R are set to GL_REPEAT.
+    std::map<texture::coordinate, texture::wrap_mode> wrap_modes = {
+        { texture::coordinate::s, texture::wrap_mode::gl_repeat },
+        { texture::coordinate::t, texture::wrap_mode::gl_repeat },
+        { texture::coordinate::r, texture::wrap_mode::gl_repeat }
     };
 
     texture::filter min_filter = filter::nearest_mip_map_linear;
@@ -198,12 +200,12 @@ bool tinygl::texture::texture_private::bound()
 }
 
 tinygl::texture::texture(target target,
-                         const std::filesystem::path& file_name,
-                         internal_format internal_format,
-                         format format,
-                         bool genMipMaps,
-                         uint32_t unit) :
-        p{std::make_unique<texture_private>(target, unit)}
+     const std::filesystem::path& file_name,
+     internal_format internal_format,
+     format format,
+     bool gen_mip_maps,
+     uint32_t unit)
+    : p{std::make_unique<texture_private>(target, unit)}
 {
     int width, height, channels;
     stbi_set_flip_vertically_on_load(true);
@@ -223,7 +225,7 @@ tinygl::texture::texture(target target,
             throw std::runtime_error("[tinygl::texture] texture target is not handled yet!");
     }
 
-    if (genMipMaps) {
+    if (gen_mip_maps) {
         glGenerateMipmap(GL_TEXTURE_2D);
     }
 
@@ -263,7 +265,7 @@ void tinygl::texture::set_wrap_mode(tinygl::texture::wrap_mode mode)
         case target::gl_target_1d:
         case target::gl_target_1d_array:
         case target::gl_target_buffer:
-            p->wrap_modes.at(coordinate_direction::s) = mode;
+            p->wrap_modes.at(coordinate::s) = mode;
             glTexParameteri(gl_enum(p->texture_target), GL_TEXTURE_WRAP_S, gl_int(mode));
             break;
         case target::gl_target_2d:
@@ -273,14 +275,14 @@ void tinygl::texture::set_wrap_mode(tinygl::texture::wrap_mode mode)
         case target::gl_target_2d_multisample:
         case target::gl_target_2d_multisample_array:
         case target::gl_target_rectangle:
-            p->wrap_modes.at(coordinate_direction::s) = p->wrap_modes.at(coordinate_direction::t) = mode;
+            p->wrap_modes.at(coordinate::s) = p->wrap_modes.at(coordinate::t) = mode;
             glTexParameteri(gl_enum(p->texture_target), GL_TEXTURE_WRAP_S, gl_int(mode));
             glTexParameteri(gl_enum(p->texture_target), GL_TEXTURE_WRAP_T, gl_int(mode));
             break;
         case target::gl_target_3d:
-            p->wrap_modes.at(coordinate_direction::s) =
-                p->wrap_modes.at(coordinate_direction::t) =
-                    p->wrap_modes.at(coordinate_direction::r) = mode;
+            p->wrap_modes.at(coordinate::s) =
+                p->wrap_modes.at(coordinate::t) =
+                    p->wrap_modes.at(coordinate::r) = mode;
             glTexParameteri(gl_enum(p->texture_target), GL_TEXTURE_WRAP_S, gl_int(mode));
             glTexParameteri(gl_enum(p->texture_target), GL_TEXTURE_WRAP_T, gl_int(mode));
             glTexParameteri(gl_enum(p->texture_target), GL_TEXTURE_WRAP_R, gl_int(mode));
@@ -289,7 +291,7 @@ void tinygl::texture::set_wrap_mode(tinygl::texture::wrap_mode mode)
 }
 
 void tinygl::texture::set_wrap_mode(
-        tinygl::texture::coordinate_direction direction,
+        tinygl::texture::coordinate direction,
         tinygl::texture::wrap_mode mode)
 {
     assert(p->bound());
@@ -298,7 +300,7 @@ void tinygl::texture::set_wrap_mode(
         case target::gl_target_1d:
         case target::gl_target_1d_array:
         case target::gl_target_buffer:
-            assert(direction == coordinate_direction::s);
+            assert(direction == coordinate::s);
             p->wrap_modes.at(direction) = mode;
             glTexParameteri(gl_enum(p->texture_target), gl_enum(direction), gl_int(mode));
             break;
@@ -309,7 +311,7 @@ void tinygl::texture::set_wrap_mode(
         case texture::target::gl_target_2d_multisample:
         case texture::target::gl_target_2d_multisample_array:
         case texture::target::gl_target_rectangle:
-            assert(direction == coordinate_direction::s || direction == coordinate_direction::t);
+            assert(direction == coordinate::s || direction == coordinate::t);
             p->wrap_modes.at(direction) = mode;
             glTexParameteri(gl_enum(p->texture_target), gl_enum(direction), gl_int(mode));
             break;
@@ -320,7 +322,7 @@ void tinygl::texture::set_wrap_mode(
     }
 }
 
-tinygl::texture::wrap_mode tinygl::texture::get_wrap_mode(tinygl::texture::coordinate_direction direction) const
+tinygl::texture::wrap_mode tinygl::texture::get_wrap_mode(tinygl::texture::coordinate direction) const
 {
     return p->wrap_modes.at(direction);
 }
@@ -357,12 +359,12 @@ void tinygl::texture::set_min_mag_filters(
     set_magnification_filter(magnification_filter);
 }
 
-std::string tinygl::texture::to_string(const tinygl::texture::coordinate_direction& direction)
+std::string tinygl::texture::to_string(const tinygl::texture::coordinate& direction)
 {
     switch (direction) {
-        case coordinate_direction::s: return "S";
-        case coordinate_direction::t: return "T";
-        case coordinate_direction::r: return "R";
+        case coordinate::s: return "S";
+        case coordinate::t: return "T";
+        case coordinate::r: return "R";
         default: return "";
     }
 }
