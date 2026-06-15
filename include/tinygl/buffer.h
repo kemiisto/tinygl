@@ -29,15 +29,15 @@ namespace tinygl
         };
 
         enum class usage_pattern : uint32_t {
-            stream_draw,
-            stream_read,
-            stream_copy,
-            static_draw,
-            static_read,
-            static_copy,
-            dynamic_draw,
-            dynamic_read,
-            dynamic_copy
+            gl_stream_draw,
+            gl_stream_read,
+            gl_stream_copy,
+            gl_static_draw,
+            gl_static_read,
+            gl_static_copy,
+            gl_dynamic_draw,
+            gl_dynamic_read,
+            gl_dynamic_copy
         };
 
         buffer(binding_target binding_target, usage_pattern usage_pattern);

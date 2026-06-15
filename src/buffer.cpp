@@ -2,7 +2,8 @@
 #include <GL/glew.h>
 
 namespace {
-    constexpr GLenum gl_enum(tinygl::buffer::binding_target target) {
+    constexpr GLenum gl_enum(tinygl::buffer::binding_target target)
+    {
         switch(target) {
         case tinygl::buffer::binding_target::gl_array_buffer: return GL_ARRAY_BUFFER;
         case tinygl::buffer::binding_target::gl_atomic_counter_buffer: return GL_ATOMIC_COUNTER_BUFFER;
@@ -21,17 +22,18 @@ namespace {
         }
     }
 
-    constexpr GLenum gl_enum(tinygl::buffer::usage_pattern usage_pattern) {
+    constexpr GLenum gl_enum(tinygl::buffer::usage_pattern usage_pattern)
+    {
         switch(usage_pattern) {
-        case tinygl::buffer::usage_pattern::stream_draw: return GL_STREAM_DRAW;
-        case tinygl::buffer::usage_pattern::stream_read: return GL_STREAM_READ;
-        case tinygl::buffer::usage_pattern::stream_copy: return GL_STREAM_COPY;
-        case tinygl::buffer::usage_pattern::static_draw: return GL_STATIC_DRAW;
-        case tinygl::buffer::usage_pattern::static_read: return GL_STATIC_READ;
-        case tinygl::buffer::usage_pattern::static_copy: return GL_STATIC_COPY;
-        case tinygl::buffer::usage_pattern::dynamic_draw: return GL_DYNAMIC_DRAW;
-        case tinygl::buffer::usage_pattern::dynamic_read: return GL_DYNAMIC_READ;
-        case tinygl::buffer::usage_pattern::dynamic_copy: return GL_DYNAMIC_COPY;
+        case tinygl::buffer::usage_pattern::gl_stream_draw: return GL_STREAM_DRAW;
+        case tinygl::buffer::usage_pattern::gl_stream_read: return GL_STREAM_READ;
+        case tinygl::buffer::usage_pattern::gl_stream_copy: return GL_STREAM_COPY;
+        case tinygl::buffer::usage_pattern::gl_static_draw: return GL_STATIC_DRAW;
+        case tinygl::buffer::usage_pattern::gl_static_read: return GL_STATIC_READ;
+        case tinygl::buffer::usage_pattern::gl_static_copy: return GL_STATIC_COPY;
+        case tinygl::buffer::usage_pattern::gl_dynamic_draw: return GL_DYNAMIC_DRAW;
+        case tinygl::buffer::usage_pattern::gl_dynamic_read: return GL_DYNAMIC_READ;
+        case tinygl::buffer::usage_pattern::gl_dynamic_copy: return GL_DYNAMIC_COPY;
         }
     }
 }
