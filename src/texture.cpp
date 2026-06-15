@@ -10,6 +10,23 @@ namespace {
     constexpr GLenum gl_enum(tinygl::texture::target target)
     {
         switch(target) {
+        case tinygl::texture::target::gl_target_1d: return GL_TEXTURE_1D;
+        case tinygl::texture::target::gl_target_2d: return GL_TEXTURE_2D;
+        case tinygl::texture::target::gl_target_3d: return GL_TEXTURE_3D;
+        case tinygl::texture::target::gl_target_1d_array: return GL_TEXTURE_1D_ARRAY;
+        case tinygl::texture::target::gl_target_2d_array: return GL_TEXTURE_2D_ARRAY;
+        case tinygl::texture::target::gl_target_rectangle: return GL_TEXTURE_RECTANGLE;
+        case tinygl::texture::target::gl_target_cube_map: return GL_TEXTURE_CUBE_MAP;
+        case tinygl::texture::target::gl_target_cube_map_array: return GL_TEXTURE_CUBE_MAP_ARRAY;
+        case tinygl::texture::target::gl_target_buffer: return GL_TEXTURE_BUFFER;
+        case tinygl::texture::target::gl_target_2d_multisample: return GL_TEXTURE_2D_MULTISAMPLE;
+        case tinygl::texture::target::gl_target_2d_multisample_array: return GL_TEXTURE_2D_MULTISAMPLE_ARRAY;
+        }
+    }
+
+    constexpr GLenum gl_get_gl_enum(tinygl::texture::target target)
+    {
+        switch(target) {
         case tinygl::texture::target::gl_target_1d: return GL_TEXTURE_BINDING_1D;
         case tinygl::texture::target::gl_target_2d: return GL_TEXTURE_BINDING_2D;
         case tinygl::texture::target::gl_target_3d: return GL_TEXTURE_BINDING_3D;
@@ -166,7 +183,7 @@ namespace {
 
 struct tinygl::texture::texture_private
 {
-    explicit texture_private(target t, GLuint u);
+    explicit texture_private(target target, GLuint unit);
     ~texture_private() = default;
 
     bool bound();
@@ -186,8 +203,8 @@ struct tinygl::texture::texture_private
     texture::filter mag_filter = filter::linear;
 };
 
-tinygl::texture::texture_private::texture_private(target t, GLuint u) :
-        texture_target{t}, unit{u}
+tinygl::texture::texture_private::texture_private(target target, GLuint unit) :
+        texture_target{target}, unit{unit}
 {
     glGenTextures(1, &id);
 }
@@ -195,7 +212,7 @@ tinygl::texture::texture_private::texture_private(target t, GLuint u) :
 bool tinygl::texture::texture_private::bound()
 {
     GLint bound_id;
-    glGetIntegerv(gl_enum(texture_target), &bound_id);
+    glGetIntegerv(gl_get_gl_enum(texture_target), &bound_id);
     return id == static_cast<GLuint>(bound_id);
 }
 
@@ -203,7 +220,6 @@ tinygl::texture::texture(target target,
      const std::filesystem::path& file_name,
      internal_format internal_format,
      format format,
-     bool gen_mip_maps,
      uint32_t unit)
     : p{std::make_unique<texture_private>(target, unit)}
 {
@@ -223,10 +239,6 @@ tinygl::texture::texture(target target,
         default:
             stbi_image_free(data);
             throw std::runtime_error("[tinygl::texture] texture target is not handled yet!");
-    }
-
-    if (gen_mip_maps) {
-        glGenerateMipmap(GL_TEXTURE_2D);
     }
 
     unbind();
@@ -255,6 +267,11 @@ void tinygl::texture::unbind()
 {
     glActiveTexture(GL_TEXTURE0 + p->unit);
     glBindTexture(gl_enum(p->texture_target), 0);
+}
+
+void tinygl::texture::generate_mipmaps()
+{
+    glGenerateMipmap(GL_TEXTURE_2D);
 }
 
 void tinygl::texture::set_wrap_mode(tinygl::texture::wrap_mode mode)

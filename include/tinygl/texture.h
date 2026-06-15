@@ -158,7 +158,6 @@ namespace tinygl
             const std::filesystem::path& file_name,
             internal_format internal_format,
             format format,
-            bool gen_mip_maps,
             uint32_t unit);
         ~texture();
 
@@ -166,8 +165,9 @@ namespace tinygl
         texture& operator=(texture&& other) noexcept;
 
         void bind();
-
         void unbind();
+
+        void generate_mipmaps();
 
         void set_wrap_mode(wrap_mode mode);
         void set_wrap_mode(coordinate direction, wrap_mode mode);
