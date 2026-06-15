@@ -12,17 +12,17 @@ namespace tinygl
     {
     public:
         enum class target : uint32_t {
-            target_1d,
-            target_2d,
-            target_3d,
-            target_1d_array,
-            target_2d_array,
-            target_rectangle,
-            target_cube_map,
-            target_cube_map_array,
-            target_buffer,
-            target_2d_multisample,
-            target_2d_multisample_array
+            gl_target_1d,
+            gl_target_2d,
+            gl_target_3d,
+            gl_target_1d_array,
+            gl_target_2d_array,
+            gl_target_rectangle,
+            gl_target_cube_map,
+            gl_target_cube_map_array,
+            gl_target_buffer,
+            gl_target_2d_multisample,
+            gl_target_2d_multisample_array
         };
 
         enum class coordinate_direction : uint32_t {
