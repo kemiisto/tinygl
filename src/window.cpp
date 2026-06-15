@@ -1,3 +1,5 @@
+#include <GL/glew.h>
+
 #include "tinygl/tinygl.h"
 #include "tinygl/window.h"
 
@@ -93,10 +95,10 @@ tinygl::window::window(int width, int height, std::string_view title, bool vsync
     }
 
     spdlog::info("[tinygl::window] ========== OpenGL properties ==========");
-    const std::map<GLenum, std::string> gl_properties = {
-        { GL_VENDOR,   "Vendor"   },
-        { GL_RENDERER, "Renderer" },
-        { GL_VERSION,  "Version"  }
+    const std::map<name, std::string> gl_properties = {
+        { name::gl_vendor,   "Vendor"   },
+        { name::gl_renderer, "Renderer" },
+        { name::gl_version,  "Version"  }
     };
     for (const auto& [flag, desc] : gl_properties) {
         spdlog::info("[tinygl::window] {}: {}", desc, tinygl::get_string(flag));

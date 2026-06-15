@@ -1,7 +1,7 @@
 #ifndef TINYGL_VERTEX_ARRAY_OBJECT_H
 #define TINYGL_VERTEX_ARRAY_OBJECT_H
 
-#include <GL/glew.h>
+#include "data_types.h"
 #include <memory>
 
 namespace tinygl
@@ -19,7 +19,7 @@ namespace tinygl
         void unbind();
 
         void set_attribute_array(
-            int location, int tuple_size, GLenum type, bool normalize, int stride = 0, int offset = 0);
+            int location, int tuple_size, data_type type, bool normalize, int stride = 0, int offset = 0);
         void enable_attribute_array(int location);
 
     private:

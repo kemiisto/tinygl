@@ -1,7 +1,7 @@
 #ifndef TINYGL_KEYS_H
 #define TINYGL_KEYS_H
 
-#include <GL/glew.h>
+#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
 namespace tinygl::keyboard {

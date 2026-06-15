@@ -5,20 +5,18 @@
 #include <memory>
 #include <string_view>
 
-#include <GL/glew.h>
-
 namespace tinygl
 {
     class shader final
     {
     public:
-        enum class type {
-            vertex = GL_VERTEX_SHADER,
-            fragment = GL_FRAGMENT_SHADER,
-            geometry = GL_GEOMETRY_SHADER,
-            tessellation_control = GL_TESS_CONTROL_SHADER,
-            tessellation_evaluation = GL_TESS_EVALUATION_SHADER,
-            compute = GL_COMPUTE_SHADER
+        enum class type : uint32_t {
+            vertex,
+            fragment,
+            geometry,
+            tessellation_control,
+            tessellation_evaluation,
+            compute
         };
 
         shader(type type, std::string_view source);
@@ -34,7 +32,7 @@ namespace tinygl
         type shader_type() const;
 
     private:
-        GLuint id() const;
+        uint32_t id() const;
 
         struct shader_private;
         std::unique_ptr<shader_private> p;

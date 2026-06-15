@@ -1,4 +1,5 @@
 #include "tinygl/shader_program.h"
+#include <GL/glew.h>
 #include <fmt/format.h>
 #include <algorithm>
 #include <iostream>
@@ -11,7 +12,7 @@ struct tinygl::shader_program::shader_program_private
 
     bool has_shader(shader::type type) const;
 
-    GLuint id = 0;
+    uint32_t id = 0;
     bool linked = false;
     std::vector<std::shared_ptr<shader>> shaders;
 };

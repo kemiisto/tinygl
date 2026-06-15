@@ -1,7 +1,6 @@
 #ifndef TINYGL_BUFFER_H
 #define TINYGL_BUFFER_H
 
-#include <GL/glew.h>
 #include <cstddef>
 #include <iterator>
 #include <memory>
@@ -12,21 +11,21 @@ namespace tinygl
     class buffer final
     {
     public:
-        enum class type {
-            vertex_buffer = GL_ARRAY_BUFFER,
-            index_buffer = GL_ELEMENT_ARRAY_BUFFER
+        enum class type : uint32_t {
+            vertex_buffer,
+            index_buffer
         };
 
-        enum class usage_pattern {
-            stream_draw = GL_STREAM_DRAW,
-            stream_read = GL_STREAM_READ,
-            stream_copy = GL_STREAM_COPY,
-            static_draw = GL_STATIC_DRAW,
-            static_read = GL_STATIC_READ,
-            static_copy = GL_STATIC_COPY,
-            dynamic_draw = GL_DYNAMIC_DRAW,
-            dynamic_read = GL_DYNAMIC_READ,
-            dynamic_copy = GL_DYNAMIC_COPY
+        enum class usage_pattern : uint32_t {
+            stream_draw,
+            stream_read,
+            stream_copy,
+            static_draw,
+            static_read,
+            static_copy,
+            dynamic_draw,
+            dynamic_read,
+            dynamic_copy
         };
 
         buffer(type type, usage_pattern usage_pattern);

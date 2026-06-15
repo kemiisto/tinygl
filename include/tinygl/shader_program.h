@@ -25,25 +25,25 @@ namespace tinygl
         int attribute_location(std::string_view name) const;
         int uniform_location(std::string_view name) const;
 
-        void set_uniform_value(int location, GLfloat value);
-        void set_uniform_value(int location, GLint value);
-        void set_uniform_value(int location, GLuint value);
-        void set_uniform_value(int location, GLfloat x, GLfloat y);
-        void set_uniform_value(int location, GLfloat x, GLfloat y, GLfloat z);
-        void set_uniform_value(int location, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
+        void set_uniform_value(int location, float value);
+        void set_uniform_value(int location, int32_t value);
+        void set_uniform_value(int location, uint32_t value);
+        void set_uniform_value(int location, float x, float y);
+        void set_uniform_value(int location, float x, float y, float z);
+        void set_uniform_value(int location, float x, float y, float z, float w);
 
         void set_uniform_value(int location, const tinyla::vec2f& v);
         void set_uniform_value(int location, const tinyla::vec3f& v);
         void set_uniform_value(int location, const tinyla::vec4f& v);
 
         void set_uniform_value(int location, const tinyla::mat4f& m);
-        void set_uniform_value(int location, const GLfloat m[4][4]);
-        void set_uniform_value(int location, const GLfloat m[16]);
+        void set_uniform_value(int location, const float m[4][4]);
+        void set_uniform_value(int location, const float m[16]);
 
-        void set_attribute_value(int location, GLfloat value);
-        void set_attribute_value(int location, GLfloat x, GLfloat y);
-        void set_attribute_value(int location, GLfloat x, GLfloat y, GLfloat z);
-        void set_attribute_value(int location, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
+        void set_attribute_value(int location, float value);
+        void set_attribute_value(int location, float x, float y);
+        void set_attribute_value(int location, float x, float y, float z);
+        void set_attribute_value(int location, float x, float y, float z, float w);
 
         void set_attribute_value(int location, const tinyla::vec2f& v);
         void set_attribute_value(int location, const tinyla::vec3f& v);

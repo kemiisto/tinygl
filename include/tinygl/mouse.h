@@ -1,8 +1,7 @@
 #ifndef TINYGL_MOUSE_H
 #define TINYGL_MOUSE_H
 
-#include "tinygl/bitmask_operators.h"
-#include <GL/glew.h>
+#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
 namespace tinygl::mouse {

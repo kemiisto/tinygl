@@ -1,60 +1,164 @@
 #ifndef TINYGL_TEXTURE_H
 #define TINYGL_TEXTURE_H
 
+#include <cstdint>
 #include <filesystem>
 #include <memory>
 #include <string>
-
-#include <GL/glew.h>
 
 namespace tinygl
 {
     class texture final
     {
     public:
-        enum class target {
-            target_1d = GL_TEXTURE_1D,
-            target_2d = GL_TEXTURE_2D,
-            target_3d = GL_TEXTURE_3D,
-            target_1d_array = GL_TEXTURE_1D_ARRAY,
-            target_2d_array = GL_TEXTURE_2D_ARRAY,
-            target_rectangle = GL_TEXTURE_RECTANGLE,
-            target_cube_map = GL_TEXTURE_CUBE_MAP,
-            target_cube_map_array = GL_TEXTURE_CUBE_MAP_ARRAY,
-            target_buffer = GL_TEXTURE_BUFFER,
-            target_2d_multisample = GL_TEXTURE_2D_MULTISAMPLE,
-            target_2d_multisample_array = GL_TEXTURE_2D_MULTISAMPLE_ARRAY
+        enum class target : uint32_t {
+            target_1d,
+            target_2d,
+            target_3d,
+            target_1d_array,
+            target_2d_array,
+            target_rectangle,
+            target_cube_map,
+            target_cube_map_array,
+            target_buffer,
+            target_2d_multisample,
+            target_2d_multisample_array
         };
 
-        enum coordinate_direction {
-            s = GL_TEXTURE_WRAP_S,
-            t = GL_TEXTURE_WRAP_T,
-            r = GL_TEXTURE_WRAP_R
+        enum class coordinate_direction : uint32_t {
+            s,
+            t,
+            r
         };
 
-        enum class wrap_mode {
-            repeat = GL_REPEAT,
-            mirrored_repeat = GL_MIRRORED_REPEAT,
-            clamp_to_edge = GL_CLAMP_TO_EDGE,
-            clamp_to_border = GL_CLAMP_TO_BORDER
+        enum class wrap_mode : uint32_t {
+            repeat,
+            mirrored_repeat,
+            clamp_to_edge,
+            clamp_to_border
         };
 
-        enum filter {
-            nearest = GL_NEAREST,
-            linear = GL_LINEAR,
-            nearest_mip_map_nearest = GL_NEAREST_MIPMAP_NEAREST,
-            nearest_mip_map_linear = GL_NEAREST_MIPMAP_LINEAR,
-            linear_mip_map_nearest = GL_LINEAR_MIPMAP_NEAREST,
-            linear_mip_map_linear = GL_LINEAR_MIPMAP_LINEAR
+        enum class filter : uint32_t {
+            nearest,
+            linear,
+            nearest_mip_map_nearest,
+            nearest_mip_map_linear,
+            linear_mip_map_nearest,
+            linear_mip_map_linear
+        };
+
+        enum class internal_format : uint32_t {
+            // base internal formats
+            gl_depth_component,
+            gl_depth_stencil,
+            gl_red,
+            gl_rg,
+            gl_rgb,
+            gl_rgba,
+            // sized internal format
+            gl_r8,
+            gl_r8_snorm,
+            gl_r16,
+            gl_r16_snorm,
+            gl_rg8,
+            gl_rg8_snorm,
+            gl_rg16,
+            gl_rg16_snorm,
+            gl_r3_g3_b2,
+            gl_rgb4,
+            gl_rgb5,
+            gl_rgb8,
+            gl_rgb8_snorm,
+            gl_rgb10,
+            gl_rgb12,
+            gl_rgb16_snorm,
+            gl_rgba2,
+            gl_rgba4,
+            gl_rgb5_a1,
+            gl_rgba8,
+            gl_rgba8_snorm,
+            gl_rgb10_a2,
+            gl_rgb10_a2ui,
+            gl_rgba12,
+            gl_rgba16,
+            gl_srgb8,
+            gl_srgb8_alpha8,
+            gl_r16f,
+            gl_rg16f,
+            gl_rgb16f,
+            gl_rgba16f,
+            gl_r32f,
+            gl_rg32f,
+            gl_rgb32f,
+            gl_rgba32f,
+            gl_r11f_g11f_b10f,
+            gl_rgb9_e5,
+            gl_r8i,
+            gl_r8ui,
+            gl_r16i,
+            gl_r16ui,
+            gl_r32i,
+            gl_r32ui,
+            gl_rg8i,
+            gl_rg8ui,
+            gl_rg16i,
+            gl_rg16ui,
+            gl_rg32i,
+            gl_rg32ui,
+            gl_rgb8i,
+            gl_rgb8ui,
+            gl_rgb16i,
+            gl_rgb16ui,
+            gl_rgb32i,
+            gl_rgb32ui,
+            gl_rgba8i,
+            gl_rgba8ui,
+            gl_rgba16i,
+            gl_rgba16ui,
+            gl_rgba32i,
+            gl_rgba32ui,
+            // compressed internal formats
+            gl_compressed_red,
+            gl_compressed_rg,
+            gl_compressed_rgb,
+            gl_compressed_rgba,
+            gl_compressed_srgb,
+            gl_compressed_srgb_alpha,
+            gl_compressed_red_rgtc1,
+            gl_compressed_signed_red_rgtc1,
+            gl_compressed_rg_rgtc2,
+            gl_compressed_signed_rg_rgtc2,
+            gl_compressed_rgba_bptc_unorm,
+            gl_compressed_srgb_alpha_bptc_unorm,
+            gl_compressed_rgb_bptc_signed_float,
+            gl_compressed_rgb_bptc_unsigned_float
+        };
+
+        enum class format : uint32_t {
+            gl_red,
+            gl_rg,
+            gl_rgb,
+            gl_bgr,
+            gl_rgba,
+            gl_bgra,
+            gl_red_integer,
+            gl_rg_integer,
+            gl_rgb_integer,
+            gl_bgr_integer,
+            gl_rgba_integer,
+            gl_bgra_integer,
+            gl_stencil_index,
+            gl_depth_component,
+            gl_depth_stencil
         };
 
         texture(
             target target,
             const std::filesystem::path& file_name,
-            GLint internal_format,
-            GLenum format,
+            internal_format internal_format,
+            format format,
             bool gen_mip_maps,
-            GLuint unit);
+            uint32_t unit);
         ~texture();
 
         texture(texture&& other) noexcept;

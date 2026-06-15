@@ -1,14 +1,35 @@
 #include "tinygl/shader.h"
+#include <GL/glew.h>
 #include <fmt/format.h>
 #include <iostream>
 #include <sstream>
 #include <fstream>
 #include <map>
 
-static const std::map<tinygl::shader::type, std::string> shader_type_name = {
-    { tinygl::shader::type::vertex,   "vertex" },
-    { tinygl::shader::type::fragment, "fragment" }
-};
+namespace {
+    constexpr GLenum gl_enum(tinygl::shader::type shader_type)
+    {
+        switch(shader_type) {
+        case tinygl::shader::type::vertex: return GL_VERTEX_SHADER;
+        case tinygl::shader::type::fragment: return GL_FRAGMENT_SHADER;
+        case tinygl::shader::type::geometry: return GL_GEOMETRY_SHADER;
+        case tinygl::shader::type::tessellation_control: return GL_TESS_CONTROL_SHADER;
+        case tinygl::shader::type::tessellation_evaluation: return GL_TESS_EVALUATION_SHADER;
+        case tinygl::shader::type::compute: return GL_COMPUTE_SHADER;
+        }
+    }
+
+    constexpr std::string name(tinygl::shader::type shader_type) {
+        switch(shader_type) {
+        case tinygl::shader::type::vertex: return "vertex";
+        case tinygl::shader::type::fragment: return "fragment";
+        case tinygl::shader::type::geometry: return "geometry";
+        case tinygl::shader::type::tessellation_control: return "tessellation control";
+        case tinygl::shader::type::tessellation_evaluation: return "tessellation evaluation";
+        case tinygl::shader::type::compute: return "compute";
+        }
+    };
+}
 
 struct tinygl::shader::shader_private
 {
@@ -21,7 +42,7 @@ struct tinygl::shader::shader_private
     void compile_source_code(std::string_view source);
     void compile_source_file(const std::filesystem::path& file_name);
 
-    GLuint id = 0;
+    uint32_t id = 0;
     type shader_type;
     bool compiled = false;
 };
@@ -33,10 +54,10 @@ tinygl::shader::shader_private::~shader_private()
 
 void tinygl::shader::shader_private::create()
 {
-    id = glCreateShader(static_cast<GLenum>(shader_type));
+    id = glCreateShader(gl_enum(shader_type));
     if (!id) {
         throw std::runtime_error(
-            fmt::format("tinygl::shader: could not create {} shader!", shader_type_name.at(shader_type))
+            fmt::format("tinygl::shader::shader_private::create(): could not create {} shader!", name(shader_type))
         );
     }
 }
@@ -62,7 +83,7 @@ void tinygl::shader::shader_private::compile()
         glGetShaderInfoLog(id, length, &length, &info_log[0]);
         std::cerr << "tinygl::shader::shader_private::compile(): " << info_log << std::endl;
         throw std::runtime_error(
-            fmt::format("tinygl::shader: could not compile {} shader!", shader_type_name.at(shader_type))
+            fmt::format("tinygl::shader: could not compile {} shader!", name(shader_type))
         );
     }
 }
