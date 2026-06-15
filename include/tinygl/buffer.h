@@ -11,9 +11,21 @@ namespace tinygl
     class buffer final
     {
     public:
-        enum class type : uint32_t {
-            vertex_buffer,
-            index_buffer
+        enum class target : uint32_t {
+            gl_array_buffer,
+            gl_atomic_counter_buffer,
+            gl_copy_read_buffer,
+            gl_copy_write_buffer,
+            gl_dispatch_indirect_buffer,
+            gl_draw_indirect_buffer,
+            gl_element_array_buffer,
+            gl_pixel_pack_buffer,
+            gl_pixel_unpack_buffer,
+            gl_query_buffer,
+            gl_shader_storage_buffer,
+            gl_texture_buffer,
+            gl_transform_feedback_buffer,
+            gl_uniform_buffer
         };
 
         enum class usage_pattern : uint32_t {
@@ -28,7 +40,7 @@ namespace tinygl
             dynamic_copy
         };
 
-        buffer(type type, usage_pattern usage_pattern);
+        buffer(target target, usage_pattern usage_pattern);
         ~buffer();
 
         buffer(buffer&& other) noexcept;
