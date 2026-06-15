@@ -1,6 +1,7 @@
 #ifndef TINYGL_TINYGL_H
 #define TINYGL_TINYGL_H
 
+#include "tinygl/bitmask_operators.h"
 #include "tinygl/buffer.h"
 #include "tinygl/color.h"
 #include "tinygl/data_types.h"
@@ -109,6 +110,11 @@ namespace tinygl
 
     void check_opengl_errors();
 }
+
+template<>
+    struct enable_bitmask_operators<tinygl::buffer_bit> {
+    static constexpr bool enable = true;
+};
 
 extern template float tinygl::get_time<float>();
 extern template double tinygl::get_time<double>();
