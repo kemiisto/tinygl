@@ -11,7 +11,7 @@ namespace tinygl
     class buffer final
     {
     public:
-        enum class target : uint32_t {
+        enum class binding_target : uint32_t {
             gl_array_buffer,
             gl_atomic_counter_buffer,
             gl_copy_read_buffer,
@@ -40,7 +40,7 @@ namespace tinygl
             dynamic_copy
         };
 
-        buffer(target target, usage_pattern usage_pattern);
+        buffer(binding_target binding_target, usage_pattern usage_pattern);
         ~buffer();
 
         buffer(buffer&& other) noexcept;

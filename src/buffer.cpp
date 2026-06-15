@@ -2,22 +2,22 @@
 #include <GL/glew.h>
 
 namespace {
-    constexpr GLenum gl_enum(tinygl::buffer::target target) {
+    constexpr GLenum gl_enum(tinygl::buffer::binding_target target) {
         switch(target) {
-        case tinygl::buffer::target::gl_array_buffer: return GL_ARRAY_BUFFER;
-        case tinygl::buffer::target::gl_atomic_counter_buffer: return GL_ATOMIC_COUNTER_BUFFER;
-        case tinygl::buffer::target::gl_copy_read_buffer: return GL_COPY_READ_BUFFER;
-        case tinygl::buffer::target::gl_copy_write_buffer: return GL_COPY_WRITE_BUFFER;
-        case tinygl::buffer::target::gl_dispatch_indirect_buffer: return GL_DISPATCH_INDIRECT_BUFFER;
-        case tinygl::buffer::target::gl_draw_indirect_buffer: return GL_DRAW_INDIRECT_BUFFER;
-        case tinygl::buffer::target::gl_element_array_buffer: return GL_ELEMENT_ARRAY_BUFFER;
-        case tinygl::buffer::target::gl_pixel_pack_buffer: return GL_PIXEL_PACK_BUFFER;
-        case tinygl::buffer::target::gl_pixel_unpack_buffer: return GL_PIXEL_UNPACK_BUFFER;
-        case tinygl::buffer::target::gl_query_buffer: return GL_QUERY_BUFFER;
-        case tinygl::buffer::target::gl_shader_storage_buffer: return GL_SHADER_STORAGE_BUFFER;
-        case tinygl::buffer::target::gl_texture_buffer: return GL_TEXTURE_BUFFER;
-        case tinygl::buffer::target::gl_transform_feedback_buffer: return GL_TRANSFORM_FEEDBACK_BUFFER;
-        case tinygl::buffer::target::gl_uniform_buffer: return GL_UNIFORM_BUFFER;
+        case tinygl::buffer::binding_target::gl_array_buffer: return GL_ARRAY_BUFFER;
+        case tinygl::buffer::binding_target::gl_atomic_counter_buffer: return GL_ATOMIC_COUNTER_BUFFER;
+        case tinygl::buffer::binding_target::gl_copy_read_buffer: return GL_COPY_READ_BUFFER;
+        case tinygl::buffer::binding_target::gl_copy_write_buffer: return GL_COPY_WRITE_BUFFER;
+        case tinygl::buffer::binding_target::gl_dispatch_indirect_buffer: return GL_DISPATCH_INDIRECT_BUFFER;
+        case tinygl::buffer::binding_target::gl_draw_indirect_buffer: return GL_DRAW_INDIRECT_BUFFER;
+        case tinygl::buffer::binding_target::gl_element_array_buffer: return GL_ELEMENT_ARRAY_BUFFER;
+        case tinygl::buffer::binding_target::gl_pixel_pack_buffer: return GL_PIXEL_PACK_BUFFER;
+        case tinygl::buffer::binding_target::gl_pixel_unpack_buffer: return GL_PIXEL_UNPACK_BUFFER;
+        case tinygl::buffer::binding_target::gl_query_buffer: return GL_QUERY_BUFFER;
+        case tinygl::buffer::binding_target::gl_shader_storage_buffer: return GL_SHADER_STORAGE_BUFFER;
+        case tinygl::buffer::binding_target::gl_texture_buffer: return GL_TEXTURE_BUFFER;
+        case tinygl::buffer::binding_target::gl_transform_feedback_buffer: return GL_TRANSFORM_FEEDBACK_BUFFER;
+        case tinygl::buffer::binding_target::gl_uniform_buffer: return GL_UNIFORM_BUFFER;
         }
     }
 
@@ -38,16 +38,16 @@ namespace {
 
 struct tinygl::buffer::buffer_private
 {
-    buffer_private(buffer::target target, buffer::usage_pattern pattern);
+    buffer_private(buffer::binding_target binding_target, buffer::usage_pattern pattern);
     ~buffer_private();
 
     GLuint id = 0;
-    target target;
+    binding_target binding_target;
     usage_pattern usage_pattern;
 };
 
-tinygl::buffer::buffer_private::buffer_private(tinygl::buffer::target target, buffer::usage_pattern pattern) :
-        target{target},
+tinygl::buffer::buffer_private::buffer_private(tinygl::buffer::binding_target target, buffer::usage_pattern pattern) :
+        binding_target{target},
         usage_pattern{pattern}
 {
     glGenBuffers(1, &id);
@@ -58,8 +58,8 @@ tinygl::buffer::buffer_private::~buffer_private()
     glDeleteBuffers(1, &id);
 }
 
-tinygl::buffer::buffer(buffer::target target, buffer::usage_pattern usage_pattern) :
-        p{std::make_unique<buffer_private>(target, usage_pattern)}
+tinygl::buffer::buffer(buffer::binding_target binding_target, buffer::usage_pattern usage_pattern) :
+        p{std::make_unique<buffer_private>(binding_target, usage_pattern)}
 {
 }
 
@@ -77,18 +77,18 @@ tinygl::buffer& tinygl::buffer::operator=(tinygl::buffer&& other) noexcept
 
 void tinygl::buffer::bind()
 {
-    glBindBuffer(gl_enum(p->target), p->id);
+    glBindBuffer(gl_enum(p->binding_target), p->id);
 }
 
 void tinygl::buffer::unbind()
 {
-    glBindBuffer(gl_enum(p->target), 0);
+    glBindBuffer(gl_enum(p->binding_target), 0);
 }
 
 void tinygl::buffer::create(std::size_t size, const void* data)
 {
     glBufferData(
-        gl_enum(p->target),
+        gl_enum(p->binding_target),
         static_cast<GLsizeiptr>(size),
         data,
         gl_enum(p->usage_pattern)
@@ -98,7 +98,7 @@ void tinygl::buffer::create(std::size_t size, const void* data)
 void tinygl::buffer::update(std::size_t offset, std::size_t size, void const* data)
 {
     glBufferSubData(
-        gl_enum(p->target),
+        gl_enum(p->binding_target),
         static_cast<GLintptr>(offset),
         static_cast<GLsizeiptr>(size),
         data
