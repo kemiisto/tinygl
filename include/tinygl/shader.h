@@ -11,12 +11,12 @@ namespace tinygl
     {
     public:
         enum class type : uint32_t {
-            vertex,
-            fragment,
-            geometry,
-            tessellation_control,
-            tessellation_evaluation,
-            compute
+            gl_compute_shader,
+            gl_vertex_shader,
+            gl_tess_control_shader,
+            gl_tess_evaluation_shader,
+            gl_geometry_shader,
+            gl_fragment_shader
         };
 
         shader(type type, std::string_view source);

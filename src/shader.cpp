@@ -10,23 +10,23 @@ namespace {
     constexpr GLenum gl_enum(tinygl::shader::type shader_type)
     {
         switch(shader_type) {
-        case tinygl::shader::type::vertex: return GL_VERTEX_SHADER;
-        case tinygl::shader::type::fragment: return GL_FRAGMENT_SHADER;
-        case tinygl::shader::type::geometry: return GL_GEOMETRY_SHADER;
-        case tinygl::shader::type::tessellation_control: return GL_TESS_CONTROL_SHADER;
-        case tinygl::shader::type::tessellation_evaluation: return GL_TESS_EVALUATION_SHADER;
-        case tinygl::shader::type::compute: return GL_COMPUTE_SHADER;
+        case tinygl::shader::type::gl_compute_shader: return GL_COMPUTE_SHADER;
+        case tinygl::shader::type::gl_vertex_shader: return GL_VERTEX_SHADER;
+        case tinygl::shader::type::gl_tess_control_shader: return GL_TESS_CONTROL_SHADER;
+        case tinygl::shader::type::gl_tess_evaluation_shader: return GL_TESS_EVALUATION_SHADER;
+        case tinygl::shader::type::gl_geometry_shader: return GL_GEOMETRY_SHADER;
+        case tinygl::shader::type::gl_fragment_shader: return GL_FRAGMENT_SHADER;
         }
     }
 
-    constexpr std::string name(tinygl::shader::type shader_type) {
+    constexpr std::string to_string(tinygl::shader::type shader_type) {
         switch(shader_type) {
-        case tinygl::shader::type::vertex: return "vertex";
-        case tinygl::shader::type::fragment: return "fragment";
-        case tinygl::shader::type::geometry: return "geometry";
-        case tinygl::shader::type::tessellation_control: return "tessellation control";
-        case tinygl::shader::type::tessellation_evaluation: return "tessellation evaluation";
-        case tinygl::shader::type::compute: return "compute";
+        case tinygl::shader::type::gl_compute_shader: return "GL_COMPUTE_SHADER";
+        case tinygl::shader::type::gl_vertex_shader: return "GL_VERTEX_SHADER";
+        case tinygl::shader::type::gl_tess_control_shader: return "GL_TESS_CONTROL_SHADER";
+        case tinygl::shader::type::gl_tess_evaluation_shader: return "GL_TESS_EVALUATION_SHADER";
+        case tinygl::shader::type::gl_geometry_shader: return "GL_GEOMETRY_SHADER";
+        case tinygl::shader::type::gl_fragment_shader: return "GL_FRAGMENT_SHADER";
         }
     };
 }
@@ -57,7 +57,7 @@ void tinygl::shader::shader_private::create()
     id = glCreateShader(gl_enum(shader_type));
     if (!id) {
         throw std::runtime_error(
-            fmt::format("tinygl::shader::shader_private::create(): could not create {} shader!", name(shader_type))
+            fmt::format("tinygl::shader::shader_private::create(): could not create {} shader!", to_string(shader_type))
         );
     }
 }
@@ -83,7 +83,7 @@ void tinygl::shader::shader_private::compile()
         glGetShaderInfoLog(id, length, &length, &info_log[0]);
         std::cerr << "tinygl::shader::shader_private::compile(): " << info_log << std::endl;
         throw std::runtime_error(
-            fmt::format("tinygl::shader: could not compile {} shader!", name(shader_type))
+            fmt::format("tinygl::shader: could not compile {} shader!", to_string(shader_type))
         );
     }
 }
