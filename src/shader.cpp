@@ -90,7 +90,8 @@ void tinygl::shader::shader_private::compile()
 
 void tinygl::shader::shader_private::compile_source_code(std::string_view source)
 {
-    const char* c_str = source.data();
+    const std::string source_str{source};
+    const char* c_str = source_str.c_str();
     glShaderSource(id, 1, &c_str, nullptr);
     compile();
 }
