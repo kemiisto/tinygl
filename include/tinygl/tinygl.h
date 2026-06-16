@@ -21,9 +21,9 @@ namespace tinygl
     void gl_clear_color(const color& color);
 
     enum class buffer_bit : uint32_t {
-        gl_color_buffer_bit,
-        gl_depth_buffer_bit,
-        gl_stencil_buffer_bit
+        gl_color_buffer_bit   = 0x00004000,  // GL_COLOR_BUFFER_BIT
+        gl_depth_buffer_bit   = 0x00000100,  // GL_DEPTH_BUFFER_BIT
+        gl_stencil_buffer_bit = 0x00000400   // GL_STENCIL_BUFFER_BIT
     };
     void gl_clear(buffer_bit buffer_bit);
 

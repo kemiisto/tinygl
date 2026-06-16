@@ -4,15 +4,6 @@
 #include <stdexcept>
 
 namespace {
-    constexpr GLenum gl_enum(tinygl::buffer_bit buffer_bit)
-    {
-        switch(buffer_bit) {
-        case tinygl::buffer_bit::gl_color_buffer_bit: return GL_COLOR_BUFFER_BIT;
-        case tinygl::buffer_bit::gl_depth_buffer_bit: return GL_DEPTH_BUFFER_BIT;
-        case tinygl::buffer_bit::gl_stencil_buffer_bit: return GL_STENCIL_BUFFER_BIT;
-        }
-    }
-
     constexpr GLenum gl_enum(tinygl::name name)
     {
         switch(name) {
@@ -102,7 +93,7 @@ void tinygl::gl_clear_color(const tinygl::color& color)
 
 void tinygl::gl_clear(buffer_bit buffer_bit)
 {
-    glClear(gl_enum(buffer_bit));
+    glClear(static_cast<GLenum>(buffer_bit));
 }
 
 void tinygl::gl_point_size(float size)
