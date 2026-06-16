@@ -10,34 +10,34 @@ namespace {
     constexpr GLenum gl_enum(tinygl::texture::target target)
     {
         switch(target) {
-        case tinygl::texture::target::gl_target_1d: return GL_TEXTURE_1D;
-        case tinygl::texture::target::gl_target_2d: return GL_TEXTURE_2D;
-        case tinygl::texture::target::gl_target_3d: return GL_TEXTURE_3D;
-        case tinygl::texture::target::gl_target_1d_array: return GL_TEXTURE_1D_ARRAY;
-        case tinygl::texture::target::gl_target_2d_array: return GL_TEXTURE_2D_ARRAY;
-        case tinygl::texture::target::gl_target_rectangle: return GL_TEXTURE_RECTANGLE;
-        case tinygl::texture::target::gl_target_cube_map: return GL_TEXTURE_CUBE_MAP;
-        case tinygl::texture::target::gl_target_cube_map_array: return GL_TEXTURE_CUBE_MAP_ARRAY;
-        case tinygl::texture::target::gl_target_buffer: return GL_TEXTURE_BUFFER;
-        case tinygl::texture::target::gl_target_2d_multisample: return GL_TEXTURE_2D_MULTISAMPLE;
-        case tinygl::texture::target::gl_target_2d_multisample_array: return GL_TEXTURE_2D_MULTISAMPLE_ARRAY;
+            case tinygl::texture::target::gl_texture_1d: return GL_TEXTURE_1D;
+            case tinygl::texture::target::gl_texture_2d: return GL_TEXTURE_2D;
+            case tinygl::texture::target::gl_texture_3d: return GL_TEXTURE_3D;
+            case tinygl::texture::target::gl_texture_1d_array: return GL_TEXTURE_1D_ARRAY;
+            case tinygl::texture::target::gl_texture_2d_array: return GL_TEXTURE_2D_ARRAY;
+            case tinygl::texture::target::gl_texture_rectangle: return GL_TEXTURE_RECTANGLE;
+            case tinygl::texture::target::gl_texture_cube_map: return GL_TEXTURE_CUBE_MAP;
+            case tinygl::texture::target::gl_texture_cube_map_array: return GL_TEXTURE_CUBE_MAP_ARRAY;
+            case tinygl::texture::target::gl_texture_buffer: return GL_TEXTURE_BUFFER;
+            case tinygl::texture::target::gl_texture_2d_multisample: return GL_TEXTURE_2D_MULTISAMPLE;
+            case tinygl::texture::target::gl_texture_2d_multisample_array: return GL_TEXTURE_2D_MULTISAMPLE_ARRAY;
         }
     }
 
     constexpr GLenum gl_get_gl_enum(tinygl::texture::target target)
     {
         switch(target) {
-        case tinygl::texture::target::gl_target_1d: return GL_TEXTURE_BINDING_1D;
-        case tinygl::texture::target::gl_target_2d: return GL_TEXTURE_BINDING_2D;
-        case tinygl::texture::target::gl_target_3d: return GL_TEXTURE_BINDING_3D;
-        case tinygl::texture::target::gl_target_1d_array: return GL_TEXTURE_BINDING_1D_ARRAY;
-        case tinygl::texture::target::gl_target_2d_array: return GL_TEXTURE_BINDING_2D_ARRAY;
-        case tinygl::texture::target::gl_target_rectangle: return GL_TEXTURE_BINDING_RECTANGLE;
-        case tinygl::texture::target::gl_target_cube_map: return GL_TEXTURE_BINDING_CUBE_MAP;
-        case tinygl::texture::target::gl_target_cube_map_array: return GL_TEXTURE_BINDING_CUBE_MAP_ARRAY;
-        case tinygl::texture::target::gl_target_buffer: return GL_TEXTURE_BINDING_BUFFER;
-        case tinygl::texture::target::gl_target_2d_multisample: return GL_TEXTURE_BINDING_2D_MULTISAMPLE;
-        case tinygl::texture::target::gl_target_2d_multisample_array: return GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY;
+            case tinygl::texture::target::gl_texture_1d: return GL_TEXTURE_BINDING_1D;
+            case tinygl::texture::target::gl_texture_2d: return GL_TEXTURE_BINDING_2D;
+            case tinygl::texture::target::gl_texture_3d: return GL_TEXTURE_BINDING_3D;
+            case tinygl::texture::target::gl_texture_1d_array: return GL_TEXTURE_BINDING_1D_ARRAY;
+            case tinygl::texture::target::gl_texture_2d_array: return GL_TEXTURE_BINDING_2D_ARRAY;
+            case tinygl::texture::target::gl_texture_rectangle: return GL_TEXTURE_BINDING_RECTANGLE;
+            case tinygl::texture::target::gl_texture_cube_map: return GL_TEXTURE_BINDING_CUBE_MAP;
+            case tinygl::texture::target::gl_texture_cube_map_array: return GL_TEXTURE_BINDING_CUBE_MAP_ARRAY;
+            case tinygl::texture::target::gl_texture_buffer: return GL_TEXTURE_BINDING_BUFFER;
+            case tinygl::texture::target::gl_texture_2d_multisample: return GL_TEXTURE_BINDING_2D_MULTISAMPLE;
+            case tinygl::texture::target::gl_texture_2d_multisample_array: return GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY;
         }
     }
 
@@ -233,7 +233,7 @@ tinygl::texture::texture(target target,
     bind();
 
     switch (target) {
-        case target::gl_target_2d:
+        case target::gl_texture_2d:
             glTexImage2D(GL_TEXTURE_2D, 0, gl_int(internal_format), width, height, 0, gl_enum(format), GL_UNSIGNED_BYTE, data);
             break;
         default:
@@ -279,24 +279,24 @@ void tinygl::texture::set_wrap_mode(tinygl::texture::wrap_mode mode)
     assert(p->bound());
 
     switch (p->texture_target) {
-        case target::gl_target_1d:
-        case target::gl_target_1d_array:
-        case target::gl_target_buffer:
+        case target::gl_texture_1d:
+        case target::gl_texture_1d_array:
+        case target::gl_texture_buffer:
             p->wrap_modes.at(coordinate::s) = mode;
             glTexParameteri(gl_enum(p->texture_target), GL_TEXTURE_WRAP_S, gl_int(mode));
             break;
-        case target::gl_target_2d:
-        case target::gl_target_2d_array:
-        case target::gl_target_cube_map:
-        case target::gl_target_cube_map_array:
-        case target::gl_target_2d_multisample:
-        case target::gl_target_2d_multisample_array:
-        case target::gl_target_rectangle:
+        case target::gl_texture_2d:
+        case target::gl_texture_2d_array:
+        case target::gl_texture_cube_map:
+        case target::gl_texture_cube_map_array:
+        case target::gl_texture_2d_multisample:
+        case target::gl_texture_2d_multisample_array:
+        case target::gl_texture_rectangle:
             p->wrap_modes.at(coordinate::s) = p->wrap_modes.at(coordinate::t) = mode;
             glTexParameteri(gl_enum(p->texture_target), GL_TEXTURE_WRAP_S, gl_int(mode));
             glTexParameteri(gl_enum(p->texture_target), GL_TEXTURE_WRAP_T, gl_int(mode));
             break;
-        case target::gl_target_3d:
+        case target::gl_texture_3d:
             p->wrap_modes.at(coordinate::s) =
                 p->wrap_modes.at(coordinate::t) =
                     p->wrap_modes.at(coordinate::r) = mode;
@@ -314,25 +314,25 @@ void tinygl::texture::set_wrap_mode(
     assert(p->bound());
 
     switch (p->texture_target) {
-        case target::gl_target_1d:
-        case target::gl_target_1d_array:
-        case target::gl_target_buffer:
+        case target::gl_texture_1d:
+        case target::gl_texture_1d_array:
+        case target::gl_texture_buffer:
             assert(direction == coordinate::s);
             p->wrap_modes.at(direction) = mode;
             glTexParameteri(gl_enum(p->texture_target), gl_enum(direction), gl_int(mode));
             break;
-        case texture::target::gl_target_2d:
-        case texture::target::gl_target_2d_array:
-        case texture::target::gl_target_cube_map:
-        case texture::target::gl_target_cube_map_array:
-        case texture::target::gl_target_2d_multisample:
-        case texture::target::gl_target_2d_multisample_array:
-        case texture::target::gl_target_rectangle:
+        case texture::target::gl_texture_2d:
+        case texture::target::gl_texture_2d_array:
+        case texture::target::gl_texture_cube_map:
+        case texture::target::gl_texture_cube_map_array:
+        case texture::target::gl_texture_2d_multisample:
+        case texture::target::gl_texture_2d_multisample_array:
+        case texture::target::gl_texture_rectangle:
             assert(direction == coordinate::s || direction == coordinate::t);
             p->wrap_modes.at(direction) = mode;
             glTexParameteri(gl_enum(p->texture_target), gl_enum(direction), gl_int(mode));
             break;
-        case target::gl_target_3d:
+        case target::gl_texture_3d:
             p->wrap_modes.at(direction) = mode;
             glTexParameteri(gl_enum(p->texture_target), gl_enum(direction), gl_int(mode));
             break;
@@ -389,17 +389,17 @@ std::string tinygl::texture::to_string(const tinygl::texture::coordinate& direct
 std::string tinygl::texture::to_string(const tinygl::texture::target& target)
 {
     switch (target) {
-        case target::gl_target_1d: return "GL_TEXTURE_BINDING_1D";
-        case target::gl_target_2d: return "GL_TEXTURE_BINDING_2D";
-        case target::gl_target_3d: return "GL_TEXTURE_BINDING_3D";
-        case target::gl_target_1d_array: return "GL_TEXTURE_BINDING_1D_ARRAY";
-        case target::gl_target_2d_array: return "GL_TEXTURE_BINDING_2D_ARRAY";
-        case target::gl_target_rectangle: return "GL_TEXTURE_BINDING_RECTANGLE";
-        case target::gl_target_cube_map: return "GL_TEXTURE_BINDING_CUBE_MAP";
-        case target::gl_target_cube_map_array: return "GL_TEXTURE_BINDING_CUBE_MAP_ARRAY";
-        case target::gl_target_buffer: return "GL_TEXTURE_BINDING_BUFFER";
-        case target::gl_target_2d_multisample: return "GL_TEXTURE_BINDING_2D_MULTISAMPLE";
-        case target::gl_target_2d_multisample_array: return "GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY";
+        case target::gl_texture_1d: return "GL_TEXTURE_1D";
+        case target::gl_texture_2d: return "GL_TEXTURE_2D";
+        case target::gl_texture_3d: return "GL_TEXTURE_3D";
+        case target::gl_texture_1d_array: return "GL_TEXTURE_1D_ARRAY";
+        case target::gl_texture_2d_array: return "GL_TEXTURE_2D_ARRAY";
+        case target::gl_texture_rectangle: return "GL_TEXTURE_RECTANGLE";
+        case target::gl_texture_cube_map: return "GL_TEXTURE_CUBE_MAP";
+        case target::gl_texture_cube_map_array: return "GL_TEXTURE_CUBE_MAP_ARRAY";
+        case target::gl_texture_buffer: return "GL_TEXTURE_BUFFER";
+        case target::gl_texture_2d_multisample: return "GL_TEXTURE_2D_MULTISAMPLE";
+        case target::gl_texture_2d_multisample_array: return "GL_TEXTURE_2D_MULTISAMPLE_ARRAY";
         default: return "";
     }
 }
