@@ -271,7 +271,7 @@ void tinygl::texture::unbind()
 
 void tinygl::texture::generate_mipmaps()
 {
-    glGenerateMipmap(GL_TEXTURE_2D);
+    glGenerateMipmap(gl_enum(p->texture_target));
 }
 
 void tinygl::texture::set_wrap_mode(tinygl::texture::wrap_mode mode)
