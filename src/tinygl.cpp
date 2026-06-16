@@ -69,7 +69,7 @@ namespace {
         case tinygl::capability::gl_primitive_restart_fixed_index: return GL_PRIMITIVE_RESTART_FIXED_INDEX;
         case tinygl::capability::gl_rasterizer_discard: return GL_RASTERIZER_DISCARD;
         case tinygl::capability::gl_sample_alpha_to_coverage: return GL_SAMPLE_ALPHA_TO_COVERAGE;
-        case tinygl::capability::gl_sample_alpha_to_one: return GL_SAMPLE_SHADING;
+        case tinygl::capability::gl_sample_alpha_to_one: return GL_SAMPLE_ALPHA_TO_ONE;
         case tinygl::capability::gl_sample_coverage: return GL_SAMPLE_COVERAGE;
         case tinygl::capability::gl_sample_shading: return GL_SAMPLE_SHADING;
         case tinygl::capability::gl_sample_mask: return GL_SAMPLE_MASK;
