@@ -44,6 +44,7 @@ namespace tinygl
         gl_patches
     };
     void gl_draw_arrays(mode mode, int32_t first, int32_t count);
+    void gl_draw_arrays_instanced(mode mode, int32_t first, int32_t count, int32_t instance_count);
 
     enum struct capability : uint32_t {
         gl_blend,
