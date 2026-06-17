@@ -1,6 +1,7 @@
 #include <GL/glew.h>
 
 #include "tinygl/tinygl.h"
+#include "utils.h"
 #include <stdexcept>
 
 namespace {
@@ -109,6 +110,11 @@ void tinygl::gl_draw_arrays(mode mode, std::int32_t first, std::int32_t count)
 void tinygl::gl_draw_arrays_instanced(mode mode, std::int32_t first, std::int32_t count, std::int32_t instance_count)
 {
     glDrawArraysInstanced(gl_enum(mode), first, count, instance_count);
+}
+
+void tinygl::gl_draw_elements(mode mode, std::int32_t count, data_type type, const void* indices)
+{
+    glDrawElements(gl_enum(mode), count, utils::gl_enum(type), indices);
 }
 
 void tinygl::gl_enable(capability capability)

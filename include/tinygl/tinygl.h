@@ -45,6 +45,7 @@ namespace tinygl
     };
     void gl_draw_arrays(mode mode, std::int32_t first, std::int32_t count);
     void gl_draw_arrays_instanced(mode mode, std::int32_t first, std::int32_t count, std::int32_t instance_count);
+    void gl_draw_elements(mode mode, std::int32_t count, data_type type, const void* indices);
 
     enum struct capability : std::uint32_t {
         gl_blend,

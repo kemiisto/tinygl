@@ -17,28 +17,6 @@ namespace tinygl::utils {
         case data_type::gl_double: return GL_DOUBLE;
         }
     }
-
-    enum coordinate_direction {
-        s = GL_TEXTURE_WRAP_S,
-        t = GL_TEXTURE_WRAP_T,
-        r = GL_TEXTURE_WRAP_R
-    };
-
-    enum class wrap_mode {
-        repeat = GL_REPEAT,
-        mirrored_repeat = GL_MIRRORED_REPEAT,
-        clamp_to_edge = GL_CLAMP_TO_EDGE,
-        clamp_to_border = GL_CLAMP_TO_BORDER
-    };
-
-    enum class filter {
-        nearest = GL_NEAREST,
-        linear = GL_LINEAR,
-        nearest_mip_map_nearest = GL_NEAREST_MIPMAP_NEAREST,
-        nearest_mip_map_linear = GL_NEAREST_MIPMAP_LINEAR,
-        linear_mip_map_nearest = GL_LINEAR_MIPMAP_NEAREST,
-        linear_mip_map_linear = GL_LINEAR_MIPMAP_LINEAR
-    };
 }
 
 

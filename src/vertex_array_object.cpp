@@ -2,6 +2,13 @@
 #include "utils.h"
 #include <stdexcept>
 
+namespace {
+    constexpr GLboolean gl_boolean(tinygl::normalization normalization)
+    {
+        return normalization == tinygl::normalization::normalize;
+    }
+}
+
 struct tinygl::vertex_array_object::vertex_array_object_private
 {
     vertex_array_object_private();
@@ -54,7 +61,7 @@ void tinygl::vertex_array_object::unbind()
 }
 
 void tinygl::vertex_array_object::set_attribute_array(
-        int location, int tuple_size, data_type type, bool normalize, int stride, int offset)
+        int location, int tuple_size, data_type type, normalization normalization, int stride, int offset)
 {
     /**
      * Here we have to convert the last parameter from `int` to `void*` to send it to `glVertexAttribPointer`.
@@ -77,7 +84,7 @@ void tinygl::vertex_array_object::set_attribute_array(
 #ifdef _MSC_VER
 #pragma warning(disable: 4312) // possible loss of data
 #endif
-    glVertexAttribPointer(location, tuple_size, tinygl::utils::gl_enum(type), normalize, stride, reinterpret_cast<void*>(offset));
+    glVertexAttribPointer(location, tuple_size, utils::gl_enum(type), gl_boolean(normalization), stride, reinterpret_cast<void*>(offset));
 }
 
 void tinygl::vertex_array_object::enable_attribute_array(int location)

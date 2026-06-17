@@ -6,9 +6,12 @@
 
 namespace tinygl
 {
+    enum struct normalization { normalize, keep };
+
     class vertex_array_object final
     {
     public:
+
         vertex_array_object();
         ~vertex_array_object();
 
@@ -19,7 +22,7 @@ namespace tinygl
         void unbind();
 
         void set_attribute_array(
-            int location, int tuple_size, data_type type, bool normalize, int stride = 0, int offset = 0);
+            int location, int tuple_size, data_type type, normalization normalization, int stride = 0, int offset = 0);
         void enable_attribute_array(int location);
 
     private:
