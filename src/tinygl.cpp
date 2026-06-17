@@ -123,8 +123,10 @@ void tinygl::gl_depth_func(depth_func depth_func)
 
 void tinygl::init(int major, int minor)
 {
+#if defined(__linux__)
     // Force GLFW to bypass Wayland and use X11
     glfwInitHint(GLFW_PLATFORM, GLFW_PLATFORM_X11);
+#endif
 
     if (!glfwInit()) {
         throw std::runtime_error("glfwInit() failed!");
