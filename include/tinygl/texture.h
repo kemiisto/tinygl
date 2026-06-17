@@ -11,7 +11,7 @@ namespace tinygl
     class texture final
     {
     public:
-        enum class target : uint32_t {
+        enum class target : std::uint32_t {
             gl_texture_1d,
             gl_texture_2d,
             gl_texture_3d,
@@ -25,13 +25,13 @@ namespace tinygl
             gl_texture_2d_multisample_array
         };
 
-        enum class coordinate : uint32_t {
+        enum class coordinate : std::uint32_t {
             s,
             t,
             r
         };
 
-        enum class wrap_mode : uint32_t {
+        enum class wrap_mode : std::uint32_t {
             gl_clamp_to_edge,
             gl_clamp_to_border,
             gl_mirrored_repeat,
@@ -39,7 +39,7 @@ namespace tinygl
             gl_mirror_clamp_to_edge
         };
 
-        enum class filter : uint32_t {
+        enum class filter : std::uint32_t {
             nearest,
             linear,
             nearest_mip_map_nearest,
@@ -48,7 +48,7 @@ namespace tinygl
             linear_mip_map_linear
         };
 
-        enum class internal_format : uint32_t {
+        enum class internal_format : std::uint32_t {
             // base internal formats
             gl_depth_component,
             gl_depth_stencil,
@@ -135,7 +135,7 @@ namespace tinygl
             gl_compressed_rgb_bptc_unsigned_float
         };
 
-        enum class format : uint32_t {
+        enum class format : std::uint32_t {
             gl_red,
             gl_rg,
             gl_rgb,
@@ -158,7 +158,7 @@ namespace tinygl
             const std::filesystem::path& file_name,
             internal_format internal_format,
             format format,
-            uint32_t unit);
+            std::uint32_t unit);
         ~texture();
 
         texture(texture&& other) noexcept;

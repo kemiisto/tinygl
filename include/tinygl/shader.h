@@ -10,7 +10,7 @@ namespace tinygl
     class shader final
     {
     public:
-        enum class type : uint32_t {
+        enum class type : std::uint32_t {
             gl_compute_shader,
             gl_vertex_shader,
             gl_tess_control_shader,
@@ -32,7 +32,7 @@ namespace tinygl
         type shader_type() const;
 
     private:
-        uint32_t id() const;
+        std::uint32_t id() const;
 
         struct shader_private;
         std::unique_ptr<shader_private> p;

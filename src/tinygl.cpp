@@ -101,12 +101,12 @@ void tinygl::gl_point_size(float size)
     glPointSize(size);
 }
 
-void tinygl::gl_draw_arrays(mode mode, int32_t first, int32_t count)
+void tinygl::gl_draw_arrays(mode mode, std::int32_t first, std::int32_t count)
 {
     glDrawArrays(gl_enum(mode), first, count);
 }
 
-void tinygl::gl_draw_arrays_instanced(mode mode, int32_t first, int32_t count, int32_t instance_count)
+void tinygl::gl_draw_arrays_instanced(mode mode, std::int32_t first, std::int32_t count, std::int32_t instance_count)
 {
     glDrawArraysInstanced(gl_enum(mode), first, count, instance_count);
 }

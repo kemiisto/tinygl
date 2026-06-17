@@ -12,7 +12,7 @@ namespace tinygl
     class buffer final
     {
     public:
-        enum class binding_target : uint32_t {
+        enum class binding_target : std::uint32_t {
             gl_array_buffer,
             gl_atomic_counter_buffer,
             gl_copy_read_buffer,
@@ -29,7 +29,7 @@ namespace tinygl
             gl_uniform_buffer
         };
 
-        enum class usage_pattern : uint32_t {
+        enum class usage_pattern : std::uint32_t {
             gl_stream_draw,
             gl_stream_read,
             gl_stream_copy,

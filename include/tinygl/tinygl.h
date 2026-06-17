@@ -20,7 +20,7 @@ namespace tinygl
 {
     void gl_clear_color(const color& color);
 
-    enum class buffer_bit : uint32_t {
+    enum class buffer_bit : std::uint32_t {
         gl_color_buffer_bit   = 0x00004000,  // GL_COLOR_BUFFER_BIT
         gl_depth_buffer_bit   = 0x00000100,  // GL_DEPTH_BUFFER_BIT
         gl_stencil_buffer_bit = 0x00000400   // GL_STENCIL_BUFFER_BIT
@@ -29,7 +29,7 @@ namespace tinygl
 
     void gl_point_size(float size);
 
-    enum class mode : uint32_t {
+    enum class mode : std::uint32_t {
         gl_points,
         gl_line_strip,
         gl_line_loop,
@@ -43,10 +43,10 @@ namespace tinygl
         gl_triangles_adjacency,
         gl_patches
     };
-    void gl_draw_arrays(mode mode, int32_t first, int32_t count);
-    void gl_draw_arrays_instanced(mode mode, int32_t first, int32_t count, int32_t instance_count);
+    void gl_draw_arrays(mode mode, std::int32_t first, std::int32_t count);
+    void gl_draw_arrays_instanced(mode mode, std::int32_t first, std::int32_t count, std::int32_t instance_count);
 
-    enum struct capability : uint32_t {
+    enum struct capability : std::uint32_t {
         gl_blend,
         gl_clip_distance0,
         gl_clip_distance1,
@@ -83,7 +83,7 @@ namespace tinygl
     };
     void gl_enable(capability capability);
 
-    enum class depth_func : uint32_t {
+    enum class depth_func : std::uint32_t {
         gl_never,
         gl_less,
         gl_equal,
@@ -101,7 +101,7 @@ namespace tinygl
     template<std::floating_point T>
     T get_time();
 
-    enum class name : uint32_t {
+    enum class name : std::uint32_t {
         gl_vendor,
         gl_renderer,
         gl_version,

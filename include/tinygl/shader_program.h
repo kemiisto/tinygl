@@ -26,8 +26,8 @@ namespace tinygl
         int uniform_location(std::string_view name) const;
 
         void set_uniform_value(int location, float value);
-        void set_uniform_value(int location, int32_t value);
-        void set_uniform_value(int location, uint32_t value);
+        void set_uniform_value(int location, std::int32_t value);
+        void set_uniform_value(int location, std::uint32_t value);
         void set_uniform_value(int location, float x, float y);
         void set_uniform_value(int location, float x, float y, float z);
         void set_uniform_value(int location, float x, float y, float z, float w);

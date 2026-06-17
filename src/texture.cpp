@@ -220,7 +220,7 @@ tinygl::texture::texture(target target,
      const std::filesystem::path& file_name,
      internal_format internal_format,
      format format,
-     uint32_t unit)
+     std::uint32_t unit)
     : p{std::make_unique<texture_private>(target, unit)}
 {
     int width, height, channels;

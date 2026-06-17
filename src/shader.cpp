@@ -42,7 +42,7 @@ struct tinygl::shader::shader_private
     void compile_source_code(std::string_view source);
     void compile_source_file(const std::filesystem::path& file_name);
 
-    uint32_t id = 0;
+    std::uint32_t id = 0;
     type shader_type;
     bool compiled = false;
 };

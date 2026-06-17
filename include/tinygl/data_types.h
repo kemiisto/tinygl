@@ -4,7 +4,7 @@
 #include <cstdint>
 
 namespace tinygl {
-    enum class data_type : uint32_t {
+    enum class data_type : std::uint32_t {
         gl_byte,
         gl_unsigned_byte,
         gl_short,

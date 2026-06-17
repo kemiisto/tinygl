@@ -12,7 +12,7 @@ struct tinygl::shader_program::shader_program_private
 
     bool has_shader(shader::type type) const;
 
-    uint32_t id = 0;
+    std::uint32_t id = 0;
     bool linked = false;
     std::vector<std::shared_ptr<shader>> shaders;
 };
