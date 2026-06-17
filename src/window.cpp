@@ -90,8 +90,9 @@ tinygl::window::window(int width, int height, std::string_view title, bool vsync
     glfwSetWindowUserPointer(p->window, reinterpret_cast<void*>(this));
 
     glewExperimental = GL_TRUE;
-    if (glewInit() != GLEW_OK) {
-        throw std::runtime_error("glewInit() failed!");
+    if (auto result = glewInit(); result != GLEW_OK) {
+        const auto* error_string = glewGetErrorString(result);
+        throw std::runtime_error{fmt::format("glewInit() failed! Error: {}", reinterpret_cast<const char*>(error_string))};
     }
 
     spdlog::info("[tinygl::window] ========== OpenGL properties ==========");

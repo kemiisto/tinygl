@@ -2,6 +2,7 @@
 #define TINYGL_BUFFER_H
 
 #include <cstddef>
+#include <cstdint>
 #include <iterator>
 #include <memory>
 #include <vector>
